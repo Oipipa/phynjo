@@ -15,7 +15,7 @@ So, this is an Embedded Domain-Specific Language (EDSL) for physics simulations,
   * **Spell.hs** (composing runes into more complex physics)
   * **Constraint.hs** (constraints and conservation laws)
 
-* A little executable (`app/Main.hs`) that runs a simple simulation of a **three-body gravitational system** (like planets orbiting each other, simplified).
+* A little executable (`app/Main.hs`) that runs a simple simulation.
 
 * Tests in (`test/`) to sanity-check everything’s working.
 
