@@ -1,0 +1,75 @@
+cabal-version:       2.2
+name:                physics-edsl
+version:             0.1.0.0
+synopsis:            A Haskell EDSL for physics abstractions
+description:         |
+  physics-edsl is an embedded domain-specific language (EDSL) in Haskell
+  for modeling and simulating physical systems. It builds on a formal
+  component–phenomenon abstraction, providing compositional “runes” (atomic
+  laws) and “spells” (composed behaviors) with first-class support for
+  conservation laws and constraints.
+license:             BSD-3-Clause
+license-file:        LICENSE
+author:              Anubhav Lamsal
+maintainer:          333anubhav@gmail.com
+copyright:           2025 Anubhav Lamsal
+category:            Simulation
+build-type:          Simple
+
+library
+  hs-source-dirs:
+    src
+  exposed-modules:
+      Components
+    , Literal
+    , Transition
+    , Action
+    , Process
+    , Rune
+    , Spell
+    , Constraint
+  build-depends:
+      base       >= 4.7 && < 5
+    , containers >= 0.6 && < 1
+  default-language:
+    Haskell2010
+  ghc-options:
+    -Wall
+    -Wcompat
+    -Widentities
+    -Wincomplete-record-updates
+    -Wincomplete-uni-patterns
+    -Wmissing-export-lists
+    -Wmissing-home-modules
+    -Wpartial-fields
+    -Wredundant-constraints
+
+executable physics-edsl
+  hs-source-dirs:
+    app
+  main-is:
+    Main.hs
+  build-depends:
+      base       >= 4.7 && < 5
+    , containers >= 0.6 && < 1
+    , physics-edsl
+  default-language:
+    Haskell2010
+  ghc-options:
+    -Wall
+
+test-suite physics-edsl-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:
+    test
+  main-is:
+    Spec.hs
+  build-depends:
+      base       >= 4.7 && < 5
+    , containers >= 0.6 && < 1
+    , hspec      >= 2.7
+    , physics-edsl
+  default-language:
+    Haskell2010
+  ghc-options:
+    -Wall
