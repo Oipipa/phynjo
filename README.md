@@ -1,6 +1,6 @@
 # PhysiSpell
 
-So, this is an Embedded Domain-Specific Language (EDSL) for physics simulations, something I made for my undergraduate thesis. It's built in Haskell and lets you define physics behaviors ("runes" for atomic effects and "spells" for composed actions) in a structured and modular way.
+This is the starting code for an Embedded Domain-Specific Language (EDSL) for physics simulations, something I am making for my undergraduate thesis. It's built in Haskell and lets you define physics behaviors ("runes" for atomic effects and "spells" for composed actions) in a structured and modular way.
 
 ## What's here?
 
