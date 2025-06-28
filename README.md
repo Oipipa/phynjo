@@ -24,8 +24,6 @@ So, this is an Embedded Domain-Specific Language (EDSL) for physics simulations,
 Make sure you've got [Stack](https://docs.haskellstack.org/en/stable/README/) installed. Then:
 
 ```bash
-git clone https://github.com/<your-username>/PhysiSpell.git
-cd PhysiSpell
 stack build
 stack test
 stack run
