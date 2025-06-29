@@ -16,6 +16,10 @@ import qualified SystemSpec
 import qualified ScalarLitSpec
 import qualified DriftNRSpec
 import qualified EulerNRSpec
+import qualified Physics.ForceSpec
+import qualified Physics.ForceNRSpec
+import qualified Physics.ForceDSLSpec
+import qualified System.SystemForcesSpec
 
 main :: IO ()
 main = hspec $ do
@@ -32,3 +36,7 @@ main = hspec $ do
   SystemSpec.spec
   ScalarLitSpec.spec
   EulerNRSpec.spec
+  Physics.ForceSpec.spec
+  Physics.ForceNRSpec.spec
+  Physics.ForceDSLSpec.spec
+  System.SystemForcesSpec.spec
