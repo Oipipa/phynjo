@@ -1,4 +1,3 @@
--- src/Physics/ForceDSL.hs
 {-# LANGUAGE NamedFieldPuns #-}
 
 module Physics.ForceDSL

@@ -1,4 +1,3 @@
--- src/Physics/ForceNR.hs
 {-# LANGUAGE NamedFieldPuns #-}
 
 module Physics.ForceNR

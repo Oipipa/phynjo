@@ -1,4 +1,3 @@
--- src/System/SystemForces.hs
 {-# LANGUAGE NamedFieldPuns #-}
 
 module System.SystemForces

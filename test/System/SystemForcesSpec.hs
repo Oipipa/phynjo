@@ -1,4 +1,3 @@
--- test/System/SystemForcesSpec.hs
 {-# LANGUAGE OverloadedStrings #-}
 
 module System.SystemForcesSpec (spec) where

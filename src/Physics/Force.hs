@@ -1,4 +1,3 @@
--- src/Physics/Force.hs
 {-# LANGUAGE LambdaCase #-}
 
 module Physics.Force

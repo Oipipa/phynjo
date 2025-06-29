@@ -1,4 +1,3 @@
--- test/Physics/ForceDSLSpec.hs
 {-# LANGUAGE OverloadedStrings #-}
 
 module Physics.ForceDSLSpec (spec) where

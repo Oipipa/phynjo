@@ -1,4 +1,3 @@
--- test/Physics/ForceNRSpec.hs
 {-# LANGUAGE OverloadedStrings #-}
 
 module Physics.ForceNRSpec (spec) where

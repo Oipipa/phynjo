@@ -1,4 +1,3 @@
--- src/Physics/Leapfrog1D.hs
 {-# LANGUAGE NamedFieldPuns #-}
 
 module Physics.Leapfrog1D
