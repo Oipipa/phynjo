@@ -6,51 +6,39 @@ module Physics.ForceDSL
   , addForces
   ) where
 
-import Physics.Force       (Force)
-import Physics.ForceNR     (forceNR)
-import Physics.DriftNR     (driftNR)
-import NSpell               (NSpell(..))
-import Components           (Component)
+import Physics.Leapfrog1D   (leapfrog1D)
+import Physics.Force        (Force, (<+>))
 import System.SystemForces  (System(..))
 import UnitLiteral          (getLiteral)
+import NSpell               (NSpell)
+import Components           (Component)
+import qualified Data.Map.Strict as M
 import Numeric.Units.Dimensional.Prelude
   ( Quantity, DMass, (/~), kilo, gram )
 
-import qualified Data.Map.Strict   as M
-
--- | Kick then drift for a single force.
+-- | One leapfrog1D step for a single force.
 addForce
   :: Double      -- ^ timestep Δt
   -> Force       -- ^ force to apply
   -> System      -- ^ extended system
   -> NSpell
 addForce dt f System{sMass} =
-  let -- Extract unit-checked mass map
-      massMapQ :: M.Map Component (Quantity DMass Double)
+  let massMapQ :: M.Map Component (Quantity DMass Double)
       massMapQ = getLiteral sMass
 
-      -- Convert to raw Doubles (kg)
       masses1D :: [(Component, Double)]
       masses1D =
         [ (c, q /~ (kilo gram))
         | (c, q) <- M.toList massMapQ
         ]
 
-      -- Build kick (force) and drift runes
-      kick  = NRun (forceNR f masses1D)
-      drift = NRun (driftNR masses1D)
-  in  NSeq kick drift
+  in leapfrog1D dt masses1D f
 
--- | Sequence several forces in the order given.
+-- | Combine multiple forces via (<+>) and do one leapfrog1D step.
 addForces
-  :: Double        -- ^ timestep Δt
-  -> [Force]       -- ^ list of forces
-  -> System        -- ^ extended system
+  :: Double
+  -> [Force]
+  -> System
   -> NSpell
-addForces dt forces sys =
-  case forces of
-    []     -> error "addForces: need at least one force"
-    (f:fs) ->
-      foldl (\acc f' -> NSeq acc (addForce dt f' sys))
-            (addForce dt f sys)
-            fs
+addForces _   []   _   = error "addForces: need at least one force"
+addForces dt  fs   sys = addForce dt (foldr1 (<+>) fs) sys

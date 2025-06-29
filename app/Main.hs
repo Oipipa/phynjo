@@ -9,88 +9,67 @@ import NSpell                        (NSpell, applyNSpellWorld)
 import NState                        ( NState
                                      , emptyNS
                                      , insertPos
-                                     , insertMom
                                      , lookupPos
                                      , lookupMom
                                      )
 import Physics.Force                 (Force(..))
 import Physics.ForceDSL              (addForces)
 import Numeric.Units.Dimensional.Prelude
-  ( (*~)
-  , (/~)
-  , kilo
-  , gram
-  , metre
-  , second
+  ( (*~), (/~)
+  , kilo, gram
+  , metre, second
   )
 import qualified Numeric.Units.Dimensional.Prelude as D
 import qualified Data.Map.Strict       as M
 import           Data.Map.Strict         (Map, (!))
 
--- Simulation parameters
+-- | Simulation parameters
 dt      :: Double
 dt       = 0.01
-
 nSteps  :: Int
 nSteps   = 2000
 
--- Spring constant & rest length
+-- | Hooke spring parameters
 kSpring :: Double
 kSpring  = 10.0
-
 restLen :: Double
 restLen   = 1.0
 
--- Two 1 kg bodies, initially at x=0 and x=restLen+0.1
+-- | Two 1 kg bodies at x=0 and x=restLen+0.1
 body1, body2 :: Body
 body1 = mkBody "m1" (1 *~ kilo gram) 0.0
 body2 = mkBody "m2" (1 *~ kilo gram) (restLen + 0.1)
 
--- Build the extended system
+-- | Extended System
 sys :: System
 sys = mkSystem [body1, body2]
 
--- Convert unit‐checked maps into raw Double maps for NState
+-- | Initial NState from positions only (momenta default to 0)
 initState :: NState
 initState =
-  let posUnitMap = getLiteral (sPos sys)   -- Map Component (Quantity DLength Double)
-      momUnitMap = getLiteral (sMom sys)   -- Map Component (Quantity (DMass*DLength/DTime) Double)
+  let posUnitMap = getLiteral (sPos sys)   -- Component -> Quantity DLength Double
+      posMap     = M.map (\q -> q /~ metre) posUnitMap
+      st0        = emptyNS
+  in  M.foldrWithKey insertPos st0 posMap
 
-      -- Define pure Units (not Quantities):
-      posU = metre                                -- Unit DLength
-      momU = (kilo gram) D.* (metre D./ second)  -- Unit (DMass · DLength / DTime)
-
-      -- Strip units:
-      posMap :: Map Component Double
-      posMap = M.map (\q -> q /~ posU) posUnitMap
-
-      momMap :: Map Component Double
-      momMap = M.map (\q -> q /~ momU) momUnitMap
-
-      -- Build NState
-      st0 = emptyNS
-      st1 = M.foldrWithKey insertPos st0 posMap
-  in    M.foldrWithKey insertMom st1 momMap
-
--- Only a Hooke spring (no drag) so P and E are conserved
 forces :: [Force]
 forces = [ Spring (AtomicC "m1") (AtomicC "m2") kSpring restLen ]
 
--- One step: kick → drift
+-- | Leapfrog‐based numeric spell
 spell :: NSpell
 spell = addForces dt forces sys
 
--- Full trajectory
+-- | Trajectory of states
 trajectory :: [NState]
 trajectory = iterate (applyNSpellWorld spell dt) initState
 
--- Compute total momentum p1 + p2
+-- | Total momentum p1 + p2
 totalMomentum :: NState -> Double
 totalMomentum st =
-  lookupMom (AtomicC "m1") st
+    lookupMom (AtomicC "m1") st
   + lookupMom (AtomicC "m2") st
 
--- Compute total energy (kinetic + spring potential)
+-- | Total energy: kinetic + spring potential
 totalEnergy :: NState -> Double
 totalEnergy st =
   let m1 = sMassMap sys ! AtomicC "m1"
@@ -107,7 +86,7 @@ totalEnergy st =
       pe = 0.5 * kSpring * (dx - restLen) * (dx - restLen)
   in ke + pe
 
--- Print one CSV row
+-- | Print CSV: t,x1,x2,p1,p2,Ptot,E,Erel
 printRow :: Int -> NState -> IO ()
 printRow i st = do
   let t    = fromIntegral i * dt
@@ -126,7 +105,7 @@ printRow i st = do
     , show p1,  ","
     , show p2,  ","
     , show ptot,","
-    , show e,   ","
+    , show e   , ","
     , show erel
     ]
 
