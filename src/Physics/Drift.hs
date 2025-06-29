@@ -4,13 +4,7 @@
 -- ---------------------------------------------------------------
 -- We haven’t yet refactored `Rune` to accept numerical literals,
 -- so this module just provides a no-op rune that type-checks
--- against the current `Literal`-based signature.  Once the
--- scalar/UnitLiteral pipeline is finished, replace the `id`
--- with the real `(dt/m)*p` update.
---
--- Keep it in the build so other modules can import
--- `Physics.Drift (driftRune)` without breaking compilation.
-
+-- against the current `Literal`-based signature.  
 module Physics.Drift
   ( driftRune        -- :: Double -> [(Component,Double)] -> Rune
   ) where

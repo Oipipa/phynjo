@@ -1,56 +1,68 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import qualified Data.Map.Strict    as M
+import qualified Data.Map.Strict as M
 import           Physics.LeapfrogNR
 
--- Physical constants & run parameters ----------------------------------------
-
+-- | Physical constants & run parameters
 gConst :: Double
 gConst = 1.0
 
 dt :: Double
-dt = 1e-3                          -- small enough for stability
+dt = 1e-3               -- time step
 
 nSteps :: Int
-nSteps = 200000                    -- final time = 200 s
+nSteps = 20000          -- run for t = nSteps*dt = 20 time-units
 
--- Masses and initial conditions ----------------------------------------------
-
+-- | Two masses: a heavy “sun” (id 1) fixed at the origin, 
+--   and a light planet (id 2) in a circular orbit.
 masses :: MassMap
-masses = M.fromList [(1,1.0), (2,1.0), (3,1.0)]
+masses = M.fromList
+  [ (1, 100.0)  -- central mass
+  , (2,   1.0)  -- orbiting mass
+  ]
 
+-- | Initial state: sun at rest at origin, planet at x=1 with vy = sqrt(G·M/r)
 initState :: State
-initState =
-  State { pos = M.fromList [(1,(-1,0,0)), (2,(0,0,0)), (3,(1,0,0))]
-        , vel = M.fromList [(1,(0,0,0)),  (2,(0,0,0)), (3,(0,0,0))] }
+initState = State
+  { pos = M.fromList
+      [ (1, (0,0,0))
+      , (2, (1,0,0))
+      ]
+  , vel = M.fromList
+      [ (1, (0,0,0))
+      , (2, (0, v0, 0))
+      ]
+  }
+  where
+    v0 = sqrt (gConst * (masses M.! 1) / 1)  -- r = 1
 
--- Trajectory ------------------------------------------------------------------
-
+-- | Build the trajectory
 traj :: [State]
 traj = integrateN nSteps dt gConst masses initState
 
--- CSV helpers -----------------------------------------------------------------
-
-vecX :: Vec3 -> Double
-vecX (x,_,_) = x
-
-lookupX, lookupV :: Int -> State -> Double
-lookupX i s = vecX (pos s M.! i)
-lookupV i s = vecX (vel s M.! i)
-
+-- | Helpers to extract x, y and energy
 row :: Int -> State -> String
-row k s =
-  let t  = fromIntegral k * dt
-      q1 = lookupX 1 s; q2 = lookupX 2 s; q3 = lookupX 3 s
-      p1 = lookupV 1 s; p2 = lookupV 2 s; p3 = lookupV 3 s
+row i s =
+  let t  = fromIntegral i * dt
+      (x1,_,_) = pos s M.! 1
+      (x2,y2,_) = pos s M.! 2
+      (vx2,vy2,_) = vel s M.! 2
       e  = totalEnergy gConst masses s
-  in concatMap (++ ",")
-       [ show t, show q1, show q2, show q3
-       , show p1, show p2, show p3 ] ++ show e
+  in unwordsWithComma
+       [ show t
+       , show x2, show y2
+       , show vx2, show vy2
+       , show e
+       ]
 
+unwordsWithComma :: [String] -> String
+unwordsWithComma = foldr1 (\a b -> a ++ ',' : b)
+
+-- | Main: print CSV to stdout
 main :: IO ()
 main = do
-  putStrLn "t,q1,q2,q3,p1,p2,p3,E"
+  putStrLn "t,x,y,vx,vy,E"
   mapM_ (uncurry rowPrint) (zip [0..] traj)
  where
   rowPrint i s = putStrLn (row i s)
