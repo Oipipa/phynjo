@@ -4,20 +4,9 @@ This is the starting code for an Embedded Domain-Specific Language (EDSL) for ph
 
 ## What's here?
 
-* The main library files (`src/`) include modules for:
-
-  * **Components.hs** (stuff like particles or bodies)
-  * **Literal.hs** (state definitions)
-  * **Transition.hs** (changes to state)
-  * **Action.hs** (basic actions)
-  * **Process.hs** (composing actions in parallel or sequence)
-  * **Rune.hs** (atomic physics laws)
-  * **Spell.hs** (composing runes into more complex physics)
-  * **Constraint.hs** (constraints and conservation laws)
-
+* The main library files (`src/`) include a bunch of modules for different stuff. 
 * A little executable (`app/Main.hs`) that runs a simple simulation.
-
-* Tests in (`test/`) to sanity-check everything’s working.
+* Tests in (`test/`) to sanity-check via unit-tests so everything’s working.
 
 ## How do you run this?
 
@@ -26,7 +15,7 @@ Make sure you've got [Stack](https://docs.haskellstack.org/en/stable/README/) in
 ```bash
 stack build
 stack test
-stack run
+stack exec physics-edsl > {some csv name}.csv
 ```
 
 ## What's the main simulation?
