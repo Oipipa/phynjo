@@ -20,4 +20,4 @@ stack exec physics-edsl > {some csv name}.csv
 
 ## What's the main simulation?
 
-The example in `Main.hs` simulates a simple gravitational three-body system for one timestep using both Euler and Leapfrog integration methods, and prints out the resulting positions and momenta.
+The example in `Main.hs` simulates a simple gravitational setup of two bodies. Energy and momentum conservation is there and the values are plausible.
