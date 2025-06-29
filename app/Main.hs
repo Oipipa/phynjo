@@ -1,40 +1,56 @@
 module Main where
 
-import Components (Component(..))
-import Data.Map   (Map)
-import qualified Data.Map as M
+import qualified Data.Map.Strict    as M
+import           Physics.LeapfrogNR
 
-type Vec     = (Double, Double)
-type MassMap = Map Component Double
-type PosMap  = Map Component Vec
+-- Physical constants & run parameters ----------------------------------------
 
-com :: Component -> MassMap -> PosMap -> Vec
-com c mm pm = case c of
-  AtomicC _ ->
-    pm M.! c
-  Composite cs ->
-    let (totalM,(sx,sy)) =
-          foldr
-            (\ci (tm,(ax,ay)) ->
-               let m     = mm M.! ci
-                   (x,y) = com ci mm pm
-               in (tm + m, (ax + m * x, ay + m * y))
-            )
-            (0,(0,0))
-            cs
-    in (sx / totalM, sy / totalM)
+gConst :: Double
+gConst = 1.0
 
-translate :: Vec -> PosMap -> PosMap
-translate (vx,vy) = M.map (\(x,y) -> (x + vx, y + vy))
+dt :: Double
+dt = 1e-3                          -- small enough for stability
+
+nSteps :: Int
+nSteps = 200000                    -- final time = 200 s
+
+-- Masses and initial conditions ----------------------------------------------
+
+masses :: MassMap
+masses = M.fromList [(1,1.0), (2,1.0), (3,1.0)]
+
+initState :: State
+initState =
+  State { pos = M.fromList [(1,(-1,0,0)), (2,(0,0,0)), (3,(1,0,0))]
+        , vel = M.fromList [(1,(0,0,0)),  (2,(0,0,0)), (3,(0,0,0))] }
+
+-- Trajectory ------------------------------------------------------------------
+
+traj :: [State]
+traj = integrateN nSteps dt gConst masses initState
+
+-- CSV helpers -----------------------------------------------------------------
+
+vecX :: Vec3 -> Double
+vecX (x,_,_) = x
+
+lookupX, lookupV :: Int -> State -> Double
+lookupX i s = vecX (pos s M.! i)
+lookupV i s = vecX (vel s M.! i)
+
+row :: Int -> State -> String
+row k s =
+  let t  = fromIntegral k * dt
+      q1 = lookupX 1 s; q2 = lookupX 2 s; q3 = lookupX 3 s
+      p1 = lookupV 1 s; p2 = lookupV 2 s; p3 = lookupV 3 s
+      e  = totalEnergy gConst masses s
+  in concatMap (++ ",")
+       [ show t, show q1, show q2, show q3
+       , show p1, show p2, show p3 ] ++ show e
 
 main :: IO ()
 main = do
-  let c    = Composite [AtomicC "c1", AtomicC "c2"]
-      mm   = M.fromList [(AtomicC "c1",1.0),(AtomicC "c2",3.0)]
-      pm   = M.fromList [(AtomicC "c1",(0,0)),   (AtomicC "c2",(2,0))]
-      v    = (1,1)
-      pm'  = translate v pm
-      com0 = com c mm pm
-      com1 = com c mm pm'
-  print com0
-  print com1
+  putStrLn "t,q1,q2,q3,p1,p2,p3,E"
+  mapM_ (uncurry rowPrint) (zip [0..] traj)
+ where
+  rowPrint i s = putStrLn (row i s)
