@@ -16,9 +16,9 @@ import ScalarLiteral
 --
 -- Sign convention: attractive, so bodies pull toward each other.
 gravNR
-  :: Double               -- ^ dt
-  -> Double               -- ^ G (use 1.0 for “natural” units)
-  -> [(Component, Double)]-- ^ masses (positive)
+  :: Double 
+  -> Double 
+  -> [(Component, Double)]
   -> NRune
 gravNR dt g masses =
   let dom      = S.fromList (map fst masses)
