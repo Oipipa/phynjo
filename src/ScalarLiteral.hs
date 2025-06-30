@@ -1,10 +1,10 @@
 module ScalarLiteral
-  ( SLit(..)                -- opaque
+  ( SLit(..)
   , emptySL
   , singletonSL
   , lookupSL
   , insertSL
-  , adjustSL            -- update existing value or insert default
+  , adjustSL
   , keysSL
   ) where
 
