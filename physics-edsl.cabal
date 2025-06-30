@@ -44,6 +44,12 @@ library
     , Physics.ForceDSL
     , System.SystemForces
     , Physics.Leapfrog1D
+    , Physics.Symplectic4
+    , Physics.RK4Integrator
+    , Physics.RigidBody
+    , Physics.RigidState
+    , Physics.Rigid3DNR
+    , Physics.Force3D
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1
@@ -66,7 +72,7 @@ executable physics-edsl
   hs-source-dirs:
     app
   main-is:
-    examples/example04.hs
+    examples/example06.hs
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1

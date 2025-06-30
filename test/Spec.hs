@@ -20,6 +20,10 @@ import qualified Physics.ForceSpec
 import qualified Physics.ForceNRSpec
 import qualified Physics.ForceDSLSpec
 import qualified System.SystemForcesSpec
+import qualified Physics.Symplectic4Spec
+import qualified Physics.RK4IntegratorSpec
+import qualified Physics.RigidBodySpec
+import qualified Physics.RigidStateSpec
 
 main :: IO ()
 main = hspec $ do
@@ -40,3 +44,7 @@ main = hspec $ do
   Physics.ForceNRSpec.spec
   Physics.ForceDSLSpec.spec
   System.SystemForcesSpec.spec
+  Physics.Symplectic4Spec.spec
+  Physics.RK4IntegratorSpec.spec
+  Physics.RigidBodySpec.spec
+  Physics.RigidStateSpec.spec

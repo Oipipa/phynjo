@@ -1,8 +1,22 @@
 {-# LANGUAGE TupleSections #-}
 module Physics.LeapfrogNR
-  ( Vec3 , State(..) , MassMap
+  ( Vec3
+  , State(..)
+  , MassMap
+  , vadd
+  , vsub
+  , vscale
+  , vdot
+  , vnorm2
+  , accOne
+  , drift
+  , kick
+  , leapRaw
+  , adaptive
   , leapfrogNR
-  , integrateN , totalEnergy ) where
+  , integrateN
+  , totalEnergy
+  ) where
 
 import qualified Data.Map.Strict as M
 import           Data.Maybe      (fromMaybe)
