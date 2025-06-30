@@ -1,3 +1,4 @@
+-- 1D 2 body Hooke's oscillator
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 

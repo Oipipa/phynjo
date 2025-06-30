@@ -1,3 +1,4 @@
+-- 1D Newtonian Free fall
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 

@@ -1,3 +1,4 @@
+-- 1D two body
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
@@ -35,7 +36,7 @@ nSteps   = 8000
 
 -- | Physical constants
 gConst :: Double
-gConst   = 6.67430e-11   -- gravitational constant (m³·kg⁻¹·s⁻²)
+gConst   = 1   -- gravitational constant (m³·kg⁻¹·s⁻²)
 
 -- | Two bodies, m1 and m2
 m1, m2 :: Double
