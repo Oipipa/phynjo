@@ -24,6 +24,8 @@ import qualified Physics.Symplectic4Spec
 import qualified Physics.RK4IntegratorSpec
 import qualified Physics.RigidBodySpec
 import qualified Physics.RigidStateSpec
+import qualified Physics.ContactSpec
+import qualified Physics.SymbolicSpec
 
 main :: IO ()
 main = hspec $ do
@@ -48,3 +50,5 @@ main = hspec $ do
   Physics.RK4IntegratorSpec.spec
   Physics.RigidBodySpec.spec
   Physics.RigidStateSpec.spec
+  Physics.ContactSpec.spec
+  Physics.SymbolicSpec.spec

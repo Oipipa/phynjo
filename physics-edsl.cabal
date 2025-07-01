@@ -50,6 +50,9 @@ library
     , Physics.RigidState
     , Physics.Rigid3DNR
     , Physics.Force3D
+    , Physics.Contact
+    , Physics.Symbolic
+    , Physics.Lagrangian
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1
@@ -72,7 +75,7 @@ executable physics-edsl
   hs-source-dirs:
     app
   main-is:
-    examples/example06.hs
+    examples/example07.hs
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1
