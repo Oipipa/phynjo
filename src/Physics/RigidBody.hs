@@ -1,4 +1,3 @@
--- src/Physics/RigidBody.hs
 {-# LANGUAGE RecordWildCards #-}
 
 module Physics.RigidBody

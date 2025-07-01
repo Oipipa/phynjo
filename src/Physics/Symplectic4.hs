@@ -1,4 +1,3 @@
--- src/Physics/Symplectic4.hs
 {-# LANGUAGE NamedFieldPuns #-}
 
 module Physics.Symplectic4
