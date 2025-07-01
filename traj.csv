@@ -1,2 +1,0 @@
-Pendulum equations of motion:
-  [θ]: 0.5 * 2.0 * 2.0 * (θ_ddot + θ_ddot) - 0.0 - 9.81 * 2.0 * (0.0 - -sin(θ)) = 0
