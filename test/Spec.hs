@@ -25,7 +25,6 @@ import qualified Physics.RK4IntegratorSpec
 import qualified Physics.RigidBodySpec
 import qualified Physics.RigidStateSpec
 import qualified Physics.ContactSpec
-import qualified Physics.SymbolicSpec
 import qualified SymbolicPhysics.SStateSpec
 import qualified SymbolicPhysics.SRuneSpec
 import qualified SymbolicPhysics.SSpellSpec
@@ -54,7 +53,6 @@ main = hspec $ do
   Physics.RigidBodySpec.spec
   Physics.RigidStateSpec.spec
   Physics.ContactSpec.spec
-  Physics.SymbolicSpec.spec
   SymbolicPhysics.SStateSpec.spec
   SymbolicPhysics.SRuneSpec.spec
   SymbolicPhysics.SSpellSpec.spec

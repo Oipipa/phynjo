@@ -1,4 +1,4 @@
--- Pendulum 
+-- app/examples/PendulumPretty.hs
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main where
@@ -16,9 +16,12 @@ import SymbolicPhysics.SymbolicD
   , constant
   , add, sub, mul
   , cosE
-  , pretty
+  )
+import SymbolicPhysics.PrettyEL
+  ( prettyEL
   )
 
+-- | Simple pendulum (m=1, ℓ=2, g=9.81)
 pendulum :: ([Coord], Expr)
 pendulum = buildLagrangian $ do
   θ  <- defineCoord "θ"
@@ -28,26 +31,27 @@ pendulum = buildLagrangian $ do
       ℓ = constant 2.0
       g = constant 9.81
 
-      -- kinetic energy T
+      -- T = ½ m ℓ² θ̇²
       tEnergy =
-        mul (constant 0.5)
-            (mul m (mul ℓ (mul ℓ (mul θd θd))))
+        constant 0.5 `mul` m
+                       `mul` ℓ `mul` ℓ
+                       `mul` θd `mul` θd
 
-      -- potential energy V
+      -- V = m g ℓ (1 − cos θ)
       vEnergy =
-        mul m (mul g (mul ℓ (sub (constant 1) (cosE (var "θ")))))
+        m `mul` g `mul` ℓ
+          `mul` (sub (constant 1.0) (cosE (var "θ")))
 
   return (sub tEnergy vEnergy)
 
 main :: IO ()
 main = do
-  let (coords, lag) = pendulum
-      equations     = eulerLagrange (coords, lag)
+  let (coords, lagrangian) = pendulum
+      rawEqns              = eulerLagrange (coords, lagrangian)
 
-  putStrLn "Pendulum equations of motion:"
-  mapM_ printEqn equations
+      -- names = ["θ"]
+      names = [ q | Coord q <- coords ]
+      eqns  = [ (q, expr) | (Coord q, expr) <- rawEqns ]
 
- where
-  printEqn :: (Coord, Expr) -> IO ()
-  printEqn (Coord q, expr) =
-    putStrLn $ "  [" ++ q ++ "]: " ++ pretty expr ++ " = 0"
+  putStrLn "Pendulum equations of motion (factored & simplified):"
+  mapM_ (putStrLn . prettyEL names) eqns

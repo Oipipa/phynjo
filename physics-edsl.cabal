@@ -56,6 +56,7 @@ library
     , SymbolicPhysics.SState
     , SymbolicPhysics.SRune
     , SymbolicPhysics.SSpell
+    , SymbolicPhysics.PrettyEL
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1
@@ -78,7 +79,7 @@ executable physics-edsl
   hs-source-dirs:
     app
   main-is:
-    examples/example07.hs
+    examples/example08.hs
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1
