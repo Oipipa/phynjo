@@ -79,7 +79,7 @@ executable physics-edsl
   hs-source-dirs:
     app
   main-is:
-    examples/example08.hs
+    examples/example09.hs
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1
