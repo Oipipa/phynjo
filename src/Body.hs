@@ -12,10 +12,6 @@ import Numeric.Units.Dimensional.Prelude
          , DLength, DMass )
 import qualified Numeric.Units.Dimensional.Prelude as D
 
-----------------------------------------------------------------------
--- Body record
-----------------------------------------------------------------------
-
 data Body = Body
   { ident :: Component   -- ^ unique identifier
   , mass  :: MassLit     -- ^ mass   (kg)
@@ -23,10 +19,6 @@ data Body = Body
   , mom0  :: MomLit      -- ^ momentum (kg·m/s)
   }
   deriving (Eq, Show)
-
-----------------------------------------------------------------------
--- Smart constructor: 1-D x-coordinate in metres
-----------------------------------------------------------------------
 
 mkBody
   :: String                  -- ^ label

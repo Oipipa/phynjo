@@ -3,17 +3,13 @@
 
 module System
   ( System(..)
-  , bodies          -- ^ build a system from a list of bodies
-  , (<+>)           -- ^ safe union of two disjoint subsystems
+  , bodies  
+  , (<+>) 
   ) where
 
 import Body
 import UnitLiteral
 import qualified Data.Maybe as Mb
-
-----------------------------------------------------------------------
--- Aggregate record
-----------------------------------------------------------------------
 
 data System = Sys
   { sMass :: MassLit    -- ^ mass of every component
