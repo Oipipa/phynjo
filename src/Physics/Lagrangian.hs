@@ -14,7 +14,7 @@ module Physics.Lagrangian
   ) where
 
 import           Data.List       (isSuffixOf)
-import           Physics.Symbolic
+import           SymbolicPhysics.SymbolicD
   ( Expr(..)
   , var
   , constant

@@ -51,8 +51,11 @@ library
     , Physics.Rigid3DNR
     , Physics.Force3D
     , Physics.Contact
-    , Physics.Symbolic
+    , SymbolicPhysics.SymbolicD
     , Physics.Lagrangian
+    , SymbolicPhysics.SState
+    , SymbolicPhysics.SRune
+    , SymbolicPhysics.SSpell
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1

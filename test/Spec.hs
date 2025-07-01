@@ -26,6 +26,9 @@ import qualified Physics.RigidBodySpec
 import qualified Physics.RigidStateSpec
 import qualified Physics.ContactSpec
 import qualified Physics.SymbolicSpec
+import qualified SymbolicPhysics.SStateSpec
+import qualified SymbolicPhysics.SRuneSpec
+import qualified SymbolicPhysics.SSpellSpec
 
 main :: IO ()
 main = hspec $ do
@@ -52,3 +55,6 @@ main = hspec $ do
   Physics.RigidStateSpec.spec
   Physics.ContactSpec.spec
   Physics.SymbolicSpec.spec
+  SymbolicPhysics.SStateSpec.spec
+  SymbolicPhysics.SRuneSpec.spec
+  SymbolicPhysics.SSpellSpec.spec

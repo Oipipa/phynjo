@@ -10,7 +10,7 @@ import Physics.Lagrangian
   , buildLagrangian
   , eulerLagrange
   )
-import Physics.Symbolic
+import SymbolicPhysics.SymbolicD
   ( Expr
   , var
   , constant

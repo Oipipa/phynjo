@@ -3,7 +3,7 @@
 module Physics.SymbolicSpec (spec) where
 
 import Test.Hspec
-import Physics.Symbolic
+import SymbolicPhysics.SymbolicD
 import qualified Data.Map.Strict as M
 
 spec :: Spec

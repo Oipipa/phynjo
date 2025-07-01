@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase #-}
 
-module Physics.Symbolic
+module SymbolicPhysics.SymbolicD
   ( Expr(..)
   , var, constant
   , neg, add, sub, mul, divE, pow
