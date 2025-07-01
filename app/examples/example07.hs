@@ -1,8 +1,6 @@
 -- Pendulum 
 {-# LANGUAGE OverloadedStrings #-}
 
--- | A complete example using the Lagrangian front‐end to derive
---   and print the equations of motion for a simple pendulum.
 module Main where
 
 import Physics.Lagrangian
@@ -21,13 +19,6 @@ import Physics.Symbolic
   , pretty
   )
 
-----------------------------------------------------------------------
--- | Build the pendulum Lagrangian
---     L = T − V
---   where
---     T = ½ m ℓ² θ̇²
---     V = m g ℓ (1 − cos θ)
-----------------------------------------------------------------------
 pendulum :: ([Coord], Expr)
 pendulum = buildLagrangian $ do
   θ  <- defineCoord "θ"
@@ -46,13 +37,8 @@ pendulum = buildLagrangian $ do
       vEnergy =
         mul m (mul g (mul ℓ (sub (constant 1) (cosE (var "θ")))))
 
-  -- L = T − V
   return (sub tEnergy vEnergy)
 
-----------------------------------------------------------------------
--- | Print each Euler–Lagrange equation in the form
---     d/dt(∂L/∂θ̇) − ∂L/∂θ = 0
-----------------------------------------------------------------------
 main :: IO ()
 main = do
   let (coords, lag) = pendulum
