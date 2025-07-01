@@ -3,20 +3,20 @@ module Constraint
   , preservesInvariant
   ) where
 
-import Literal (Literal)
-import Spell   (Spell, applySpellWorld)
+import Literal            (Literal)
+import EventWorkflow      (EventWorkflow, applyEventWorkflowWorld)
 
 -- | An invariant is a predicate on system state (a Literal).
 type Invariant = Literal -> Bool
 
--- | A spell preserves an invariant if the invariant holds on both
---   the initial and the final state after running the spell.
+-- | A workflow preserves an invariant if the invariant holds on both
+--   the initial and the final flag‐set after running the workflow.
 preservesInvariant
-  :: Spell       -- ^ the spell to check
-  -> Int         -- ^ starting tick (ignored by most invariants)
-  -> Literal     -- ^ starting state
-  -> Invariant   -- ^ the invariant predicate
+  :: EventWorkflow  -- ^ the workflow to check
+  -> Int            -- ^ starting tick
+  -> Literal        -- ^ starting flags
+  -> Invariant      -- ^ the invariant predicate
   -> Bool
-preservesInvariant spell t0 st inv =
-  let (_, st') = applySpellWorld spell t0 st
+preservesInvariant wf t0 st inv =
+  let (_, st') = applyEventWorkflowWorld wf t0 st
   in inv st && inv st'

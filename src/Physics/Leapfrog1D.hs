@@ -1,45 +1,44 @@
 {-# LANGUAGE NamedFieldPuns #-}
-
 module Physics.Leapfrog1D
-  ( leapfrog1D
+  ( leapfrog1D  -- :: Double -> [(Component,Double)] -> Force -> NumericWorkflow
   ) where
 
-import Physics.DriftNR     (driftNR)
-import Physics.ForceNR     (forceNR)
-import Physics.Force       (Force)
-import NRune               (NRune(..))
-import NSpell              (NSpell(..))
-import Components          (Component)
-import qualified Data.Set     as S
+import           Components         (Component)
+import qualified Data.Set           as S
 
--- | 1-D velocity–Verlet step:
+import           Physics.DriftNR    (driftNR)
+import           Physics.ForceNR    (forceNR)
+import           Physics.Force      (Force)
+import           NumericRule        (NumericRule(..))
+import           NumericWorkflow    (NumericWorkflow(..))
+import           NState             (NState)
+
+-- | One 1-D velocity–Verlet (leapfrog) step:
 --     drift(½·dt) → kick(dt) → drift(½·dt)
---   'masses' is list of (body, mass in kg), 'f' the Force.
 leapfrog1D
-  :: Double                -- ^ full Δt
+  :: Double                -- ^ full time‐step Δt
   -> [(Component,Double)]  -- ^ bodies with masses
-  -> Force                 -- ^ force to apply
-  -> NSpell
+  -> Force                 -- ^ force field
+  -> NumericWorkflow
 leapfrog1D dt masses f =
-  let half = dt / 2
-      -- base runes
-      driftRune = driftNR masses
-      forceRune = forceNR f masses
+  let half      = dt / 2
+      domain    = S.fromList (map fst masses)
 
-      -- shared domain
-      dom = S.fromList (map fst masses)
+      -- the underlying drift and kick rules
+      baseDrift = driftNR masses
+      baseKick  = forceNR  f      masses
 
-      -- override dt for half-step drift
-      driftHalf = NR
-        { domainN = dom
-        , stepN   = \_ st -> stepN driftRune half st
+      -- wrap them so they ignore the workflow‐dt and use our chosen half/full steps
+      driftHalfRule = NumericRule
+        { nrDomain = domain
+        , nrStep   = \_ st -> nrStep baseDrift half st
         }
 
-      -- full-step kick uses dt passed in
-      kickFull  = NR
-        { domainN = dom
-        , stepN   = \_ st -> stepN forceRune dt st
+      kickFullRule = NumericRule
+        { nrDomain = domain
+        , nrStep   = \_ st -> nrStep baseKick dt st
         }
-  in  NSeq (NRun driftHalf)
-           (NSeq (NRun kickFull)
-                 (NRun driftHalf))
+
+  in  Seq (Run driftHalfRule)
+          (Seq (Run kickFullRule)
+               (Run driftHalfRule))

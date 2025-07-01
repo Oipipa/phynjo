@@ -1,54 +1,57 @@
 {-# LANGUAGE NamedFieldPuns #-}
-
 module Physics.Symplectic4
-  ( symplectic4
+  ( symplectic4    -- :: Double -> [(Component,Double)] -> Force -> NumericWorkflow
   ) where
 
-import Physics.DriftNR     (driftNR)
-import Physics.ForceNR     (forceNR)
-import Physics.Force       (Force)
-import NRune               (NRune(..))
-import NSpell              (NSpell(..))
-import Components          (Component)
-import qualified Data.Set        as S
+import           Components           (Component)
+import qualified Data.Set             as S
 
--- | 4th‐order symplectic (Forest–Ruth) splitting in 1D.
---   drift(c1·dt) → kick(d1·dt) → drift(c2·dt) → kick(d2·dt)
+import           Physics.DriftNR      (driftNR)
+import           Physics.ForceNR      (forceNR)
+import           Physics.Force        (Force)
+import           NumericRule          (NumericRule(..))
+import           NumericWorkflow      (NumericWorkflow(..))
+
+-- | 4th‐order symplectic (Forest–Ruth) splitting in 1D:
+--   drift(c1·dt) → kick(d1·dt)
+--   → drift(c2·dt) → kick(d2·dt)
 --   → drift(c2·dt) → kick(d1·dt) → drift(c1·dt)
 symplectic4
   :: Double                -- ^ full Δt
   -> [(Component,Double)]  -- ^ bodies with masses
-  -> Force                 -- ^ force to apply
-  -> NSpell
+  -> Force                 -- ^ force field
+  -> NumericWorkflow
 symplectic4 dt masses f =
-  let θ  = 1 / (2 - 2 ** (1/3))
+  let -- Forest–Ruth coefficients
+      θ  = 1 / (2 - 2 ** (1/3))
       c1 = θ / 2
       c2 = (1 - θ) / 2
       d1 = θ
-      d2 = 1 - 2 * θ
+      d2 = 1 - 2*θ
 
-      -- Domain of all bodies
-      dom = S.fromList (map fst masses)
+      -- chop out base rules
+      baseDrift = driftNR masses
+      baseKick  = forceNR  f masses
 
-      -- Sequence of (rune‐constructor, fraction) pairs.
-      -- driftNR          :: [(c,m)] -> NRune
-      -- forceNR f        :: [(c,m)] -> NRune
-      steps :: [ ([(Component,Double)] -> NRune, Double) ]
-      steps =
-        [ (driftNR,    c1)
-        , (forceNR f,  d1)
-        , (driftNR,    c2)
-        , (forceNR f,  d2)
-        , (driftNR,    c2)
-        , (forceNR f,  d1)
-        , (driftNR,    c1)
+      -- full set of bodies
+      domain = S.fromList (map fst masses)
+
+      -- build each slice: ignore the workflow's dt, use α·dt internally
+      mkSlice (ruleF, α) =
+        let nr = NumericRule
+                   { nrDomain = domain
+                   , nrStep   = \_ st -> nrStep ruleF (α * dt) st
+                   }
+        in Run nr
+
+      -- the sequence of (rule, fraction) pairs
+      schedule =
+        [ (baseDrift, c1)
+        , (baseKick , d1)
+        , (baseDrift, c2)
+        , (baseKick , d2)
+        , (baseDrift, c2)
+        , (baseKick , d1)
+        , (baseDrift, c1)
         ]
-
-      -- Turn each (rfun, α) into an NRun slice
-      mkSlice (rfun, α) =
-        NRun NR
-          { domainN = dom
-          , stepN   = \_ st -> stepN (rfun masses) (α * dt) st
-          }
-
-  in foldr1 NSeq (map mkSlice steps)
+  in foldr1 Seq (map mkSlice schedule)

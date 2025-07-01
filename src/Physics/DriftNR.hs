@@ -1,21 +1,23 @@
 {-# LANGUAGE NamedFieldPuns #-}
 module Physics.DriftNR
-  ( driftNR        -- :: [(Component,Double)] -> NRune
+  ( driftNR        -- :: [(Component,Double)] -> NumericRule
   ) where
 
-import Components        (Component)
-import qualified Data.Map.Strict as M
-import qualified Data.Set        as S
+import           Components         (Component)
+import qualified Data.Map.Strict    as M
+import qualified Data.Set           as S
 
-import NRune
-import NState
-import ScalarLiteral
+import           NumericRule        (NumericRule(..))
+import           NState             (NState, lookupPos, lookupMom, insertPos)
 
-driftNR :: [(Component,Double)] -> NRune
+-- | Build a NumericRule that drifts positions according to p/m:
+--   For each body c with mass mᵢ and momentum pᵢ,
+--     qᵢ ← qᵢ + dt · (pᵢ / mᵢ)
+driftNR :: [(Component, Double)] -> NumericRule
 driftNR masses =
-  let dom       = S.fromList (map fst masses)
-      massMap   = M.fromList masses           -- Component ↦ m_i
-      step dt st =
+  let dom     = S.fromList (map fst masses)
+      massMap = M.fromList masses  -- Component ↦ mᵢ
+      step dt st0 =
         foldr
           (\c acc ->
               let m   = massMap M.! c
@@ -23,6 +25,6 @@ driftNR masses =
                   pi  = lookupMom c acc
                   qi' = qi + dt * pi / m
               in insertPos c qi' acc)
-          st
+          st0
           (map fst masses)
-  in NR { domainN = dom, stepN = step }
+  in NumericRule { nrDomain = dom, nrStep = step }

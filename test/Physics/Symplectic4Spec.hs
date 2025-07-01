@@ -1,17 +1,16 @@
 {-# LANGUAGE OverloadedStrings #-}
-
 module Physics.Symplectic4Spec (spec) where
 
 import Test.Hspec
-import Physics.Symplectic4 (symplectic4)
-import Physics.Force       (Force(..))
-import Components          (Component(AtomicC))
-import NSpell               (domainS, applyNSpellWorld)
+import Components              (Component(AtomicC))
+import Physics.Symplectic4     (symplectic4)
+import Physics.Force           (Force(..))
+import NumericWorkflow         (applyNumericWorkflow, workflowDomain)
 import NState ( NState
               , emptyNS
               , insertPos, insertMom
               , lookupPos, lookupMom )
-import qualified Data.Set     as S
+import qualified Data.Set        as S
 
 spec :: Spec
 spec = describe "Physics.Symplectic4.symplectic4" $ do
@@ -23,21 +22,22 @@ spec = describe "Physics.Symplectic4.symplectic4" $ do
       f      = Spring i j k rest
       dt     = 0.5
 
-      spell0 = symplectic4 0 masses f
-      spell  = symplectic4 dt masses f
+      wf0    = symplectic4 0 masses f
+      wf     = symplectic4 dt masses f
 
-      -- initial state: bodies at rest-length, zero momentum
+      -- initial state at rest at natural length
       state0 :: NState
-      state0 = insertMom i 0 $
-               insertMom j 0 $
-               insertPos i 0 $
-               insertPos j rest emptyNS
+      state0 = insertMom i 0
+             $ insertMom j 0
+             $ insertPos i 0
+             $ insertPos j rest
+             $ emptyNS
 
-      state1 = applyNSpellWorld spell dt state0
-      state0' = applyNSpellWorld spell0 0 state0
+      state1  = applyNumericWorkflow wf dt state0
+      state0' = applyNumericWorkflow wf0 0 state0
 
-  it "domain includes both bodies" $
-    domainS spell `shouldBe` S.fromList [i,j]
+  it "workflow domain includes both bodies" $
+    workflowDomain wf `shouldBe` S.fromList [i,j]
 
   it "dt = 0 leaves the state unchanged" $
     state0' `shouldBe` state0

@@ -1,22 +1,24 @@
 module Physics.EulerNR
-  ( eulerNR            -- :: dt -> G -> [(Component,Double)] -> NSpell
+  ( eulerNR
   ) where
 
-import Components        (Component)
-import NSpell            (NSpell (..))
-import Physics.GravNR    (gravNR)
-import Physics.DriftNR   (driftNR)
+import Components             (Component)
+import Physics.GravNR         (gravNR)
+import Physics.DriftNR        (driftNR)
+import NumericWorkflow        (NumericWorkflow(..))
 
--- | Classic first-order ‘kick → drift’ Euler step.
+-- | First-order (“kick → drift”) Euler integrator.
 --
---   • gravNR uses the same dt to update momenta
---   • driftNR uses dt (passed later by the spell runner) for positions
+--   * kick:   update momenta via Newtonian gravity
+--   * drift:  update positions via p/m
+--
+-- Δt is the time step, G is the gravitational constant.
 eulerNR
-  :: Double                 -- ^ Δt
-  -> Double                 -- ^ G (gravitational constant)
-  -> [(Component,Double)]   -- ^ masses (positive)
-  -> NSpell
+  :: Double                   -- ^ Δt
+  -> Double                   -- ^ G
+  -> [(Component,Double)]     -- ^ masses
+  -> NumericWorkflow
 eulerNR dt g masses =
-  let kick  = NRun (gravNR dt g masses)
-      drift = NRun (driftNR masses)
-  in  NSeq kick drift
+  let kick  = Run (gravNR dt g masses)
+      drift = Run (driftNR masses)
+  in Seq kick drift

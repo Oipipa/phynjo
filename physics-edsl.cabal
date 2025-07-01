@@ -25,16 +25,14 @@ library
     , Transition
     , Action
     , Process
-    , Rune
-    , Spell
+    , EventRule
+    , EventWorkflow
     , Constraint
     , UnitLiteral
     , Body
     , System
     , ScalarLiteral
-    , NRune
     , NState
-    , NSpell
     , Physics.DriftNR
     , Physics.GravNR
     , Physics.EulerNR
@@ -57,6 +55,8 @@ library
     , SymbolicPhysics.SRune
     , SymbolicPhysics.SSpell
     , SymbolicPhysics.PrettyEL
+    , NumericRule
+    , NumericWorkflow
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1
