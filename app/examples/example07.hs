@@ -1,4 +1,4 @@
--- app/examples/PendulumExample.hs
+-- Pendulum 
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | A complete example using the Lagrangian front‐end to derive
