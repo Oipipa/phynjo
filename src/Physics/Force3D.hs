@@ -1,4 +1,3 @@
--- src/Physics/Force3D.hs
 {-# LANGUAGE RecordWildCards #-}
 
 module Physics.Force3D

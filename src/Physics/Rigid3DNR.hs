@@ -1,4 +1,3 @@
--- src/Physics/Rigid3DNR.hs
 {-# LANGUAGE RecordWildCards #-}
 
 module Physics.Rigid3DNR
