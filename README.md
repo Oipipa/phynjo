@@ -42,7 +42,7 @@ data EventRule = EventRule
 
 `erStep` only rewrites flags in `erDomain`; the rest of the set is left intact.  Because it is pure I can unit-test a rule with one line: feed it a literal, look at the result, compare to expectation.
 
-Boolean rules need to be wired together—sometimes sequentially, sometimes in parallel—so I introduced
+Boolean rules need to be put together, sometimes sequentially, sometimes in parallel, so I introduced
 
 ```haskell
 data EventWorkflow
