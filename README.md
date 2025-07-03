@@ -1,3 +1,21 @@
+To run this project, make sure you have stack: 
+
+```
+stack build
+stack test
+stack run -- exe:physics-edsl > stdout_file.extension
+```
+
+You can change which example to run in `physics-edsl.cabal` somewhere around:
+
+```
+executable physics-edsl
+  hs-source-dirs:
+    app
+  main-is:
+    examples/example09.hs <------ HERE!!!
+```
+
 This project is basically somewhat of an answer to the age-old question: 
 
 > *Could we treat every step of a classical-mechanics simulation as nothing more than a lambda-calculus reduction?*
