@@ -272,3 +272,4 @@ cases I pass a complete environment anyway.
 What I do not implement os symbolic integration, pattern-based trig simplification, `sqrt`, piecewise functions.  For the examples I care about; double pendulum, spring–mass, rigid body in spherical coordinates— plain algebraic differentiation is enough.
 
 The payoff shows up in `Physics.Lagrangian`.  There I build expressions for kinetic and potential energies, give them to `deriv` twice, simplify, and out drops an explicit update rule that I convert into a `NumericRule`.  I can tweak the symbolic Lagrangian and immediately get a new simulator.
+
