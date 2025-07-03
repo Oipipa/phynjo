@@ -80,13 +80,7 @@ Anyway, I'll be walking through how each of the core modules work in the followi
 
 ### `EventWorkflow.hs`
 
-`EventWorkflow` is one of the modules for the Boolean layer.  Each `EventRule`
-is like a small chip: it consumes the current flag set, possibly flips a bit or two,
-and possibly emits an event.  A useful simulation, however, needs many
-chips working together.  I considered dropping straight into `Action`
-composition, but that loses the semantic difference between “do these two
-rules **now**” and “do one, then on the next tick do the other”.  The
-workflow datatype keeps that distinction explicit.
+`EventWorkflow` is one of the modules for the Boolean layer.  Each `EventRule` is like a small chip: it consumes the current flag set, possibly flips a bit or two, and possibly emits an event.  A useful simulation, however, needs many chips working together.  I considered dropping straight into `Action` composition, but that loses the semantic difference between “do these two rules **now**” and “do one, then on the next tick do the other”.  The workflow datatype keeps that distinction explicit.
 
 ```haskell
 data EventWorkflow
@@ -97,16 +91,11 @@ data EventWorkflow
 
 `ERun` is the trivial wrapper; `ESeq` and `EPar` are the thing.
 
-Sequential composition is just function composition over time.  If I have a
-state `(tick, flags)` and I give it to `w1`, the result becomes the input
-to `w2`.  The interpreter does exactly that and nothing more; it does not
-go inside the rules.
+Sequential composition is just function composition over time.  If I have a state `(tick, flags)` and I give it to `w1`, the result becomes the input to `w2`.  The interpreter does exactly that and nothing more; it does not go inside the rules.
 
-It's worth noting that parallel composition needs a safety check: two branches must not update the
-same flag.  That requirement is enforced at run time by computing the union of `erDomain`s.  If the intersection is non-empty the interpreter throws.
+It's worth noting that parallel composition needs a safety check: two branches must not update the same flag.  That requirement is enforced at run time by computing the union of `erDomain`s.  If the intersection is non-empty the interpreter throws.
 
-`toProcess` lowers the workflow to the generic `Process` defined earlier. The translation is structural.  `ERun` becomes `PAct (ruleToAction r)`, `ESeq` becomes `PSeq`, and so on.  That means the only interpreter I need to maintain is `applyProcessWorld / Phen`, and Boolean workflows piggy-back
-on it automatically.
+`toProcess` lowers the workflow to the generic `Process` defined earlier. The translation is structural.  `ERun` becomes `PAct (ruleToAction r)`, `ESeq` becomes `PSeq`, and so on.  That means the only interpreter I need to maintain is `applyProcessWorld / Phen`, and Boolean workflows piggy-back on it automatically.
 
 So, as an example, suppose I want a contact sensor that, once it sees the flag `onGround`, waits one tick and then clears it.  I write two rules:
 
