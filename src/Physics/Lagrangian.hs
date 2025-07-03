@@ -13,16 +13,14 @@ module Physics.Lagrangian
   , tDerivative
   ) where
 
-import           Data.List       (isSuffixOf)
 import           SymbolicPhysics.SymbolicD
-  ( Expr(..)
-  , var
-  , constant
-  , neg
-  , add, sub, mul, divE, pow
+  ( Expr
+  , var, constant
+  , neg, add, sub, mul, divE, pow
   , sinE, cosE, tanE, expE, logE
   , deriv, simplify
   )
+import qualified CAS.AST as C
 
 ----------------------------------------------------------------------  
 -- | A generalized coordinate, identified by a name.
@@ -75,43 +73,52 @@ buildLagrangian = runLagM
 ----------------------------------------------------------------------
 tDerivative :: [Coord] -> Expr -> Expr
 tDerivative coords = \case
-  Var x
+  -- names ending in "_dot" → double‐dot
+  C.Var x
     | any (\(Coord q) -> x == q ++ "_dot") coords ->
         let q = take (length x - length "_dot") x
         in var (q ++ "_ddot")
     | any (\(Coord q) -> x == q) coords ->
         var (x ++ "_dot")
-    | otherwise -> Const 0
+    | otherwise ->
+        constant 0
 
-  Const _ -> Const 0
+  C.Const _ ->
+    constant 0
 
-  Neg u   -> neg (tDerivative coords u)
-  Add u v -> add (tDerivative coords u) (tDerivative coords v)
-  Sub u v -> sub (tDerivative coords u) (tDerivative coords v)
+  C.Neg u   ->
+    neg (tDerivative coords u)
+  C.Add u v ->
+    add (tDerivative coords u) (tDerivative coords v)
+  C.Sub u v ->
+    sub (tDerivative coords u) (tDerivative coords v)
 
-  Mul u v ->
+  C.Mul u v ->
     add (mul (tDerivative coords u) v)
         (mul u (tDerivative coords v))
-
-  Div u v ->
+  C.Div u v ->
     divE
       ( sub (mul (tDerivative coords u) v)
             (mul u (tDerivative coords v)) )
       ( mul v v )
 
-  Pow u v ->
-    let u' = tDerivative coords u
-        v' = tDerivative coords v
-    in mul (pow u v)
-           ( add (mul v' (logE u))
-                (mul v  (divE u' u)) )
+  C.Pow u v ->
+    mul (pow u v)
+        ( add (mul (tDerivative coords v) (logE u))
+              (mul v (divE (tDerivative coords u) u)) )
 
-  Sin u -> mul (tDerivative coords u) (cosE u)
-  Cos u -> mul (tDerivative coords u) (neg (sinE u))
-  Tan u -> mul (tDerivative coords u)
-               ( add (constant 1) (pow (tanE u) (constant 2)) )
-  Exp u -> mul (tDerivative coords u) (expE u)
-  Log u -> divE (tDerivative coords u) u
+  C.Sin u ->
+    mul (tDerivative coords u) (cosE u)
+  C.Cos u ->
+    mul (tDerivative coords u) (neg (sinE u))
+  C.Tan u ->
+    mul (tDerivative coords u)
+        ( add (constant 1) (pow (tanE u) (constant 2)) )
+
+  C.Exp u ->
+    mul (tDerivative coords u) (expE u)
+  C.Log u ->
+    divE (tDerivative coords u) u
 
 ----------------------------------------------------------------------  
 -- | Derive the Euler–Lagrange equations:
@@ -122,9 +129,9 @@ eulerLagrange :: ([Coord], Expr) -> [(Coord, Expr)]
 eulerLagrange (coords, lag) = map makeEq coords
  where
   makeEq c@(Coord q) =
-    let qdot        = q ++ "_dot"
-        dL_dq        = deriv q    lag
-        dL_dqdot     = deriv qdot lag
-        dt_dL_dqdot  = tDerivative coords dL_dqdot
-        residual     = simplify (sub dt_dL_dqdot dL_dq)
+    let qdot       = q ++ "_dot"
+        dL_dq      = deriv q    lag
+        dL_dqdot   = deriv qdot lag
+        dt_dL_dqdot = tDerivative coords dL_dqdot
+        residual   = simplify (sub dt_dL_dqdot dL_dq)
     in (c, residual)

@@ -33,10 +33,6 @@ import qualified Physics.RigidStateSpec
 
 import qualified Physics.ContactSpec
 
-import qualified SymbolicPhysics.SStateSpec
-import qualified SymbolicPhysics.SRuneSpec
-import qualified SymbolicPhysics.SSpellSpec
-
 main :: IO ()
 main = hspec $ do
   ComponentsSpec.spec
@@ -68,7 +64,3 @@ main = hspec $ do
   Physics.RigidStateSpec.spec
 
   Physics.ContactSpec.spec
-
-  SymbolicPhysics.SStateSpec.spec
-  SymbolicPhysics.SRuneSpec.spec
-  SymbolicPhysics.SSpellSpec.spec

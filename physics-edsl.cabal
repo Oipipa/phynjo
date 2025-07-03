@@ -57,11 +57,24 @@ library
     , SymbolicPhysics.PrettyEL
     , NumericRule
     , NumericWorkflow
+    , CAS.AST
+    , CAS.Parser
+    , CAS.PrettyPrinter
+    , CAS.Simplify
+    , CAS.Differentiate
+    , CAS.Integrate.Integrate
+    , CAS.Integrate.Exponential
+    , CAS.Integrate.Logarithmic
+    , CAS.Integrate.Polynomial
+    , CAS.Integrate.Rational
+    , CAS.Integrate.Trigonometric
+    , CAS.SolveSystem
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1
     , linear       >= 1.22  && < 1.24
     , dimensional  >= 1.6   && < 1.7
+    , parsec >=3.1 && <4
   default-language:
     Haskell2010
   ghc-options:
@@ -79,7 +92,7 @@ executable physics-edsl
   hs-source-dirs:
     app
   main-is:
-    examples/example09.hs
+    examples/example07.hs
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1

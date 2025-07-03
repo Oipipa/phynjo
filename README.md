@@ -30,7 +30,7 @@ step :: Δt -> world -> world
 
 where `world` is an immutable value and `step` is a lambda that rewrites that value. The final result was an EDSL that I call "Phynjo". It managed to do a few things well: 
 
-1. I can rebuild an entire scheme (Euler → leap-frog → Forest–Ruth) by changing NumericRule nodes; the interpreter never changes. Energy drift plots that I made by passing the simulation data to LLMs (namely, Chatgpt's 'analysis' features) confirm: Euler drifts linearly, leap-frog stays bounded, Forest–Ruth is flat to machine precision for $10^5$ steps. No bugs surfaced when I changed gravity for a spring—only the force lambda changed, which was convenient.
+1. I can rebuild an entire scheme (Euler → leap-frog → Forest–Ruth) by changing NumericRule nodes; the interpreter never changes. Energy drift plots that I made by passing the simulation data to LLMs (namely, Chatgpt's 'analysis' features) confirm: Euler drifts linearly, leap-frog stays bounded, Forest–Ruth is flat to machine precision for $10^5$ steps. No bugs surfaced when I changed gravity for a spring, only the force lambda changed, which was convenient.
 2. Running the derived equations with leap-frog preserves energy to within 0.01 % over 20 000 steps which is the same accuracy as the hand-coded equations. I changed the potential term (+k/2 (θ₁−θ₂)²) and re-ran without touching any numeric code.
 
 There were still disappointments, though. For starters, every map lookup is O(log n); at 5000 bodies the gravity step dominates. A mutable Vector keyed by Int would be faster, but would break the “everything pure” elegance unless I push it behind ST. Barnes–Hut could be a next step if this project were to be optimized for demanding performances. In any case, the current Map approach is clearly not scalable beyond a few thousand bodies. There's also the issue in the rigid-body kick where I renormalise the orientation every half-step. It works, but the corrective factor introduces a small non-symplectic
@@ -152,7 +152,7 @@ data EventRule = EventRule
 
 *`erStep`* is completely pure: given only the slice of flags in the domain it produces the slice for the next tick.  Because it is pure, QuickCheck and unit tests can nail the behaviour down with no IO and no global state.  I deliberately excluded the global tick from `erStep`; the tick lives in `erEvents` because it matters only for time-stamping events.
 
-*`erEvents`* is also pure.  Many rules don’t emit anything, so they just return `emptyPhen`.  When a rule does emit, it receives the same domain slice and the integer tick and can build any `Phenomenon` it wants—typically via the helper `epsilon component tick`.
+*`erEvents`* is also pure.  Many rules don’t emit anything, so they just return `emptyPhen`.  When a rule does emit, it receives the same domain slice and the integer tick and can build any `Phenomenon` it wants, typically via the helper `epsilon component tick`.
 
 Embedding a rule into the engine is handled by `ruleToAction`.  The function literally splits the full world literal into two pieces (`domain` and `outside`), runs `erStep` on the first, pastes the result back together with the second, and increments the tick.  That is all.  The phenomenon function is forwarded directly.  After the conversion an `EventRule` behaves like any other `Action`, which means the generic `Process` interpreter can execute it without knowing anything about domains or events.
 
@@ -186,8 +186,6 @@ nrStep = \dt st ->
     masses
 ```
 
-No monads, no mutation—just ordinary functional code.
-
 The helper
 
 ```haskell
@@ -197,9 +195,9 @@ applyRule NumericRule{nrStep} = nrStep
 
 exists mostly for readability in tests.  It hides the record selector and keeps call-sites short.
 
-### `NumericWorkflow.hs` — design notes
+### `NumericWorkflow.hs`
 
-The Boolean side had `EventWorkflow`; I needed the same idea for the numeric layer—a data structure that lets me put together a handful of `NumericRule`s into a single stepper without writing a bespoke interpreter for every integrator.  That became `NumericWorkflow`.
+The Boolean side had `EventWorkflow`; I needed the same idea for the numeric layer, a data structure that lets me put together a handful of `NumericRule`s into a single stepper without writing a bespoke interpreter for every integrator.  That became `NumericWorkflow`.
 
 ```haskell
 data NumericWorkflow
@@ -254,7 +252,7 @@ data Expr
 
 Anything beyond this would require me putting some extra effort which is obviously outrageous.
 
-Anyway, for everyday work I wrote smart constructors `var`, `constant`, `add` etc.—thin wrappers that save parentheses when building expressions manually.  They don’t simplify; the simplifier runs in a separate pass.
+Anyway, for everyday work I wrote smart constructors `var`, `constant`, `add` etc., thin wrappers that save parentheses when building expressions manually.  They don’t simplify; the simplifier runs in a separate pass.
 
 `deriv` is probably the most important of the module (in the context of this project at least).  It is a direct transcription of the textbook rules, case by case, including the chain rule for composite functions and a special case for `Pow u (Const n)` so that `x^3` produces the familiar `3 x^2` instead of the more general `x^3 (2 log x + 3/x)` formula.  That saves me from writing a rewrite pass later.
 
@@ -271,6 +269,6 @@ I decided to add a simplifier early on because the derivative of even moderately
 default to zero so I can partially evaluate an expression easily.  In most
 cases I pass a complete environment anyway.
 
-What I do not implement os symbolic integration, pattern-based trig simplification, `sqrt`, piecewise functions.  For the examples I care about—double pendulum, spring–mass, rigid body in spherical coordinates— plain algebraic differentiation is enough.
+What I do not implement os symbolic integration, pattern-based trig simplification, `sqrt`, piecewise functions.  For the examples I care about; double pendulum, spring–mass, rigid body in spherical coordinates— plain algebraic differentiation is enough.
 
 The payoff shows up in `Physics.Lagrangian`.  There I build expressions for kinetic and potential energies, give them to `deriv` twice, simplify, and out drops an explicit update rule that I convert into a `NumericRule`.  I can tweak the symbolic Lagrangian and immediately get a new simulator.
