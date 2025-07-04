@@ -70,7 +70,7 @@ contactGround e μ specs =
             vel0 = rsVel    st0
             ang0 = rsAngVel st0
 
-            -- accumulate one impulse pass
+            -- one impulse pass
             (dvF, dwF) =
               foldl' (\(dvA,dwA) c ->
                         let r      = radii   M.! c
@@ -80,24 +80,33 @@ contactGround e μ specs =
                             pen    = r - y
                         in if pen > 0
                               then
-                                let n    = (0,1,0)
-                                    rVec = (0,-r,0)
-                                    vRel = vadd (vel0 M.! c)
-                                                 (cross (ang0 M.! c) rVec)
-                                    vN   = vdot vRel n
+                                let n      = (0,1,0)
+                                    rVec   = (0,-r,0)
+                                    vRel   = vadd (vel0 M.! c)
+                                                  (cross (ang0 M.! c) rVec)
+                                    vN     = vdot vRel n
                                 in if vN < 0
                                       then
-                                        -- normal + friction impulse
-                                        let jn    = -(1+e)*vN * m
+                                        -- normal impulse
+                                        let jn    = -(1 + e) * vN * m
                                             impN  = vscale jn n
+
+                                            -- tangential relative velocity
                                             vt    = vsub vRel (vscale vN n)
                                             vtMag = vnorm vt
-                                            jtMax = μ * abs jn
-                                            jt    = min (m * vtMag) jtMax
-                                            tDir  = if vtMag==0
+                                            tDir  = if vtMag == 0
                                                     then (0,0,0)
                                                     else vscale (1/vtMag) vt
+
+                                            -- friction: effective tangential mass
+                                            jtMax = μ * abs jn
+                                            invMt = (1/m)
+                                                  + vdot (cross rVec tDir)
+                                                         (applyMat invI (cross rVec tDir))
+                                            mt    = if invMt /= 0 then 1 / invMt else 0
+                                            jt    = min (mt * vtMag) jtMax
                                             impT  = vscale (-jt) tDir
+
                                             total = vadd impN impT
                                             dv    = vscale (1/m) total
                                             dw    = applyMat invI (cross rVec total)
@@ -108,9 +117,13 @@ contactGround e μ specs =
                               else (dvA,dwA)
                      ) (M.empty, M.empty) bodies
 
-            -- apply velocity updates
-            vel' = M.mapWithKey (\c v -> vadd v (M.findWithDefault (0,0,0) c dvF)) vel0
-            ang' = M.mapWithKey (\c w -> vadd w (M.findWithDefault (0,0,0) c dwF)) ang0
+            -- apply velocity impulses
+            vel' = M.mapWithKey
+                     (\c v -> vadd v (M.findWithDefault (0,0,0) c dvF))
+                     vel0
+            ang' = M.mapWithKey
+                     (\c w -> vadd w (M.findWithDefault (0,0,0) c dwF))
+                     ang0
 
             -- positional (Baumgarte) correction
             β    = 0.2
@@ -122,9 +135,8 @@ contactGround e μ specs =
                             depth   = max 0 (r - y - slop)
                         in if depth > 0
                               then
-                                let m = massMap M.! c
-                                    n = (0,1,0)
-                                    δ = vscale (β * depth * m) n
+                                let n = (0,1,0)
+                                    δ = vscale (β * depth) n
                                 in M.insertWith vadd c δ acc
                               else acc
                      ) M.empty bodies
@@ -140,12 +152,12 @@ contactGround e μ specs =
   in RR { domainR = dom, stepR = step }
 
 --------------------------------------------------------------------------------
--- 2) Sphere↔sphere contacts (unchanged; uses an Int iteration parameter).
+-- 2) Sphere↔sphere contacts with corrected friction and push‐out.
 
 contactSpheres
-  :: Double
-  -> Double
-  -> Int
+  :: Double                             -- restitution e
+  -> Double                             -- friction μ
+  -> Int                                -- iterations
   -> [(Component, Double, Double, InertiaTensor)]
   -> RRune
 contactSpheres e μ it specs =
@@ -161,9 +173,11 @@ contactSpheres e μ it specs =
             vel0 = rsVel    st0
             ang0 = rsAngVel st0
 
+            -- init impulse accumulators
             dv0  = M.fromList [ (c,(0,0,0)) | c <- bodies ]
             dw0  = M.fromList [ (c,(0,0,0)) | c <- bodies ]
 
+            -- one pass of impulse resolution
             onePass (dvA,dwA) =
               foldl' (\(dvAcc,dwAcc) (c1,c2) ->
                         let p1    = pos0 M.! c1
@@ -184,31 +198,45 @@ contactSpheres e μ it specs =
                                     vN     = vdot vRel n
                                 in if vN < 0
                                       then
+                                        -- normal impulse
                                         let invM1  = 1/(massMap M.! c1)
                                             invM2  = 1/(massMap M.! c2)
-                                            term1  = invM1 + invM2
                                             term2  = vdot n (applyMat (invIMap M.! c1)
                                                               (cross r1 n))
                                             term3  = vdot n (applyMat (invIMap M.! c2)
                                                               (cross r2 n))
-                                            denom  = term1 + term2 + term3
-                                            jn     = -(1+e)*vN / denom
+                                            invMn  = invM1 + invM2 + term2 + term3
+                                            jn     = -(1 + e) * vN / invMn
                                             impN   = vscale jn n
+
+                                            -- tangential friction
                                             vt     = vsub vRel (vscale vN n)
                                             vtMag  = vnorm vt
+                                            tDir   = if vtMag == 0
+                                                     then (0,0,0)
+                                                     else vscale (1/vtMag) vt
                                             jtMax  = μ * abs jn
-                                            jt     = min (massMap M.! c1 * vtMag) jtMax
-                                            tDir   = if vtMag==0 then (0,0,0)
-                                                              else vscale (1/vtMag) vt
-                                            impT   = vscale (-jt) tDir
-                                            d1     = vadd impN impT
-                                            d2     = vsub (vscale (-1) impN) impT
+                                            invMt1 = invM1 + vdot (cross r1 tDir)
+                                                                 (applyMat (invIMap M.! c1)
+                                                                           (cross r1 tDir))
+                                            invMt2 = invM2 + vdot (cross r2 tDir)
+                                                                 (applyMat (invIMap M.! c2)
+                                                                           (cross r2 tDir))
+                                            invMt  = invMt1 + invMt2
+                                            mt     = if invMt /= 0 then 1 / invMt else 0
+                                            jt     = min (mt * vtMag) jtMax
+                                            impT1  = vscale (-jt) tDir
+                                            impT2  = vscale   jt  tDir
+
+                                            -- assemble impulses
+                                            d1     = vadd impN impT1
+                                            d2     = vadd (vscale (-1) impN) impT2
                                             dv1    = vscale invM1 d1
                                             dv2    = vscale invM2 d2
                                             dw1    = applyMat (invIMap M.! c1)
-                                                             (cross r1 d1)
+                                                              (cross r1 d1)
                                             dw2    = applyMat (invIMap M.! c2)
-                                                             (cross r2 d2)
+                                                              (cross r2 d2)
                                             dvAcc' = M.insertWith vadd c1 dv1
                                                     $ M.insertWith vadd c2 dv2 dvAcc
                                             dwAcc' = M.insertWith vadd c1 dw1
@@ -218,29 +246,33 @@ contactSpheres e μ it specs =
                               else (dvAcc, dwAcc)
                      ) (dv0, dw0) [ (c1,c2) | (c1:c2:_) <- tails bodies ]
 
+            -- iterate impulses
             (dvF, dwF) = iterate onePass (dv0, dw0) !! it
 
             vel' = M.mapWithKey (\c v -> vadd v (dvF  M.! c)) vel0
             ang' = M.mapWithKey (\c w -> vadd w (dwF  M.! c)) ang0
 
-            -- positional correction (unchanged)
-            β    = 0.2; slop = 0.01
+            -- positional correction
+            β    = 0.2
+            slop = 0.01
             corr = foldl' (\acc (c1,c2) ->
-                      let p1    = pos0 M.! c1
-                          p2    = pos0 M.! c2
-                          d     = vsub p1 p2
-                          dist  = vnorm d
-                          pen   = radMap M.! c1 + radMap M.! c2 - dist
-                          depth = max 0 (pen - slop)
+                      let p1       = pos0 M.! c1
+                          p2       = pos0 M.! c2
+                          d        = vsub p1 p2
+                          dist     = vnorm d
+                          pen      = radMap M.! c1 + radMap M.! c2 - dist
+                          depth    = max 0 (pen - slop)
                       in if depth > 0
-                            then let invM1   = 1/(massMap M.! c1)
-                                     invM2   = 1/(massMap M.! c2)
-                                     corrMag = β * depth / (invM1 + invM2)
-                                     n       = vscale (1/max 1 dist) d
-                                     c1off   = vscale (corrMag * invM1) n
-                                     c2off   = vscale (-corrMag * invM2) n
-                                 in M.insertWith vadd c1 c1off
-                                  $ M.insertWith vadd c2 c2off acc
+                            then
+                              let invM1    = 1/(massMap M.! c1)
+                                  invM2    = 1/(massMap M.! c2)
+                                  sumInv   = invM1 + invM2
+                                  corrBase = β * depth
+                                  n        = vscale (1 / max 1 dist) d
+                                  c1off    = vscale (corrBase * (invM1 / sumInv)) n
+                                  c2off    = vscale (-corrBase * (invM2 / sumInv)) n
+                              in M.insertWith vadd c1 c1off
+                               $ M.insertWith vadd c2 c2off acc
                             else acc
                      ) M.empty [ (c1,c2) | (c1:c2:_) <- tails bodies ]
 
