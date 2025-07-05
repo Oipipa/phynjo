@@ -32,6 +32,10 @@ import qualified Physics.RigidBodySpec
 import qualified Physics.RigidStateSpec
 
 import qualified Physics.ContactSpec
+import qualified Physics.Force3D.ExtraSpec
+import qualified Physics.Contact.FlexibleSpec
+import qualified Physics.Math.Vec3UtilSpec
+import qualified Physics.Sim.ComposeSpec
 
 main :: IO ()
 main = hspec $ do
@@ -64,3 +68,7 @@ main = hspec $ do
   Physics.RigidStateSpec.spec
 
   Physics.ContactSpec.spec
+  Physics.Force3D.ExtraSpec.spec
+  Physics.Contact.FlexibleSpec.spec
+  Physics.Math.Vec3UtilSpec.spec
+  Physics.Sim.ComposeSpec.spec

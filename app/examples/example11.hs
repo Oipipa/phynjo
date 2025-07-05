@@ -20,16 +20,11 @@ import           Physics.Rigid3DNR         ( RRune(..)
                                            )
 import           Physics.Contact           (contactSpheres)
 
--- | Solid sphere inertia: I = (2/5)·m·r²
 sphereInertia :: Double -> Double -> InertiaTensor
 sphereInertia m r =
   let i = (2/5) * m * r * r
   in ((i,0,0),(0,i,0),(0,0,i))
 
--- | Build one time‐step:
---    1) Drift half‐step
---    2) Resolve collisions (full dt)
---    3) Drift half‐step
 makeStep
   :: [(Component,Double,Double,InertiaTensor)]  -- specs
   -> Double                                      -- restitution
