@@ -9,13 +9,13 @@ import           Numeric                (showFFloat)
 import           System.IO              (hPutStrLn, stdout)
 
 import           Components             (Component (..))
-import           Physics.LeapfrogNR     (Vec3)
+import           Physics.LeapfrogNR     (Vec3, vscale)
 import           Physics.RigidBody      (Quaternion)
 import           Physics.RigidState
 import           Physics.Rigid3DNR      ( RRune (..), applyRRuneWorld
                                         , driftTrans, driftRot
                                         , kickForce3D )
-import           Physics.Force3D        (gravity3D)
+import           Physics.Force3D        (gravity3D, Force3D (..) )
 import qualified Physics.Force3D.Extra  as F
 import           Physics.Contact.Flexible (contactGroundF)
 
@@ -24,9 +24,10 @@ ball        = AtomicC "ball"
 
 mBall, rBall, areaBall :: Double
 mBall    = 0.0027                    -- kg
-rBall    = 0.020                     -- m  (radius)
+rBall    = 0.020                     -- m
 areaBall = pi * rBall * rBall        -- cross-section
 
+type InertiaTensor = (Vec3,Vec3,Vec3)
 inertiaBall :: InertiaTensor
 inertiaBall = let i = (2/3) * mBall * rBall * rBall
               in  ((i,0,0),(0,i,0),(0,0,i))
@@ -37,21 +38,27 @@ rhoAir = 1.225
 cdBall = 0.46
 clBall = 0.18
 
-cOmega  = 1.0e-8      -- N m s
+cOmega = 1.0e-8      -- N m s   (~0.9 s half-life)
 
 eRest, muK :: Double -> Double
-eRest vn = 0.87 - 0.02 * min 4 vn   -- slight drop with impact speed
-muK  _  = 0.20                      -- kinetic μ
+eRest vn = 0.87 - 0.02 * min 4 vn      -- drops slightly with impact speed
+muK  _  = 0.20                         -- kinetic μ
 
 muStatic, epsStick :: Double
-muStatic = 0.35                     -- static/stick μ
-epsStick = 0.01                     -- m s⁻¹  (stick threshold)
+muStatic = 0.35
+epsStick = 0.01 
 
-type InertiaTensor = (Vec3,Vec3,Vec3)
+scaleForce3D :: Double -> Force3D -> Force3D
+scaleForce3D k (Force3D g) =
+  Force3D $ \st c -> let (f,τ) = g st c
+                     in  (vscale k f, vscale k τ)
+
+-----------------------------------------------------------------------
+-- 3)  Half-drift runes ----------------------------------------------
 
 driftHalfT, driftHalfR :: RRune
-driftHalfT = driftTrans [ball]   -- translation
-driftHalfR = driftRot   [ball]   -- rotation
+driftHalfT = driftTrans [ball]
+driftHalfR = driftRot   [ball]
 
 contactGroundFixed :: RRune
 contactGroundFixed =
@@ -61,7 +68,7 @@ contactGroundFixed =
 
 massMap  = [(ball, mBall)]
 inertMap = [(ball, inertiaBall)]
-
+fieldAll :: Force3D
 fieldAll = F.sumForces3D
   [ gravity3D gEarth (M.fromList massMap)
   , F.dragQuad3D  rhoAir cdBall areaBall
@@ -69,20 +76,22 @@ fieldAll = F.sumForces3D
   , F.dragTorque3D cOmega
   ]
 
-kickRune = kickForce3D massMap inertMap fieldAll
+halfKick :: RRune
+halfKick = kickForce3D massMap inertMap (scaleForce3D 0.5 fieldAll)
 
 composeRRune :: [RRune] -> RRune
 composeRRune rs =
-  let dom       = S.unions (map domainR rs)
-      step dt s = foldl (\st r -> stepR r dt st) s rs
+  let dom        = S.unions (map domainR rs)
+      step dt st = foldl (\s r -> stepR r dt s) st rs
   in  RR dom step
 
 fullStepRune :: RRune
 fullStepRune = composeRRune
-  [ driftHalfT, driftHalfR
-  , kickRune
+  [ halfKick
+  , driftHalfT, driftHalfR
   , contactGroundFixed
   , driftHalfT, driftHalfR
+  , halfKick
   ]
 
 qIdentity :: Quaternion
@@ -90,10 +99,10 @@ qIdentity = (1,0,0,0)
 
 st0 :: RigidState
 st0 = emptyRigid
-  { rsPos    = M.singleton ball (0, 0.30, 0)      -- 30 cm above table
+  { rsPos    = M.singleton ball (0, 0.30, 0)     -- 30 cm above table
   , rsOri    = M.singleton ball qIdentity
-  , rsVel    = M.singleton ball ( 2.0, -1.0, 0)   -- forward & slight down
-  , rsAngVel = M.singleton ball (0, 0, 150)       -- topspin 150 rad s⁻¹
+  , rsVel    = M.singleton ball ( 2.0, -1.0, 0)  -- forward & slight down
+  , rsAngVel = M.singleton ball (0, 0, 150)      -- topspin 150 rad s⁻¹
   }
 
 dt, simT :: Double
@@ -120,12 +129,12 @@ dumpLine t st =
       q = rsOri    st M.! ball
       v = rsVel    st M.! ball
       w = rsAngVel st M.! ball
-  in intercalate ","
-       [ ff t
-       , vecShow p
-       , quatShow q
-       , vecShow v
-       , vecShow w ]
+  in  intercalate ","
+        [ ff t
+        , vecShow p
+        , quatShow q
+        , vecShow v
+        , vecShow w ]
 
 header :: String
 header = "t,x,y,z,qw,qx,qy,qz,vx,vy,vz,wx,wy,wz"
