@@ -10,10 +10,6 @@ import qualified Data.Set           as S
 import           NumericRule        (NumericRule(..))
 import           NState             (NState, lookupPos, lookupMom, insertMom)
 
--- | 1-D Newtonian gravity kick:
---     pᵢ ← pᵢ + dt * Σⱼ [ G·mᵢ·mⱼ·signum(qⱼ–qᵢ) / |qⱼ–qᵢ|² ]
---
--- Bodies attract each other (sign convention built in).
 gravNR
   :: Double                  -- ^ Δt
   -> Double                  -- ^ G (gravitational constant)

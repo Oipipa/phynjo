@@ -14,27 +14,16 @@ import SymbolicPhysics.SymbolicD (Expr)
 import SymbolicPhysics.SRune   (SRune(..), applySRuneWorld)
 import SymbolicPhysics.SState  (SState(..))
 
-----------------------------------------------------------------------
--- Data type
-----------------------------------------------------------------------
 
 data SSpell
   = SRun SRune
   | SSeq SSpell SSpell
   | SPar SSpell SSpell        -- parallel, must be disjoint domains
 
-----------------------------------------------------------------------
--- Domain of a spell (set of components it may touch)
-----------------------------------------------------------------------
-
 domainSpell :: SSpell -> S.Set Component
 domainSpell (SRun r)     = domainS r
 domainSpell (SSeq a b)   = domainSpell a `S.union` domainSpell b
 domainSpell (SPar a b)   = domainSpell a `S.union` domainSpell b
-
-----------------------------------------------------------------------
--- Interpreter
-----------------------------------------------------------------------
 
 applySSpellWorld :: SSpell -> Expr -> SState -> SState
 applySSpellWorld (SRun r)     dt st = applySRuneWorld r dt st

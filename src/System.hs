@@ -18,10 +18,6 @@ data System = Sys
   }
   deriving (Eq, Show)
 
-----------------------------------------------------------------------
--- Helpers
-----------------------------------------------------------------------
-
 -- convert a single Body to a singleton System
 bodyToSys :: Body -> System
 bodyToSys Body{mass, pos0, mom0} = Sys mass pos0 mom0
@@ -30,10 +26,6 @@ bodyToSys Body{mass, pos0, mom0} = Sys mass pos0 mom0
 unsafeMerge :: System -> System -> System
 unsafeMerge (Sys m1 q1 p1) (Sys m2 q2 p2) =
   Sys (mergeU m1 m2) (mergeU q1 q2) (mergeU p1 p2)
-
-----------------------------------------------------------------------
--- API
-----------------------------------------------------------------------
 
 -- | Build a system from a non-empty list of bodies (assumes unique ids).
 bodies :: [Body] -> System

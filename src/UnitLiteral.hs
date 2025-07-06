@@ -6,9 +6,6 @@
 {-# LANGUAGE TypeOperators        #-}
 {-# LANGUAGE UndecidableInstances #-}
 
--- | Unit-checked literals: each component is annotated with a
---   ‘dimensional’ quantity of *one* fixed dimension @u@.
---   The module is independent of the old ‘Literal’ API; adopt it gradually.
 module UnitLiteral
   ( ULiteral(..)
   , getLiteral
@@ -36,20 +33,12 @@ import Numeric.Units.Dimensional.Prelude
          , KnownDimension )
 import qualified Numeric.Units.Dimensional.Prelude as D
 
-----------------------------------------------------------------------
--- Core newtype
-----------------------------------------------------------------------
-
 newtype ULiteral u = ULit { unU :: Map Component (Quantity u Double) }
 
 deriving instance Eq (ULiteral u)
 
 instance KnownDimension u => Show (ULiteral u) where
   show (ULit m) = "ULit " ++ show m
-
-----------------------------------------------------------------------
--- Constructors / queries
-----------------------------------------------------------------------
 
 emptyU :: ULiteral u
 emptyU = ULit M.empty
@@ -72,10 +61,6 @@ keysU (ULit m) = M.keys m
 getLiteral :: ULiteral u -> Map Component (Quantity u Double)
 getLiteral = unU
 
-----------------------------------------------------------------------
--- Functor-like utilities
-----------------------------------------------------------------------
-
 mapU :: (Quantity u Double -> Quantity u Double) -> ULiteral u -> ULiteral u
 mapU f (ULit m) = ULit (M.map f m)
 
@@ -88,10 +73,6 @@ zipWithU f (ULit a) (ULit b) = ULit (M.unionWith f a b)
 scaleU :: Quantity DOne Double -> ULiteral u -> ULiteral u
 scaleU k = mapU (k D.*)
 
-----------------------------------------------------------------------
--- Union helpers
-----------------------------------------------------------------------
-
 mergeU :: ULiteral u -> ULiteral u -> ULiteral u
 mergeU = zipWithU (D.+)
 
@@ -99,10 +80,6 @@ disjointMergeU :: ULiteral u -> ULiteral u -> Maybe (ULiteral u)
 disjointMergeU (ULit a) (ULit b)
   | M.null (M.intersection a b) = Just (ULit (M.union a b))
   | otherwise                   = Nothing
-
-----------------------------------------------------------------------
--- Handy physics aliases
-----------------------------------------------------------------------
 
 type PosLit   = ULiteral DLength
 type MomLit   = ULiteral (DMass D.* DLength D./ DTime)

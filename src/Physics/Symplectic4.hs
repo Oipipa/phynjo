@@ -12,10 +12,6 @@ import           Physics.Force        (Force)
 import           NumericRule          (NumericRule(..))
 import           NumericWorkflow      (NumericWorkflow(..))
 
--- | 4th‐order symplectic (Forest–Ruth) splitting in 1D:
---   drift(c1·dt) → kick(d1·dt)
---   → drift(c2·dt) → kick(d2·dt)
---   → drift(c2·dt) → kick(d1·dt) → drift(c1·dt)
 symplectic4
   :: Double                -- ^ full Δt
   -> [(Component,Double)]  -- ^ bodies with masses

@@ -13,8 +13,6 @@ import           NumericRule        (NumericRule(..))
 import           NumericWorkflow    (NumericWorkflow(..))
 import           NState             (NState)
 
--- | One 1-D velocity–Verlet (leapfrog) step:
---     drift(½·dt) → kick(dt) → drift(½·dt)
 leapfrog1D
   :: Double                -- ^ full time‐step Δt
   -> [(Component,Double)]  -- ^ bodies with masses

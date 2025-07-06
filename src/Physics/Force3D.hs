@@ -17,7 +17,6 @@ import qualified Data.Map.Strict as M
 newtype Force3D = Force3D
   { runForce3D :: RigidState -> Component -> (Vec3, Vec3) }
 
--- | Uniform gravity down the –Y axis: F = m·g·(0,–1,0)
 gravity3D
   :: Double                -- ^ gravitational acceleration g > 0
   -> M.Map Component Double-- ^ masses (kg) for each body
@@ -26,8 +25,6 @@ gravity3D g massMap = Force3D $ \_ c ->
   let m = massMap M.! c
   in ((0, - m * g, 0), (0,0,0))
 
--- | Hooke spring between bodies i and j:
---     F = –k·(‖xⱼ–xᵢ‖ – rest) · (unit vector from i to j)
 spring3D
   :: Component  -- ^ body i
   -> Component  -- ^ body j

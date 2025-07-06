@@ -113,16 +113,13 @@ kickForce3D masses inertias (Force3D field) =
                                 tauB   = applyMat rt tauW
                                 wB     = applyMat rt w0
 
-                                -- L = I·ω
                                 iB     = ibodyMap  M.! c
                                 lB     = applyMat iB wB
 
-                                -- Euler: ω̇_b = I⁻¹ (τ_b − ω_b×L_b)
                                 invIB  = invIMap   M.! c
                                 gyro   = cross wB lB
                                 wBdot  = applyMat invIB (vsub tauB gyro)
 
-                                -- back to world, then step
                                 wWdot  = applyMat rmat wBdot
                             in  vadd w0 (vscale dt wWdot)
                           else w0
@@ -177,9 +174,6 @@ cross (x1,y1,z1) (x2,y2,z2) =
   , x1*y2 - y1*x2
   )
 
-----------------------------------------------------------------------  
---  Quaternion → 3×3 rotation matrix
-
 quatToMatrix :: (Double,Double,Double,Double) -> InertiaTensor
 quatToMatrix (w,x,y,z) =
   let ww = w*w; xx = x*x; yy = y*y; zz = z*z
@@ -189,9 +183,6 @@ quatToMatrix (w,x,y,z) =
      , (2*(xy + wz),   ww-xx+yy-zz,   2*(yz - wx))
      , (2*(xz - wy),   2*(yz + wx),   ww-xx-yy+zz)
      )
-
-----------------------------------------------------------------------  
---  Quaternion integrator (body‐space ω)
 
 integrateQuat
   :: Double

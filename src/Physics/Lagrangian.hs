@@ -1,8 +1,5 @@
 {-# LANGUAGE LambdaCase #-}
 
--- | Symbolic Lagrangian front‐end: declare generalized coordinates,
---   build a Lagrangian L(q, q̇), and automatically derive the
---   Euler–Lagrange equations d/dt(∂L/∂q̇) − ∂L/∂q = 0.
 module Physics.Lagrangian
   ( Coord(..)
   , LagM
@@ -22,16 +19,10 @@ import           SymbolicPhysics.SymbolicD
   )
 import qualified CAS.AST as C
 
-----------------------------------------------------------------------  
--- | A generalized coordinate, identified by a name.
-----------------------------------------------------------------------
 newtype Coord = Coord
   { coordName :: String
   } deriving (Eq, Show)
 
-----------------------------------------------------------------------  
--- | Lagrangian‐builder monad collects all declared coordinates.
-----------------------------------------------------------------------
 newtype LagM a = LagM { runLagM :: ([Coord], a) }
 
 instance Functor LagM where
@@ -48,32 +39,17 @@ instance Monad LagM where
     let LagM (cs2, y) = k x
     in  LagM (cs1 ++ cs2, y)
 
-----------------------------------------------------------------------  
--- | Declare a new generalized coordinate q.
-----------------------------------------------------------------------
 defineCoord :: String -> LagM Coord
 defineCoord name = LagM ([Coord name], Coord name)
 
-----------------------------------------------------------------------  
--- | Refer to the time‐derivative ˙q as a new symbolic variable "q_dot".
-----------------------------------------------------------------------
 timeDeriv :: Coord -> LagM Expr
 timeDeriv (Coord q) = pure $ var (q ++ "_dot")
 
-----------------------------------------------------------------------  
--- | Run the builder to get the list of coordinates and the Lagrangian Expr.
-----------------------------------------------------------------------
 buildLagrangian :: LagM Expr -> ([Coord], Expr)
 buildLagrangian = runLagM
 
-----------------------------------------------------------------------  
--- | Symbolic time‐derivative:
---   q ↦ q_dot, q_dot ↦ q_ddot, others ↦ 0,
---   with full chain‐rule on subexpressions.
-----------------------------------------------------------------------
 tDerivative :: [Coord] -> Expr -> Expr
 tDerivative coords = \case
-  -- names ending in "_dot" → double‐dot
   C.Var x
     | any (\(Coord q) -> x == q ++ "_dot") coords ->
         let q = take (length x - length "_dot") x
@@ -120,11 +96,6 @@ tDerivative coords = \case
   C.Log u ->
     divE (tDerivative coords u) u
 
-----------------------------------------------------------------------  
--- | Derive the Euler–Lagrange equations:
---     d/dt(∂L/∂q̇) − ∂L/∂q = 0
---   Returns [(Coord, residualExpr)] for each coordinate.
-----------------------------------------------------------------------
 eulerLagrange :: ([Coord], Expr) -> [(Coord, Expr)]
 eulerLagrange (coords, lag) = map makeEq coords
  where

@@ -12,10 +12,6 @@ import Components        (Component)
 import ScalarLiteral
   ( SLit , emptySL , insertSL , lookupSL , keysSL )
 
-----------------------------------------------------------------------
--- Numeric world-state: 1-D positions & momenta stored in SLit
-----------------------------------------------------------------------
-
 data NState = NS
   { q :: SLit    -- ^ positions  (metres, plain Double)
   , p :: SLit    -- ^ momenta    (kg·m/s, plain Double)

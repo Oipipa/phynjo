@@ -27,8 +27,6 @@ type Phenomenon = Set Transition
 epsilon :: Component -> Int -> Transition
 epsilon c t = Transition c c t (t + 1)
 
--- | Domain of a single transition: the set of components it really moves.
---   Epsilon transitions (c→c) contribute an empty domain.
 domain :: Transition -> Set Component
 domain (Transition s t _ _)
   | s == t    = Set.empty

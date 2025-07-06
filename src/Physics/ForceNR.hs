@@ -10,8 +10,6 @@ import Components       (Component)
 import qualified Data.Set        as S
 import qualified Data.Map.Strict as M
 
--- | Build a NumericRule that applies a 1-D force to each body,
---   updating pᵢ ← pᵢ + dt·Fᵢ, where Fᵢ is the x-component of the net force.
 forceNR
   :: Force                -- ^ force field
   -> [(Component,Double)] -- ^ list of (body, mass in kg)

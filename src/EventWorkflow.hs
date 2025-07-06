@@ -14,7 +14,6 @@ import           Process         (Process(..), applyProcessWorld, applyProcessPh
 import           Literal         (Literal)
 import           Transition      (Phenomenon)
 
--- | A little workflow DSL built on top of EventRule→Action→Process.
 data EventWorkflow
   = ERun EventRule
   | ESeq EventWorkflow EventWorkflow

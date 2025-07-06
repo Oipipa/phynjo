@@ -8,9 +8,6 @@ import Literal    (Literal)
 import Transition (Phenomenon)
 import qualified Data.Set as Set
 
--- | An atomic action carries two maps:
---   * world: given a tick and literal, advance one tick and update the literal
---   * phen : given a tick and literal, produce the phenomenon (set of transitions)
 data Action = Action
   { aWorld :: Int -> Literal -> (Int, Literal)
   , aPhen  :: Int -> Literal -> Phenomenon

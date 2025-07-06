@@ -1,7 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
--- | A single-time-step numeric rule over the numeric state (`NState`).
---   Think of it as the counterpart to EventRule, but acting on numbers instead of booleans.
 module NumericRule
   ( NumericRule(..)
   , applyNumericRule

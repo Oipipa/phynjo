@@ -8,8 +8,6 @@ module Physics.RK4Integrator
 import Physics.LeapfrogNR    (State(..), MassMap, accOne, vadd, vscale)
 import qualified Data.Map.Strict as M
 
--- | One RK4 step for 3D Newtonian gravity:
---   state derivatives are (q̇ = v, v̇ = acceleration).
 rk4Step
   :: Double     -- ^ timestep h
   -> Double     -- ^ gravitational constant G
@@ -18,7 +16,6 @@ rk4Step
   -> State      -- ^ next state
 rk4Step h g masses st0 = 
   let
-      -- f(s): returns (ṙ, ṗ)
       deriv st@State{..} =
         State
           { pos = vel

@@ -21,10 +21,6 @@ module Physics.LeapfrogNR
 import qualified Data.Map.Strict as M
 import           Data.Maybe      (fromMaybe)
 
-----------------------------------------------------------------------
---  Basic linear-algebra utilities
-----------------------------------------------------------------------
-
 type Vec3 = (Double,Double,Double)
 
 vadd, vsub          :: Vec3 -> Vec3 -> Vec3
@@ -38,10 +34,6 @@ vscale k (x,y,z)     = (k*x , k*y , k*z)
 vdot  (a,b,c) (x,y,z)=  a*x + b*y + c*z
 vnorm2 v             = vdot v v
 
-----------------------------------------------------------------------
---  External data types
-----------------------------------------------------------------------
-
 type MassMap = M.Map Int Double    -- ^ body-id → mass
 
 soft, safety, hMin :: Double
@@ -54,11 +46,6 @@ data State = State
   , vel :: M.Map Int Vec3          -- ^ velocities, vᵢ
   } deriving (Eq,Show)
 
-----------------------------------------------------------------------
---  1-step operators
-----------------------------------------------------------------------
-
--- | Drift positions for a time h with current velocities.
 drift :: Double -> State -> State
 drift h s =
   s{ pos = M.intersectionWith (\r v -> vadd r (vscale h v))
@@ -124,10 +111,6 @@ adaptive h g m s
                        s' = adaptive h2 g m s
                    in  adaptive h2 g m s'
 
-----------------------------------------------------------------------
---  Exported integrator
-----------------------------------------------------------------------
-
 -- | Adaptive velocity-Verlet step.
 leapfrogNR :: Double -> Double -> MassMap -> State -> State
 leapfrogNR = adaptive
@@ -135,10 +118,6 @@ leapfrogNR = adaptive
 -- | Integrate for n steps, returning the whole trajectory.
 integrateN :: Int -> Double -> Double -> MassMap -> State -> [State]
 integrateN n h g m = take (n + 1) . iterate (leapfrogNR h g m)
-
-----------------------------------------------------------------------
---  Diagnostics
-----------------------------------------------------------------------
 
 -- | Total (kinetic + potential) energy.
 totalEnergy :: Double -> MassMap -> State -> Double
