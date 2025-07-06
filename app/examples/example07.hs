@@ -1,4 +1,3 @@
--- app/examples/PendulumPretty.hs
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main where

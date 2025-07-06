@@ -1,4 +1,3 @@
--- test/Physics/RK4IntegratorSpec.hs
 {-# LANGUAGE RecordWildCards #-}
 module Physics.RK4IntegratorSpec (spec) where
 

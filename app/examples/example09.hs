@@ -19,10 +19,6 @@ import Physics.Lagrangian
 import qualified Data.Map.Strict as M
 import Text.Printf (printf)
 
-----------------------------------------------------------------------
--- 1) Symbolic setup: Lagrangian and Euler–Lagrange residuals
-----------------------------------------------------------------------
-
 -- Build the double‐pendulum Lagrangian L(q, q̇)
 doublePendulumL :: ([Coord], Expr)
 doublePendulumL = buildLagrangian $ do
@@ -78,10 +74,6 @@ c2_expr = simplify $ sub res2
                        ( add (mul c21 (var "θ1_ddot"))
                              (mul c22 (var "θ2_ddot")) )
 
-----------------------------------------------------------------------
--- 2) Numeric helpers: solve for accelerations & RK4 integrator
-----------------------------------------------------------------------
-
 type State = (Double,Double,Double,Double)  -- (θ1, ω1, θ2, ω2)
 
 -- Solve 2×2 system for θ̈1, θ̈2 given current state
@@ -125,10 +117,6 @@ f :: State -> State
 f (θ1,ω1,θ2,ω2) =
   let (a1,a2) = computeAccel (θ1,ω1,θ2,ω2)
   in (ω1, a1, ω2, a2)
-
-----------------------------------------------------------------------
--- 3) Simulation & CSV output
-----------------------------------------------------------------------
 
 dt    = 0.01
 tmax  = 20.0

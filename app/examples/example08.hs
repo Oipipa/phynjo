@@ -49,6 +49,6 @@ main = do
       raws           = eulerLagrange (coords, lag)
       names          = [ q | Coord q <- coords ]
 
-  putStrLn "Double pendulum equations of motion (clean):"
+  putStrLn "Double pendulum equations of motion:"
   forM_ raws $ \(Coord θ, expr) ->
     putStrLn (prettyEL names (θ, expr))
