@@ -1,3 +1,5 @@
+This is a functional EDSL built on top of haskell for modeling problems in classical mechanics, rigid body mechanics and rotational kinematics. 
+
 ![TennisBall](results/samples/1.gif)
 
 To run this project, make sure you have stack: 
