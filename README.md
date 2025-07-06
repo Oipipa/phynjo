@@ -1,3 +1,5 @@
+![TennisBall](results/samples/1.gif)
+
 To run this project, make sure you have stack: 
 
 ```
