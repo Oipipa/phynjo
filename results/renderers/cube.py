@@ -4,7 +4,7 @@ import moderngl
 import numpy as np
 from pyrr import Matrix44, Quaternion
 
-with open('data/rotatingbody.csv') as f:
+with open('../data/rotatingbody.csv') as f:
     lines = [l for l in f if l.strip()]
 quats = []
 for l in lines:

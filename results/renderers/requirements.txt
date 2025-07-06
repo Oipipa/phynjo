@@ -1,0 +1,7 @@
+glfw
+numpy
+pandas
+moderngl
+pyglet
+PyOpenGL
+pyrr

@@ -33,7 +33,7 @@ glfw.make_context_current(win)
 ctx=moderngl.create_context()
 ctx.enable(moderngl.DEPTH_TEST)
 
-data=np.genfromtxt('data/ttball.csv',delimiter=',',names=True)
+data=np.genfromtxt('../data/ttball.csv',delimiter=',',names=True)
 pos=np.vstack((data['x'],data['y'],data['z'])).T.astype('f4')
 qw,qx,qy,qz=data['qw'],data['qx'],data['qy'],data['qz']
 wx,wy,wz=data['wx'],data['wy'],data['wz']

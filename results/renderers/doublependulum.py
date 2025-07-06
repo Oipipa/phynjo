@@ -2,7 +2,7 @@ import numpy as np, pandas as pd, pyglet, moderngl
 from pyglet import gl
 
 # load data
-csv = 'data/doublePendulum.csv'
+csv = '../data/doublePendulum.csv'
 df = pd.read_csv(csv)
 θ1, θ2 = df['θ1'].values, df['θ2'].values
 frames = len(θ1)

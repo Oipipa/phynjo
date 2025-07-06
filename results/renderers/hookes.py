@@ -1,6 +1,6 @@
 import numpy as np, pandas as pd, pyglet, moderngl
 
-df = pd.read_csv('data/2bodyhookes.csv')
+df = pd.read_csv('../data/2bodyhookes.csv')
 x1 = df['x1'].values
 x2 = df['x2'].values
 n = len(x1)
