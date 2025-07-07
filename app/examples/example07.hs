@@ -20,7 +20,6 @@ import SymbolicPhysics.PrettyEL
   ( prettyEL
   )
 
--- | Simple pendulum (m=1, ℓ=2, g=9.81)
 pendulum :: ([Coord], Expr)
 pendulum = buildLagrangian $ do
   θ  <- defineCoord "θ"

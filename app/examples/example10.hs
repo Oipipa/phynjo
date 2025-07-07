@@ -44,11 +44,10 @@ gravityWithPivot g pivot massMap = Force3D $ \st c ->
       τz = lx*fy - ly*fx
   in (f, (τx, τy, τz))
 
--- | A single combined step: kick → drift translation → drift rotation
 makeStep
-  :: [(Component,Double)]                    -- ^ masses
-  -> [(Component,InertiaTensor)]             -- ^ body‐space inertias
-  -> Force3D                                 -- ^ gravity+torque field
+  :: [(Component,Double)] 
+  -> [(Component,InertiaTensor)] 
+  -> Force3D 
   -> RRune
 makeStep masses inertias field =
   let kick   = kickForce3D masses inertias field

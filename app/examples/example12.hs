@@ -23,16 +23,16 @@ ball        :: Component
 ball        = AtomicC "ball"
 
 mBall, rBall, areaBall :: Double
-mBall    = 0.0027                    -- kg
-rBall    = 0.020                     -- m
-areaBall = pi * rBall * rBall        -- cross-section
+mBall    = 0.0027 
+rBall    = 0.020 
+areaBall = pi * rBall * rBall 
 
 type InertiaTensor = (Vec3,Vec3,Vec3)
 inertiaBall :: InertiaTensor
 inertiaBall = let i = (2/3) * mBall * rBall * rBall
               in  ((i,0,0),(0,i,0),(0,0,i))
 
-gEarth   = 9.81      -- m s⁻²
+gEarth   = 9.81 
 
 rhoAir = 1.225
 cdBall = 0.46
@@ -53,8 +53,6 @@ scaleForce3D k (Force3D g) =
   Force3D $ \st c -> let (f,τ) = g st c
                      in  (vscale k f, vscale k τ)
 
------------------------------------------------------------------------
--- 3)  Half-drift runes ----------------------------------------------
 
 driftHalfT, driftHalfR :: RRune
 driftHalfT = driftTrans [ball]

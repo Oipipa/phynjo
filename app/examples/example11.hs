@@ -47,7 +47,6 @@ makeStep specs e μ it =
         in st3
   in RR { domainR = dom, stepR = step }
 
--- | Print CSV: time,x1,y1,z1,x2,y2,z2
 formatCSV :: Double -> RigidState -> String
 formatCSV t st =
   let (x1,y1,z1) = lookupPosR (AtomicC "s1") st
@@ -60,7 +59,6 @@ formatCSV t st =
 
 main :: IO ()
 main = do
-  -- 1) Sphere parameters
   let r      = 0.5
       m      = 1.0
       inertia= sphereInertia m r
@@ -68,7 +66,6 @@ main = do
       c1     = AtomicC "s1"
       c2     = AtomicC "s2"
 
-      -- 2) Initial state: s1 at x=–1 moving right; s2 at x=+1 moving left
       initSt = insertRigid c2 ( 1,0,0) (1,0,0,0) (-1,0,0) (0,0,0)
              $ insertRigid c1 (-1,0,0) (1,0,0,0) ( 1,0,0) (0,0,0)
              $ emptyRigid
@@ -85,11 +82,9 @@ main = do
       -- 3) Build our Strang‐split collision step
       stepRune   = makeStep specs restitution friction iterations
 
-      -- 4) Simulation parameters
       dt    = 0.01
       steps = 200
 
-  -- 5) Run and print CSV
   putStrLn "time,x1,y1,z1,x2,y2,z2"
   let loop 0 _ _ = return ()
       loop n t st = do
