@@ -10,8 +10,6 @@ import Physics.RigidState     (RigidState(..))
 import Physics.LeapfrogNR     (Vec3)
 import Components             (Component(..))
 
--- | A simple Quaternion alias used only for orientation maps in tests.
---   Change this if your actual Quaternion type differs.
 type Quaternion = (Double, Double, Double, Double)
 
 identityQ :: Quaternion
