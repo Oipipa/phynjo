@@ -1,6 +1,6 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Physics.Force3D.Extra
+module Physics.Extra
   ( 
     dragQuad3D 
   , magnus3D

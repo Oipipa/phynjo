@@ -69,8 +69,7 @@ library
     , CAS.Integrate.Rational
     , CAS.Integrate.Trigonometric
     , CAS.SolveSystem
-    , Physics.Force3D.Extra
-    , Physics.Contact.Flexible
+    , Physics.Extra
     , Physics.Math.Vec3Util
     , Physics.Sim.Compose
   build-depends:
@@ -97,7 +96,7 @@ executable physics-edsl
   hs-source-dirs:
     app
   main-is:
-    examples/example13.hs
+    examples/example11.hs
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1

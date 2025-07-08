@@ -1,10 +1,10 @@
 {-# LANGUAGE TypeApplications #-}
 
-module Physics.Force3D.ExtraSpec (spec) where
+module Physics.ExtraSpec (spec) where
 
 import           Test.Hspec
 
-import           Physics.Force3D.Extra
+import           Physics.Extra
 import           Physics.Force3D         (runForce3D)
 import           Physics.RigidState
 import           Physics.LeapfrogNR      (Vec3, vdot)

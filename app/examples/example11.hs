@@ -18,7 +18,7 @@ import           Physics.Rigid3DNR         ( RRune(..)
                                            , applyRRuneWorld
                                            , driftTrans
                                            )
-import           Physics.Contact           (contactSpheres)
+import           Physics.Contact           (contactSpheresF)
 
 sphereInertia :: Double -> Double -> InertiaTensor
 sphereInertia m r =
@@ -35,7 +35,7 @@ makeStep specs e μ it =
   let comps    = [c | (c,_,_,_) <- specs]
       -- half‐drift and collision runes
       drift    = driftTrans comps
-      collide  = contactSpheres e μ it specs
+      collide = contactSpheresF (const e) (const μ) it specs
       -- union of domains
       dom      = Set.union (domainR drift) (domainR collide)
 

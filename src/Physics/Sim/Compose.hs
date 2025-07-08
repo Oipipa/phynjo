@@ -12,7 +12,7 @@ import qualified Data.Map.Strict          as M
 
 import           Components               (Component)
 import           Physics.Force3D          (Force3D)
-import qualified Physics.Force3D.Extra    as F
+import qualified Physics.Extra    as F
 import           Physics.Rigid3DNR        (RRune (..), kickForce3D)
 
 composeRRune :: [RRune] -> RRune

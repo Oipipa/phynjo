@@ -16,8 +16,8 @@ import           Physics.Rigid3DNR      ( RRune (..), applyRRuneWorld
                                         , driftTrans, driftRot
                                         , kickForce3D )
 import           Physics.Force3D        (gravity3D, Force3D (..) )
-import qualified Physics.Force3D.Extra  as F
-import           Physics.Contact.Flexible (contactGroundF)
+import qualified Physics.Extra  as F
+import           Physics.Contact (contactGroundF)
 
 ball        :: Component
 ball        = AtomicC "ball"
