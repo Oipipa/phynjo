@@ -34,6 +34,6 @@ applyActionPhen
 applyActionPhen []       _ l = Set.empty
 applyActionPhen (a:as)   t l =
   let (t', l') = aWorld a t l
-      φ1        = aPhen  a t l
-      φrest     = applyActionPhen as t' l'
-  in Set.union φ1 φrest
+      phi1        = aPhen  a t l
+      phirest     = applyActionPhen as t' l'
+  in Set.union phi1 phirest
