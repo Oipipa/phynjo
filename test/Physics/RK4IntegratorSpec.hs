@@ -16,7 +16,6 @@ spec = describe "Physics.RK4Integrator" $ do
       masses = M.fromList [(1,1.0),(2,1.0)]
       zeroV  = (0,0,0) :: Vec3
 
-      -- initial state: two bodies at rest-length distance, zero velocity
       state0 :: State
       state0 = State
         { pos = M.fromList [(1,(0,0,0)),(2,(2,0,0))]

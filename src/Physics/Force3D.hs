@@ -46,11 +46,11 @@ spring3D i j k rest = Force3D $ \st c ->
             | otherwise = (0,0,0)
   in (f, (0,0,0))
 
--- | Linear drag: F = –γ·v, where v is the body’s linear velocity.
+-- | Linear drag: F = –gamma·v, where v is the body’s linear velocity.
 drag3D
-  :: Double    -- ^ drag coefficient γ
+  :: Double    -- ^ drag coefficient gamma
   -> Force3D
-drag3D γ = Force3D $ \st c ->
+drag3D gamma = Force3D $ \st c ->
   let v = lookupVelR c st
-      f = vscale (-γ) v
+      f = vscale (-gamma) v
   in (f, (0,0,0))

@@ -18,13 +18,11 @@ spec = describe "Physics.ForceNR.forceNR" $ do
 
   describe "Drag" $ do
     let c      = AtomicC "x"
-        masses = [(c,2.0)]               -- m = 2kg
-        f      = Drag 0.2                -- γ = 0.2
+        masses = [(c,2.0)] 
+        f      = Drag 0.2 
         rule   = forceNR f masses
         st0    = insertMom c 10 emptyNS
         st1    = applyNumericRule rule dt st0
-        -- F = –γ·(p/m) = –0.2*(10/2) = –1
-        -- Δp = dt*F = –1 ⇒ p' = 9
         expectedP = 9.0
 
     it "domain includes the component" $
@@ -56,5 +54,5 @@ spec = describe "Physics.ForceNR.forceNR" $ do
     it "updates i momentum by +k*(dx-rest)*dt" $
       lookupMom i st1 `shouldBe` expectedPi
 
-    it "updates j momentum by –k*(dx-rest)*dt" $
+    it "updates j momentum by -k*(dx-rest)*dt" $
       lookupMom j st1 `shouldBe` expectedPj

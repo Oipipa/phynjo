@@ -27,9 +27,9 @@ forceNR f masses =
                     let (fx',_,_) = ff acc c
                     in fx'
 
-                  Drag γ    ->
+                  Drag gamma    ->
                     let v = p0 / m
-                    in - γ * v
+                    in - gamma * v
 
                   Spring i j k rest ->
                     let xi   = lookupPos i acc

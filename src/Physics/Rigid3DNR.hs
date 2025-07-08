@@ -87,7 +87,6 @@ kickForce3D masses inertias (Force3D field) =
             ang0 = rsAngVel st
             ori0 = rsOri st
 
-            -- linear update: v ← v + (dt/m)·F
             vel' = M.mapWithKey
                      (\c v0 ->
                         if c `S.member` dom

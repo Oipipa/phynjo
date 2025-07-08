@@ -29,8 +29,8 @@ instance Eq Force where
 -- Manual Show instance so Hspec can display failures.
 instance Show Force where
   show (Gravity g)       = "Gravity "  ++ show g
-  show (Spring i j k ℓ)  = "Spring "   ++ show i ++ " " ++ show j
-                                      ++ " " ++ show k ++ " " ++ show ℓ
+  show (Spring i j k l)  = "Spring "   ++ show i ++ " " ++ show j
+                                      ++ " " ++ show k ++ " " ++ show l
   show (Drag d)          = "Drag "     ++ show d
   show (Custom _)        = "Custom <force>"
 
@@ -43,8 +43,8 @@ f1 <+> f2 = Custom $ \st c ->
 scaleF :: Double -> Force -> Force
 scaleF s = \case
   Gravity g      -> Gravity (s * g)
-  Spring i j k ℓ -> Spring i j (s * k) ℓ
-  Drag γ         -> Drag (s * γ)
+  Spring i j k l -> Spring i j (s * k) l
+  Drag gamma         -> Drag (s * gamma)
   Custom ff      -> Custom $ \st c -> scaleV s (ff st c)
 
 applyFF :: Force -> ForceField

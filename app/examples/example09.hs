@@ -22,8 +22,8 @@ import Text.Printf (printf)
 -- Build the double‐pendulum Lagrangian L(q, q̇)
 doublePendulumL :: ([Coord], Expr)
 doublePendulumL = buildLagrangian $ do
-  θ1  <- defineCoord "θ1"; θ1d <- timeDeriv θ1
-  θ2  <- defineCoord "θ2"; θ2d <- timeDeriv θ2
+  theta1  <- defineCoord "theta1"; theta1d <- timeDeriv theta1
+  theta2  <- defineCoord "theta2"; theta2d <- timeDeriv theta2
 
   let m1 = constant 1.0
       m2 = constant 1.0
@@ -32,20 +32,20 @@ doublePendulumL = buildLagrangian $ do
       g  = constant 9.81
 
       -- Kinetic energy of mass 1
-      t1 = mul (constant 0.5) (mul m1 (mul l1 (mul l1 (mul θ1d θ1d))))
+      t1 = mul (constant 0.5) (mul m1 (mul l1 (mul l1 (mul theta1d theta1d))))
       -- Kinetic energy of mass 2 (with full 2D velocity)
-      vx2 = add (mul l1 θ1d `mul` cosE (var "θ1"))
-                (mul l2 θ2d `mul` cosE (var "θ2"))
-      vy2 = add (mul l1 θ1d `mul` sinE (var "θ1"))
-                (mul l2 θ2d `mul` sinE (var "θ2"))
+      vx2 = add (mul l1 theta1d `mul` cosE (var "theta1"))
+                (mul l2 theta2d `mul` cosE (var "theta2"))
+      vy2 = add (mul l1 theta1d `mul` sinE (var "theta1"))
+                (mul l2 theta2d `mul` sinE (var "theta2"))
       t2  = mul (constant 0.5) (mul m2 (add (mul vx2 vx2) (mul vy2 vy2)))
 
       -- Potential energy (zero at y=0)
-      v1 = mul m1 (mul g (mul l1 (sub (constant 1) (cosE (var "θ1")))))
+      v1 = mul m1 (mul g (mul l1 (sub (constant 1) (cosE (var "theta1")))))
       v2 = mul m2
            (mul g
-             (add (mul l1 (sub (constant 1) (cosE (var "θ1"))))
-                  (mul l2 (sub (constant 1) (cosE (var "θ2"))))))
+             (add (mul l1 (sub (constant 1) (cosE (var "theta1"))))
+                  (mul l2 (sub (constant 1) (cosE (var "theta2"))))))
 
   return (sub (add t1 t2) (add v1 v2))
 
@@ -59,31 +59,31 @@ res1, res2 :: Expr
 res1 = snd (eqns !! 0)
 res2 = snd (eqns !! 1)
 
--- Coefficients for θ̈1, θ̈2 in each residual
+-- Coefficients for thetä1, thetä2 in each residual
 c11, c12, c21, c22, c1_expr, c2_expr :: Expr
-c11    = simplify $ deriv "θ1_ddot" res1
-c12    = simplify $ deriv "θ2_ddot" res1
-c21    = simplify $ deriv "θ1_ddot" res2
-c22    = simplify $ deriv "θ2_ddot" res2
+c11    = simplify $ deriv "theta1_ddot" res1
+c12    = simplify $ deriv "theta2_ddot" res1
+c21    = simplify $ deriv "theta1_ddot" res2
+c22    = simplify $ deriv "theta2_ddot" res2
 
--- Remainder terms: residual minus θ̈-parts
+-- Remainder terms: residual minus thetä-parts
 c1_expr = simplify $ sub res1
-                       ( add (mul c11 (var "θ1_ddot"))
-                             (mul c12 (var "θ2_ddot")) )
+                       ( add (mul c11 (var "theta1_ddot"))
+                             (mul c12 (var "theta2_ddot")) )
 c2_expr = simplify $ sub res2
-                       ( add (mul c21 (var "θ1_ddot"))
-                             (mul c22 (var "θ2_ddot")) )
+                       ( add (mul c21 (var "theta1_ddot"))
+                             (mul c22 (var "theta2_ddot")) )
 
-type State = (Double,Double,Double,Double)  -- (θ1, ω1, θ2, ω2)
+type State = (Double,Double,Double,Double)  -- (theta1, ω1, theta2, ω2)
 
--- Solve 2×2 system for θ̈1, θ̈2 given current state
+-- Solve 2×2 system for thetä1, thetä2 given current state
 computeAccel :: State -> (Double,Double)
-computeAccel (θ1,ω1,θ2,ω2) =
+computeAccel (theta1,ω1,theta2,ω2) =
   let env = M.fromList
-        [ ("θ1",     θ1)
-        , ("θ2",     θ2)
-        , ("θ1_dot", ω1)
-        , ("θ2_dot", ω2)
+        [ ("theta1",     theta1)
+        , ("theta2",     theta2)
+        , ("theta1_dot", ω1)
+        , ("theta2_dot", ω2)
         ]
       [m11,m12,m21,m22] = map (eval env) [c11,c12,c21,c22]
       [r1, r2]          = map (eval env) [c1_expr, c2_expr]
@@ -114,8 +114,8 @@ rk4Step f h s0 = ( x0 + h*(k11+2*k21+2*k31+k41)/6
 
 -- Derivative of full state
 f :: State -> State
-f (θ1,ω1,θ2,ω2) =
-  let (a1,a2) = computeAccel (θ1,ω1,θ2,ω2)
+f (theta1,ω1,theta2,ω2) =
+  let (a1,a2) = computeAccel (theta1,ω1,theta2,ω2)
   in (ω1, a1, ω2, a2)
 
 dt    = 0.01
@@ -130,9 +130,9 @@ simulate = take (steps+1) $ iterate (rk4Step f dt) initial
 
 main :: IO ()
 main = do
-  putStrLn "t,θ1,ω1,θ2,ω2"
+  putStrLn "t,theta1,ω1,theta2,ω2"
   let times = [0, dt .. tmax]
-  mapM_ (\(t,(θ1,ω1,θ2,ω2)) ->
+  mapM_ (\(t,(theta1,ω1,theta2,ω2)) ->
             printf "%.4f,%.6f,%.6f,%.6f,%.6f\n"
-                   t θ1 ω1 θ2 ω2)
+                   t theta1 ω1 theta2 ω2)
         (zip times simulate)

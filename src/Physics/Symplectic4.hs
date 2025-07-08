@@ -32,11 +32,10 @@ symplectic4 dt masses f =
       -- full set of bodies
       domain = S.fromList (map fst masses)
 
-      -- build each slice: ignore the workflow's dt, use α·dt internally
-      mkSlice (ruleF, α) =
+      mkSlice (ruleF, alpha) =
         let nr = NumericRule
                    { nrDomain = domain
-                   , nrStep   = \_ st -> nrStep ruleF (α * dt) st
+                   , nrStep   = \_ st -> nrStep ruleF (alpha * dt) st
                    }
         in Run nr
 

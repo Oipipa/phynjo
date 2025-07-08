@@ -30,28 +30,28 @@ guardScale ok k v = if ok then vscale k v else (0,0,0)
 
 
 dragQuad3D
-  :: Double          -- ^ air/fluid density ρ  (kg·m⁻³)
+  :: Double          -- ^ air/fluid density rho  (kg·m⁻³)
   -> Double          -- ^ drag coefficient C_d (≈0.4–1.2 for bluff bodies)
   -> Double          -- ^ reference area A (m²)
   -> Force3D
-dragQuad3D ρ cd a = Force3D $ \st c ->
+dragQuad3D rho cd a = Force3D $ \st c ->
   let v            = lookupVelR c st
       speed2       = vnorm2 v
-      forceScale   = 0.5 * ρ * cd * a * sqrt speed2
+      forceScale   = 0.5 * rho * cd * a * sqrt speed2
       f            = guardScale (speed2 > 0) (-forceScale) v
   in  (f, (0,0,0))
 
 
 magnus3D
-  :: Double          -- ^ fluid density ρ
+  :: Double          -- ^ fluid density rho
   -> Double          -- ^ lift coefficient C_l (empirical; 0.05–0.3 for balls)
   -> Double          -- ^ reference area A
   -> Double          -- ^ reference radius r (m)
   -> Force3D
-magnus3D ρ cl a r = Force3D $ \st c ->
+magnus3D rho cl a r = Force3D $ \st c ->
   let v         = lookupVelR   c st
       ω         = lookupAngVelR c st
-      f         = vscale (0.5 * ρ * cl * a * r) (cross ω v)
+      f         = vscale (0.5 * rho * cl * a * r) (cross ω v)
   in (f, (0,0,0))
 
 dragTorque3D

@@ -21,14 +21,10 @@ rk4Step h g masses st0 =
           { pos = vel
           , vel = M.mapWithKey (\i _ -> accOne g masses pos i) vel
           }
-
-      -- s1 + s2 (componentwise vector add)
       addSt a b = State
         { pos = M.unionWith vadd (pos a) (pos b)
         , vel = M.unionWith vadd (vel a) (vel b)
         }
-
-      -- k · s (scale both maps)
       scaleSt k st@State{..} = State
         { pos = M.map (vscale k) pos
         , vel = M.map (vscale k) vel

@@ -39,7 +39,6 @@ spec = describe "Physics.Force3D.Extra" $ do
       f `shouldBe` (0,0,0)
 
     it "opposes the velocity direction with expected magnitude" $ do
-      -- v = (10,0,0); F = -½ρCdA |v| v̂ = -0.5*1*1*1*10*10 = -50
       let v         = (10,0,0)
           st        = mkState v (0,0,0)
           (f,_)     = runForce3D (dragQuad3D 1 1 1) st dummyC

@@ -41,9 +41,9 @@ initState = State
   }
   where
     twoPi120 = 2 * pi / 3
-    toPos i  = let θ = fromIntegral (i-1) * twoPi120
-               in ( r * cos θ
-                  , r * sin θ
+    toPos i  = let theta = fromIntegral (i-1) * twoPi120
+               in ( r * cos theta
+                  , r * sin theta
                   , 0.0
                   )
     posMap = M.fromList [ (i, toPos i) | i <- [1..3 :: Int] ]

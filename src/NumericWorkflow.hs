@@ -14,9 +14,7 @@ import qualified Data.Map.Strict    as M
 
 import           NumericRule        (NumericRule(..), applyNumericRule)
 import           NState             (NState(..))
-import           ScalarLiteral      (SLit(..))  -- for mergeSL
-
-----------------------------------------------------------------------
+import           ScalarLiteral      (SLit(..)) 
 
 -- | A numeric workflow: either a single rule, or sequential / parallel composition.
 data NumericWorkflow

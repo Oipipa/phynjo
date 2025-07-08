@@ -27,9 +27,9 @@ spec = describe "Physics.Force" $ do
     let i = AtomicC "i"
         j = AtomicC "j"
         k = 5
-        ℓ = 2
-    scaleF 0.5 (Spring i j k ℓ)
-      `shouldBe` Spring i j (0.5 * k) ℓ
+        l = 2
+    scaleF 0.5 (Spring i j k l)
+      `shouldBe` Spring i j (0.5 * k) l
 
   it "scaleF scales Drag coefficient" $ do
     scaleF 4 (Drag 0.5) `shouldBe` Drag 2.0
