@@ -7,9 +7,9 @@ import Text.Printf               (printf)
 import qualified Data.Set           as S
 
 import Components                (Component(AtomicC))
-import Physics.RigidBody         (InertiaTensor)
-import Physics.RigidState        (RigidState, emptyRigid, insertRigid, lookupPosR)
-import Physics.Rigid3DNR         (RRune(..), applyRRuneWorld, driftTrans)
+import Physics.RigidBodyUtilities.RigidBody         (InertiaTensor)
+import Physics.RigidBodyUtilities.RigidState        (RigidState, emptyRigid, insertRigid, lookupPosR)
+import Physics.RigidBodyUtilities.Rigid3DNR         (RRune(..), applyRRuneWorld, driftTrans)
 import Physics.Collision.Types   (AABB(..), BoundingVolume(..), SphereBB(..))
 import Physics.Collision.BoundingVolume (aabbFromSphere)
 import Physics.Collision.Manager (BroadPhase(..), buildManager, updateManager, runBroadPhase)

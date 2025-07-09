@@ -1,5 +1,5 @@
 {-# LANGUAGE TupleSections #-}
-module Physics.LeapfrogNR
+module Physics.Integrators.LeapfrogNR
   ( Vec3
   , State(..)
   , MassMap

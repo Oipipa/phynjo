@@ -4,14 +4,13 @@ module Physics.ExtraSpec (spec) where
 
 import           Test.Hspec
 
-import           Physics.Extra
-import           Physics.Force3D         (runForce3D)
-import           Physics.RigidState
-import           Physics.LeapfrogNR      (Vec3, vdot)
+import           Physics.Forces.Extra
+import           Physics.Forces.Force3D         (runForce3D)
+import           Physics.RigidBodyUtilities.RigidState
+import           Physics.Integrators.LeapfrogNR      (Vec3, vdot)
 import qualified Data.Map.Strict         as M
-import           Components              (Component (..))   -- <- note the import
+import           Components              (Component (..))
 
--- | A stand-in component used throughout the tests.
 dummyC :: Component
 dummyC = AtomicC "dummy"
 
@@ -56,14 +55,14 @@ spec = describe "Physics.Force3D.Extra" $ do
           (f,_)     = runForce3D (magnus3D 1 0.2 0.02 0.01) st dummyC
       f `shouldBe` (0,0,0)
 
-    it "produces force perpendicular to both v and ω" $ do
+    it "produces force perpendicular to both v and omega" $ do
       let st        = mkState (10,0,0) (0,0,100)
           (f,_)     = runForce3D (magnus3D 1 1 1 0.5) st dummyC
       f `shouldBeNear` (0,250,0)  
   describe "dragTorque3D" $ do
 
     it "is proportional and opposite to angular velocity" $ do
-      let ω         = (0,0,50)
-          st        = mkState (0,0,0) ω
+      let omega         = (0,0,50)
+          st        = mkState (0,0,0) omega
           (_,τ)     = runForce3D (dragTorque3D 2) st dummyC
       τ `shouldBe` (0,0,-100)

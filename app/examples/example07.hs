@@ -22,23 +22,21 @@ import SymbolicPhysics.PrettyEL
 
 pendulum :: ([Coord], Expr)
 pendulum = buildLagrangian $ do
-  θ  <- defineCoord "θ"
-  θd <- timeDeriv θ
+  theta  <- defineCoord "theta"
+  thetad <- timeDeriv theta
 
   let m = constant 1.0
       l = constant 2.0
       g = constant 9.81
 
-      -- T = ½ m ℓ² θ̇²
       tEnergy =
         constant 0.5 `mul` m
                        `mul` l `mul` l
-                       `mul` θd `mul` θd
+                       `mul` thetad `mul` thetad
 
-      -- V = m g ℓ (1 − cos θ)
       vEnergy =
         m `mul` g `mul` l
-          `mul` (sub (constant 1.0) (cosE (var "θ")))
+          `mul` (sub (constant 1.0) (cosE (var "theta")))
 
   return (sub tEnergy vEnergy)
 
@@ -47,7 +45,6 @@ main = do
   let (coords, lagrangian) = pendulum
       rawEqns              = eulerLagrange (coords, lagrangian)
 
-      -- names = ["θ"]
       names = [ q | Coord q <- coords ]
       eqns  = [ (q, expr) | (Coord q, expr) <- rawEqns ]
 

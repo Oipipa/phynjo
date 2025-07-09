@@ -3,8 +3,8 @@ module Physics.Symplectic4Spec (spec) where
 
 import Test.Hspec
 import Components              (Component(AtomicC))
-import Physics.Symplectic4     (symplectic4)
-import Physics.Force           (Force(..))
+import Physics.Integrators.Symplectic4     (symplectic4)
+import Physics.Forces.Force           (Force(..))
 import NumericWorkflow         (applyNumericWorkflow, workflowDomain)
 import NState ( NState
               , emptyNS

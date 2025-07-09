@@ -4,7 +4,7 @@ import Test.Hspec
 import Components                 (Component(AtomicC))
 import NState                     (emptyNS, insertPos, insertMom, lookupPos)
 import NumericWorkflow            (applyNumericWorkflow)
-import Physics.EulerNR            (eulerNR)
+import Physics.Integrators.EulerNR            (eulerNR)
 
 spec :: Spec
 spec = describe "Euler numeric integrator" $ do

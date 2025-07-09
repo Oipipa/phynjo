@@ -2,8 +2,8 @@
 module Physics.ForceNRSpec (spec) where
 
 import Test.Hspec
-import Physics.ForceNR       (forceNR)
-import Physics.Force         (Force(..))
+import Physics.Forces.ForceNR       (forceNR)
+import Physics.Forces.Force         (Force(..))
 import NState                ( emptyNS
                              , insertPos, insertMom
                              , lookupPos, lookupMom )

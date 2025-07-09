@@ -5,9 +5,9 @@ import qualified Data.Map.Strict          as M
 import qualified Data.Set                 as S
 
 import           Physics.Sim.Compose
-import           Physics.Rigid3DNR        (RRune (..), applyRRuneWorld)
-import           Physics.RigidState
-import           Physics.Force3D
+import           Physics.RigidBodyUtilities.Rigid3DNR        (RRune (..), applyRRuneWorld)
+import           Physics.RigidBodyUtilities.RigidState
+import           Physics.Forces.Force3D
 import           Components               (Component (..))
 
 cA, cB :: Component

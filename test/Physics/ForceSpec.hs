@@ -3,9 +3,9 @@
 module Physics.ForceSpec (spec) where
 
 import Test.Hspec
-import Physics.Force
+import Physics.Forces.Force
 import Components           (Component(AtomicC))
-import Physics.LeapfrogNR   (Vec3)
+import Physics.Integrators.LeapfrogNR   (Vec3)
 import NState               (NState)
 
 spec :: Spec

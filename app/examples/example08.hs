@@ -12,7 +12,6 @@ doublePendulum = buildLagrangian $ do
   -- Define generalized coordinates
   theta1  <- defineCoord "theta1"
   theta2  <- defineCoord "theta2"
-  -- Create Expr handles for the coordinates
   let theta1e = var (coordName theta1)
       theta2e = var (coordName theta2)
   -- Time derivatives

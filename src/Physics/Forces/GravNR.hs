@@ -1,6 +1,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
-module Physics.GravNR
-  ( gravNR     -- :: Double -> Double -> [(Component,Double)] -> NumericRule
+module Physics.Forces.GravNR
+  ( gravNR 
   ) where
 
 import           Components         (Component)
@@ -11,9 +11,9 @@ import           NumericRule        (NumericRule(..))
 import           NState             (NState, lookupPos, lookupMom, insertMom)
 
 gravNR
-  :: Double                  -- ^ Δt
-  -> Double                  -- ^ G (gravitational constant)
-  -> [(Component,Double)]    -- ^ list of (body, mass in kg)
+  :: Double
+  -> Double
+  -> [(Component,Double)] 
   -> NumericRule
 gravNR dt g masses =
   let domain = S.fromList (map fst masses)

@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase #-}
 
-module Physics.Force
+module Physics.Forces.Force
   ( Force(..)
   , (<+>)
   , scaleF
@@ -8,7 +8,7 @@ module Physics.Force
   ) where
 
 import Components                (Component)
-import Physics.LeapfrogNR        (Vec3)
+import Physics.Integrators.LeapfrogNR        (Vec3)
 import NState                    (NState)
 
 type ForceField = NState -> Component -> Vec3

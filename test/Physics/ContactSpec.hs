@@ -4,8 +4,8 @@ import           Test.Hspec
 import qualified Data.Map.Strict           as M
 
 import           Physics.Contact
-import           Physics.RigidState
-import           Physics.Rigid3DNR         (RRune, applyRRuneWorld)
+import           Physics.RigidBodyUtilities.RigidState
+import           Physics.RigidBodyUtilities.Rigid3DNR         (RRune, applyRRuneWorld)
 import           Components                (Component (..))
 
 ball :: Component

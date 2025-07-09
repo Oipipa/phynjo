@@ -1,9 +1,9 @@
 {-# LANGUAGE NamedFieldPuns #-}
-module Physics.ForceNR
-  ( forceNR        -- :: Force -> [(Component,Double)] -> NumericRule
+module Physics.Forces.ForceNR
+  ( forceNR 
   ) where
 
-import Physics.Force    (Force(..))
+import Physics.Forces.Force    (Force(..))
 import NState           (NState, lookupPos, lookupMom, insertMom)
 import NumericRule      (NumericRule(..))
 import Components       (Component)

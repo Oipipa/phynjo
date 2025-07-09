@@ -1,9 +1,9 @@
-module Physics.EulerNR
+module Physics.Integrators.EulerNR
   ( eulerNR
   ) where
 
 import Components             (Component)
-import Physics.GravNR         (gravNR)
+import Physics.Forces.GravNR         (gravNR)
 import Physics.DriftNR        (driftNR)
 import NumericWorkflow        (NumericWorkflow(..))
 

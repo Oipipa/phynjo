@@ -74,16 +74,16 @@ c2_expr = simplify $ sub res2
                        ( add (mul c21 (var "theta1_ddot"))
                              (mul c22 (var "theta2_ddot")) )
 
-type State = (Double,Double,Double,Double)  -- (theta1, ω1, theta2, ω2)
+type State = (Double,Double,Double,Double)  -- (theta1, omega1, theta2, omega2)
 
 -- Solve 2×2 system for thetä1, thetä2 given current state
 computeAccel :: State -> (Double,Double)
-computeAccel (theta1,ω1,theta2,ω2) =
+computeAccel (theta1,omega1,theta2,omega2) =
   let env = M.fromList
         [ ("theta1",     theta1)
         , ("theta2",     theta2)
-        , ("theta1_dot", ω1)
-        , ("theta2_dot", ω2)
+        , ("theta1_dot", omega1)
+        , ("theta2_dot", omega2)
         ]
       [m11,m12,m21,m22] = map (eval env) [c11,c12,c21,c22]
       [r1, r2]          = map (eval env) [c1_expr, c2_expr]
@@ -114,9 +114,9 @@ rk4Step f h s0 = ( x0 + h*(k11+2*k21+2*k31+k41)/6
 
 -- Derivative of full state
 f :: State -> State
-f (theta1,ω1,theta2,ω2) =
-  let (a1,a2) = computeAccel (theta1,ω1,theta2,ω2)
-  in (ω1, a1, ω2, a2)
+f (theta1,omega1,theta2,omega2) =
+  let (a1,a2) = computeAccel (theta1,omega1,theta2,omega2)
+  in (omega1, a1, omega2, a2)
 
 dt    = 0.01
 tmax  = 20.0
@@ -130,9 +130,9 @@ simulate = take (steps+1) $ iterate (rk4Step f dt) initial
 
 main :: IO ()
 main = do
-  putStrLn "t,theta1,ω1,theta2,ω2"
+  putStrLn "t,theta1,omega1,theta2,omega2"
   let times = [0, dt .. tmax]
-  mapM_ (\(t,(theta1,ω1,theta2,ω2)) ->
+  mapM_ (\(t,(theta1,omega1,theta2,omega2)) ->
             printf "%.4f,%.6f,%.6f,%.6f,%.6f\n"
-                   t theta1 ω1 theta2 ω2)
+                   t theta1 omega1 theta2 omega2)
         (zip times simulate)

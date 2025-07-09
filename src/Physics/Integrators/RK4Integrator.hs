@@ -1,19 +1,19 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Physics.RK4Integrator
+module Physics.Integrators.RK4Integrator
   ( rk4Step
   , integrateRK4
   ) where
 
-import Physics.LeapfrogNR    (State(..), MassMap, accOne, vadd, vscale)
+import Physics.Integrators.LeapfrogNR    (State(..), MassMap, accOne, vadd, vscale)
 import qualified Data.Map.Strict as M
 
 rk4Step
-  :: Double     -- ^ timestep h
-  -> Double     -- ^ gravitational constant G
-  -> MassMap    -- ^ body-id → mass (kg)
-  -> State      -- ^ current state
-  -> State      -- ^ next state
+  :: Double 
+  -> Double 
+  -> MassMap 
+  -> State 
+  -> State 
 rk4Step h g masses st0 = 
   let
       deriv st@State{..} =

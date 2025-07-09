@@ -1,6 +1,6 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Physics.RigidBody
+module Physics.RigidBodyUtilities.RigidBody
   ( RigidBody(..)
   , InertiaTensor
   , Quaternion
@@ -8,26 +8,22 @@ module Physics.RigidBody
   ) where
 
 import Components        (Component)
-import Physics.LeapfrogNR (Vec3)
+import Physics.Integrators.LeapfrogNR (Vec3)
 
--- | A 3×3 inertia tensor, stored as three row‐vectors.
 type InertiaTensor = (Vec3, Vec3, Vec3)
 
--- | A quaternion (w, x, y, z)
 type Quaternion = (Double, Double, Double, Double)
 
--- | A rigid‐body’s parameters and initial state.
 data RigidBody = RigidBody
-  { rbIdent   :: Component      -- ^ unique id
-  , rbMass    :: Double         -- ^ mass in kg
-  , rbInertia :: InertiaTensor  -- ^ inertia tensor about COM
-  , rbPos0    :: Vec3           -- ^ initial position (m)
-  , rbOri0    :: Quaternion     -- ^ initial orientation
-  , rbVel0    :: Vec3           -- ^ initial linear velocity (m/s)
-  , rbAngVel0 :: Vec3           -- ^ initial angular velocity (rad/s)
+  { rbIdent   :: Component 
+  , rbMass    :: Double 
+  , rbInertia :: InertiaTensor 
+  , rbPos0    :: Vec3 
+  , rbOri0    :: Quaternion 
+  , rbVel0    :: Vec3 
+  , rbAngVel0 :: Vec3 
   } deriving (Eq, Show)
 
--- | Smart‐constructor for a rigid body
 mkRigidBody
   :: Component
   -> Double          -- ^ mass

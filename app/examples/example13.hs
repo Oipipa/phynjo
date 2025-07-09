@@ -2,7 +2,7 @@
 
 module Main where
 
-import Physics.LeapfrogNR    (State(..), MassMap, integrateN, totalEnergy)
+import Physics.Integrators.LeapfrogNR    (State(..), MassMap, integrateN, totalEnergy)
 import qualified Data.Map.Strict as M
 import Data.List             (intercalate)
 import Text.Printf           (printf)

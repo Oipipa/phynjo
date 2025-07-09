@@ -14,7 +14,7 @@ module Physics.Math.Vec3Util
   , approxEqVec
   ) where
 
-import           Physics.LeapfrogNR (Vec3)
+import           Physics.Integrators.LeapfrogNR (Vec3)
 
 vzero :: Vec3
 vzero = (0,0,0)

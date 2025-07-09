@@ -1,12 +1,12 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
-module Physics.ForceDSL
+module Physics.Forces.ForceDSL
   ( addForce
   , addForces
   ) where
 
-import Physics.Leapfrog1D      (leapfrog1D)
-import Physics.Force           (Force, (<+>))
+import Physics.Integrators.Leapfrog1D      (leapfrog1D)
+import Physics.Forces.Force           (Force, (<+>))
 import System.SystemForces     (System(..))
 import UnitLiteral             (getLiteral)
 import NumericWorkflow         (NumericWorkflow(..))

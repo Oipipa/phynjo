@@ -11,9 +11,9 @@ import qualified Data.Set                as S
 import qualified Data.Map.Strict         as M
 import           Data.List               (foldl', tails)
 
-import           Physics.LeapfrogNR      (Vec3, vadd, vsub, vscale, vdot)
-import           Physics.RigidState      (RigidState (..))
-import           Physics.Rigid3DNR       (RRune (..))
+import           Physics.Integrators.LeapfrogNR      (Vec3, vadd, vsub, vscale, vdot)
+import           Physics.RigidBodyUtilities.RigidState      (RigidState (..))
+import           Physics.RigidBodyUtilities.Rigid3DNR       (RRune (..))
 
 invertTensor :: InertiaTensor -> InertiaTensor
 invertTensor ((a,b,c),(d,e,f),(g,h,i)) =

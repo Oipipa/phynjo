@@ -9,14 +9,14 @@ import           Numeric                (showFFloat)
 import           System.IO              (hPutStrLn, stdout)
 
 import           Components             (Component (..))
-import           Physics.LeapfrogNR     (Vec3, vscale)
-import           Physics.RigidBody      (Quaternion)
-import           Physics.RigidState
-import           Physics.Rigid3DNR      ( RRune (..), applyRRuneWorld
+import           Physics.Integrators.LeapfrogNR     (Vec3, vscale)
+import           Physics.RigidBodyUtilities.RigidBody      (Quaternion)
+import           Physics.RigidBodyUtilities.RigidState
+import           Physics.RigidBodyUtilities.Rigid3DNR      ( RRune (..), applyRRuneWorld
                                         , driftTrans, driftRot
                                         , kickForce3D )
-import           Physics.Force3D        (gravity3D, Force3D (..) )
-import qualified Physics.Extra  as F
+import           Physics.Forces.Force3D        (gravity3D, Force3D (..) )
+import qualified Physics.Forces.Extra  as F
 import           Physics.Contact (contactGroundF)
 
 ball        :: Component
@@ -38,11 +38,11 @@ rhoAir = 1.225
 cdBall = 0.46
 clBall = 0.18
 
-cOmega = 1.0e-8      -- N m s   (~0.9 s half-life)
+cOmega = 1.0e-8 
 
 eRest, muK :: Double -> Double
-eRest vn = 0.87 - 0.02 * min 4 vn      -- drops slightly with impact speed
-muK  _  = 0.20                         -- kinetic μ
+eRest vn = 0.87 - 0.02 * min 4 vn 
+muK  _  = 0.20 
 
 muStatic, epsStick :: Double
 muStatic = 0.35

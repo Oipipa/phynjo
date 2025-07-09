@@ -1,6 +1,6 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Physics.Extra
+module Physics.Forces.Extra
   ( 
     dragQuad3D 
   , magnus3D
@@ -9,9 +9,9 @@ module Physics.Extra
   , sumForces3D
   ) where
 
-import           Physics.Force3D       (Force3D (..))
-import           Physics.RigidState    (RigidState, lookupVelR, lookupAngVelR)
-import           Physics.LeapfrogNR    (Vec3, vscale, vadd, vdot)
+import           Physics.Forces.Force3D       (Force3D (..))
+import           Physics.RigidBodyUtilities.RigidState    (RigidState, lookupVelR, lookupAngVelR)
+import           Physics.Integrators.LeapfrogNR    (Vec3, vscale, vadd, vdot)
 import qualified Data.Map.Strict       as M
 import           Data.Semigroup        (Semigroup (..))
 

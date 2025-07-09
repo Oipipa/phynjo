@@ -1,5 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
-module Physics.Symplectic4
+module Physics.Integrators.Symplectic4
   ( symplectic4    -- :: Double -> [(Component,Double)] -> Force -> NumericWorkflow
   ) where
 
@@ -7,18 +7,18 @@ import           Components           (Component)
 import qualified Data.Set             as S
 
 import           Physics.DriftNR      (driftNR)
-import           Physics.ForceNR      (forceNR)
-import           Physics.Force        (Force)
+import           Physics.Forces.ForceNR      (forceNR)
+import           Physics.Forces.Force        (Force)
 import           NumericRule          (NumericRule(..))
 import           NumericWorkflow      (NumericWorkflow(..))
 
 symplectic4
-  :: Double                -- ^ full Δt
-  -> [(Component,Double)]  -- ^ bodies with masses
-  -> Force                 -- ^ force field
+  :: Double 
+  -> [(Component,Double)] 
+  -> Force 
   -> NumericWorkflow
 symplectic4 dt masses f =
-  let -- Forest–Ruth coefficients
+  let 
       θ  = 1 / (2 - 2 ** (1/3))
       c1 = θ / 2
       c2 = (1 - θ) / 2

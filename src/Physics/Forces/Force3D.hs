@@ -1,6 +1,6 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Physics.Force3D
+module Physics.Forces.Force3D
   ( Force3D(..)
   , runForce3D
   , gravity3D
@@ -9,8 +9,8 @@ module Physics.Force3D
   ) where
 
 import Components             (Component)
-import Physics.RigidState     (RigidState, lookupPosR, lookupVelR)
-import Physics.LeapfrogNR     (Vec3, vsub, vnorm2, vscale)
+import Physics.RigidBodyUtilities.RigidState     (RigidState, lookupPosR, lookupVelR)
+import Physics.Integrators.LeapfrogNR     (Vec3, vsub, vnorm2, vscale)
 import qualified Data.Map.Strict as M
 
 newtype Force3D = Force3D

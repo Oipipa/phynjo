@@ -2,18 +2,18 @@
 
 module Main where
 
-import Physics.RigidState    ( RigidState(..)
+import Physics.RigidBodyUtilities.RigidState    ( RigidState(..)
                              , emptyRigid
                              , insertRigid
                              )
-import Physics.Rigid3DNR
+import Physics.RigidBodyUtilities.Rigid3DNR
                             ( RRune
                             , applyRRuneWorld
                             , driftTrans
                             , kickForce3D
                             )
 
-import Physics.Force3D       ( gravity3D, Force3D(..) )
+import Physics.Forces.Force3D       ( gravity3D, Force3D(..) )
 import Components            ( Component(AtomicC) )
 import qualified Data.Map.Strict as M
 import Text.Printf           ( printf )

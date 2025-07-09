@@ -4,9 +4,9 @@ module Physics.RigidStateSpec (spec) where
 
 import Test.Hspec
 import Components            (Component(AtomicC))
-import Physics.RigidState
-import Physics.RigidBody     (Quaternion)
-import Physics.LeapfrogNR    (Vec3)
+import Physics.RigidBodyUtilities.RigidState
+import Physics.RigidBodyUtilities.RigidBody     (Quaternion)
+import Physics.Integrators.LeapfrogNR    (Vec3)
 
 spec :: Spec
 spec = describe "Physics.RigidState" $ do

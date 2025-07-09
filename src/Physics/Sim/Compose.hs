@@ -11,9 +11,9 @@ import qualified Data.Set                 as S
 import qualified Data.Map.Strict          as M
 
 import           Components               (Component)
-import           Physics.Force3D          (Force3D)
-import qualified Physics.Extra    as F
-import           Physics.Rigid3DNR        (RRune (..), kickForce3D)
+import           Physics.Forces.Force3D          (Force3D)
+import qualified Physics.Forces.Extra    as F
+import           Physics.RigidBodyUtilities.Rigid3DNR        (RRune (..), kickForce3D)
 
 composeRRune :: [RRune] -> RRune
 composeRRune [] = error "composeRRune: empty list"

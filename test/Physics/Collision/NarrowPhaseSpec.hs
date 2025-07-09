@@ -4,7 +4,7 @@ module Physics.Collision.NarrowPhaseSpec (spec) where
 
 import Test.Hspec
 import Physics.Collision.NarrowPhase (narrowPhase, Shape(..))
-import Physics.Rigid3DNR            (RRune(..))
+import Physics.RigidBodyUtilities.Rigid3DNR            (RRune(..))
 import Components                   (Component(AtomicC))
 import Data.Set                     (Set)
 import qualified Data.Set as S

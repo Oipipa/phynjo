@@ -5,8 +5,8 @@ module Physics.ForceDSLSpec (spec) where
 import Test.Hspec
 import Control.Exception       (evaluate)
 
-import Physics.ForceDSL        (addForce, addForces)
-import Physics.Force           (Force(..), (<+>))
+import Physics.Forces.ForceDSL        (addForce, addForces)
+import Physics.Forces.Force           (Force(..), (<+>))
 import NumericWorkflow         (workflowDomain)
 import Components              (Component(AtomicC))
 import Body                     (mkBody)

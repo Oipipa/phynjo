@@ -1,6 +1,6 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Physics.Rigid3DNR
+module Physics.RigidBodyUtilities.Rigid3DNR
   ( RRune(..)
   , applyRRuneWorld
   , driftTrans
@@ -9,9 +9,9 @@ module Physics.Rigid3DNR
   ) where
 
 import Components            (Component)
-import Physics.RigidState    (RigidState(..))
-import Physics.Force3D       (Force3D(..))
-import Physics.LeapfrogNR    ( Vec3
+import Physics.RigidBodyUtilities.RigidState    (RigidState(..))
+import Physics.Forces.Force3D       (Force3D(..))
+import Physics.Integrators.LeapfrogNR    ( Vec3
                              , vadd
                              , vsub
                              , vscale )

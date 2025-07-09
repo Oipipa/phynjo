@@ -6,7 +6,7 @@ module Physics.Collision.NarrowPhase
   ) where
 
 import Physics.Contact      (contactSpheresF)
-import Physics.Rigid3DNR    (RRune)
+import Physics.RigidBodyUtilities.Rigid3DNR    (RRune)
 import Components            (Component)
 import Physics.Math.Vec3Util (Vec3)
 import Data.Set             (Set)

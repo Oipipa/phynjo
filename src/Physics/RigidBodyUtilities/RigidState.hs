@@ -1,6 +1,6 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Physics.RigidState
+module Physics.RigidBodyUtilities.RigidState
   ( RigidState(..)
   , emptyRigid
   , insertRigid
@@ -11,8 +11,8 @@ module Physics.RigidState
   ) where
 
 import Components            (Component)
-import Physics.LeapfrogNR    (Vec3)
-import Physics.RigidBody     (Quaternion)
+import Physics.Integrators.LeapfrogNR    (Vec3)
+import Physics.RigidBodyUtilities.RigidBody     (Quaternion)
 import Data.Map.Strict       (Map)
 import qualified Data.Map.Strict as M
 
@@ -23,17 +23,15 @@ data RigidState = RigidState
   , rsAngVel :: Map Component Vec3
   } deriving (Eq, Show)
 
--- | Empty state: all maps empty.
 emptyRigid :: RigidState
 emptyRigid = RigidState M.empty M.empty M.empty M.empty
 
--- | Insert or update a body’s full state.
 insertRigid
   :: Component
-  -> Vec3        -- ^ position
-  -> Quaternion  -- ^ orientation
-  -> Vec3        -- ^ linear velocity
-  -> Vec3        -- ^ angular velocity
+  -> Vec3 
+  -> Quaternion 
+  -> Vec3 
+  -> Vec3 
   -> RigidState
   -> RigidState
 insertRigid c pos ori vel ang s@RigidState{..} =

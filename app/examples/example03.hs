@@ -13,8 +13,8 @@ import NState                        ( NState
                                      , lookupPos
                                      , lookupMom
                                      )
-import Physics.Force                 (Force(..))
-import Physics.ForceDSL              (addForces)
+import Physics.Forces.Force                 (Force(..))
+import Physics.Forces.ForceDSL              (addForces)
 import Numeric.Units.Dimensional.Prelude
   ( (*~), (/~)
   , kilo, gram
