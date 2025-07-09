@@ -3,9 +3,9 @@ module ProcessSpec (spec) where
 
 import Test.Hspec
 import Action      (Action(..))
-import Process     (Process(..), applyProcessWorld, applyProcessPhen)
-import Literal     (emptyLiteral)
-import Transition  (singletonPhen, epsilon)
+import BooleanUtils.Process     (Process(..), applyProcessWorld, applyProcessPhen)
+import BooleanUtils.Literal     (emptyLiteral)
+import BooleanUtils.Transition  (singletonPhen, epsilon)
 import Components  (Component(AtomicC))
 import qualified Data.Set as Set
 

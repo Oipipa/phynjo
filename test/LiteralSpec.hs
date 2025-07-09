@@ -4,7 +4,7 @@ module LiteralSpec (spec) where
 import Test.Hspec
 import qualified Data.Set as Set
 
-import Literal
+import BooleanUtils.Literal
 import Components (Component(AtomicC, Composite))
 
 spec :: Spec

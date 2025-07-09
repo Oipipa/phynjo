@@ -4,8 +4,8 @@ module Action
   , applyActionPhen
   ) where
 
-import Literal    (Literal)
-import Transition (Phenomenon)
+import BooleanUtils.Literal    (Literal)
+import BooleanUtils.Transition (Phenomenon)
 import qualified Data.Set as Set
 
 data Action = Action
@@ -13,23 +13,20 @@ data Action = Action
   , aPhen  :: Int -> Literal -> Phenomenon
   }
 
--- | Sequentially apply a list of actions to get the final (tick, literal).
 applyActionWorld
-  :: [Action]   -- ^ actions in sequence
-  -> Int        -- ^ starting tick
-  -> Literal    -- ^ starting literal
+  :: [Action] 
+  -> Int 
+  -> Literal 
   -> (Int, Literal)
 applyActionWorld []       t l = (t, l)
 applyActionWorld (a:as)   t l =
   let (t', l') = aWorld a t l
   in applyActionWorld as t' l'
 
--- | Sequentially collect all phenomena from a list of actions.
---   Note: for sequential composition we simply union all transitions.
 applyActionPhen
-  :: [Action]   -- ^ actions in sequence
-  -> Int        -- ^ starting tick
-  -> Literal    -- ^ starting literal
+  :: [Action] 
+  -> Int 
+  -> Literal 
   -> Phenomenon
 applyActionPhen []       _ l = Set.empty
 applyActionPhen (a:as)   t l =

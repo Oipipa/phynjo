@@ -4,10 +4,10 @@ module EventWorkflowSpec (spec) where
 import Test.Hspec
 import qualified Data.Set        as Set
 
-import Literal               (emptyLiteral, literalFromList)
-import Transition            (singletonPhen, epsilon)
-import EventRule             (EventRule(..), ruleToAction)
-import EventWorkflow         (EventWorkflow(..), toProcess
+import BooleanUtils.Literal               (emptyLiteral, literalFromList)
+import BooleanUtils.Transition            (singletonPhen, epsilon)
+import BooleanUtils.EventRule             (EventRule(..), ruleToAction)
+import BooleanUtils.EventWorkflow         (EventWorkflow(..), toProcess
                              , applyEventWorkflowWorld
                              , applyEventWorkflowPhen)
 import Components            (Component(AtomicC))

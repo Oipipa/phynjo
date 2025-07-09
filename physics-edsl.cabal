@@ -21,12 +21,12 @@ library
     src
   exposed-modules:
       Components
-    , Literal
-    , Transition
+    , BooleanUtils.Literal
+    , BooleanUtils.Transition
     , Action
-    , Process
-    , EventRule
-    , EventWorkflow
+    , BooleanUtils.Process
+    , BooleanUtils.EventRule
+    , BooleanUtils.EventWorkflow
     , Constraint
     , UnitLiteral
     , Body

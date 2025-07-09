@@ -4,11 +4,11 @@ module ConstraintSpec (spec) where
 import Test.Hspec
 import qualified Data.Set as Set
 
-import Literal               (emptyLiteral, getLiteral, literalFromList)
-import Transition            (singletonPhen, epsilon)
+import BooleanUtils.Literal               (emptyLiteral, getLiteral, literalFromList)
+import BooleanUtils.Transition            (singletonPhen, epsilon)
 import Components            (Component(AtomicC))
-import EventRule             (EventRule(..))
-import EventWorkflow         
+import BooleanUtils.EventRule             (EventRule(..))
+import BooleanUtils.EventWorkflow         
   ( EventWorkflow(..)
   , applyEventWorkflowWorld
   )

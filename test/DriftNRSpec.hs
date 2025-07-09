@@ -9,13 +9,12 @@ import Physics.DriftNR (driftNR)
 spec :: Spec
 spec = describe "Numeric drift rule" $ do
   let c     = AtomicC "ball"
-      m     = 2.0               -- kg
+      m     = 2.0 
       dt    = 0.1
       rule  = driftNR [(c,m)]
 
-      -- start: q = 0 m, p = 10 kg·m/s
-      start = insertMom c 10    -- mom first (p = 10)
-            $ insertPos c 0     -- pos next (q = 0)
+      start = insertMom c 10 
+            $ insertPos c 0 
             $ emptyNS
 
       -- apply one step

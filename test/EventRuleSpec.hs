@@ -3,10 +3,10 @@ module EventRuleSpec (spec) where
 
 import Test.Hspec
 import Components        (Component(AtomicC))
-import Literal           (emptyLiteral, literalFromList, unionLiteral, getLiteral)
-import Transition        (singletonPhen, epsilon)
+import BooleanUtils.Literal           (emptyLiteral, literalFromList, unionLiteral, getLiteral)
+import BooleanUtils.Transition        (singletonPhen, epsilon)
 import Action            (applyActionWorld, applyActionPhen)
-import EventRule         (EventRule(..), ruleToAction)
+import BooleanUtils.EventRule         (EventRule(..), ruleToAction)
 import qualified Data.Set as Set
 
 spec :: Spec

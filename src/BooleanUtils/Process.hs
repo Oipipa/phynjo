@@ -1,12 +1,12 @@
-module Process
+module BooleanUtils.Process
   ( Process(..)
   , applyProcessWorld
   , applyProcessPhen
   ) where
 
 import Action      (Action(..))
-import Literal     (Literal, unionLiteral)
-import Transition  (Phenomenon, unionPhen)
+import BooleanUtils.Literal     (Literal, unionLiteral)
+import BooleanUtils.Transition  (Phenomenon, unionPhen)
 import qualified Data.Set as Set
 
 -- | A Process is either a single Action, a sequential composition, or a parallel composition.

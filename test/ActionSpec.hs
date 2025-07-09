@@ -2,8 +2,8 @@
 module ActionSpec (spec) where
 
 import Test.Hspec
-import Literal    (emptyLiteral)
-import Transition (Phenomenon, emptyPhen, singletonPhen, Transition(..), epsilon)
+import BooleanUtils.Literal    (emptyLiteral)
+import BooleanUtils.Transition (Phenomenon, emptyPhen, singletonPhen, Transition(..), epsilon)
 import Action     (Action(..), applyActionWorld, applyActionPhen)
 import Components (Component(AtomicC))
 import qualified Data.Set as Set

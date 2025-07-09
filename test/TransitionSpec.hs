@@ -3,7 +3,7 @@ module TransitionSpec (spec) where
 
 import Test.Hspec
 import Components (Component(AtomicC, Composite))
-import Transition
+import BooleanUtils.Transition
 import qualified Data.Set as Set
 
 spec :: Spec

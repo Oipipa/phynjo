@@ -3,19 +3,16 @@ module Constraint
   , preservesInvariant
   ) where
 
-import Literal            (Literal)
-import EventWorkflow      (EventWorkflow, applyEventWorkflowWorld)
+import BooleanUtils.Literal            (Literal)
+import BooleanUtils.EventWorkflow      (EventWorkflow, applyEventWorkflowWorld)
 
--- | An invariant is a predicate on system state (a Literal).
 type Invariant = Literal -> Bool
 
--- | A workflow preserves an invariant if the invariant holds on both
---   the initial and the final flag‐set after running the workflow.
 preservesInvariant
-  :: EventWorkflow  -- ^ the workflow to check
-  -> Int            -- ^ starting tick
-  -> Literal        -- ^ starting flags
-  -> Invariant      -- ^ the invariant predicate
+  :: EventWorkflow 
+  -> Int 
+  -> Literal 
+  -> Invariant 
   -> Bool
 preservesInvariant wf t0 st inv =
   let (_, st') = applyEventWorkflowWorld wf t0 st
