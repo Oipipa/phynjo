@@ -2,7 +2,7 @@
 
 
 module Physics.Math.Vec3Util
-  ( Vec3        -- re-export
+  ( Vec3 
   , vzero
   , vadd, (<+>)
   , vsub, (<->)
@@ -15,9 +15,6 @@ module Physics.Math.Vec3Util
   ) where
 
 import           Physics.LeapfrogNR (Vec3)
-
---------------------------------------------------------------------------------
---  Basic operations -----------------------------------------------------------
 
 vzero :: Vec3
 vzero = (0,0,0)
@@ -53,10 +50,10 @@ vhat v =
   let n = vnorm v
   in if n < 1e-12 then vzero else vscale (1/n) v
 
--- | Approximate equality with absolute tolerance @ε@ = 1e-9 for each component.
+-- | Approximate equality with absolute tolerance @epsilon@ = 1e-9 for each component.
 approxEqVec :: Vec3 -> Vec3 -> Bool
 approxEqVec (ax,ay,az) (bx,by,bz) =
-  let ε = 1e-9
-  in  abs (ax - bx) < ε
-   && abs (ay - by) < ε
-   && abs (az - bz) < ε
+  let epsilon = 1e-9
+  in  abs (ax - bx) < epsilon
+   && abs (ay - by) < epsilon
+   && abs (az - bz) < epsilon

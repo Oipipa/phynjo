@@ -39,10 +39,10 @@ gravityWithPivot g pivot massMap = Force3D $ \st c ->
       (px,py,pz)   = pivot
       lx = x - px; ly = y - py; lz = z - pz
       -- torque = lever × F
-      τx = ly*fz - lz*fy
-      τy = lz*fx - lx*fz
-      τz = lx*fy - ly*fx
-  in (f, (τx, τy, τz))
+      taux = ly*fz - lz*fy
+      tauy = lz*fx - lx*fz
+      tauz = lx*fy - ly*fx
+  in (f, (taux, tauy, tauz))
 
 makeStep
   :: [(Component,Double)] 

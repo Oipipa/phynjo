@@ -2,50 +2,23 @@
 
 module Main where
 
-import           Data.List                 (intercalate)
-import           Text.Printf               (printf)
-import qualified Data.Map.Strict           as M
-import qualified Data.Set                  as Set
+import Data.List                 (intercalate)
+import Text.Printf               (printf)
+import qualified Data.Set           as S
 
-import           Components                (Component(AtomicC))
-import           Physics.RigidBody         (InertiaTensor)
-import           Physics.RigidState        ( RigidState
-                                           , emptyRigid
-                                           , insertRigid
-                                           , lookupPosR
-                                           )
-import           Physics.Rigid3DNR         ( RRune(..)
-                                           , applyRRuneWorld
-                                           , driftTrans
-                                           )
-import           Physics.Contact           (contactSpheresF)
+import Components                (Component(AtomicC))
+import Physics.RigidBody         (InertiaTensor)
+import Physics.RigidState        (RigidState, emptyRigid, insertRigid, lookupPosR)
+import Physics.Rigid3DNR         (RRune(..), applyRRuneWorld, driftTrans)
+import Physics.Collision.Types   (AABB(..), BoundingVolume(..), SphereBB(..))
+import Physics.Collision.BoundingVolume (aabbFromSphere)
+import Physics.Collision.Manager (BroadPhase(..), buildManager, updateManager, runBroadPhase)
+import Physics.Collision.NarrowPhase (Shape(..), narrowPhase)
 
 sphereInertia :: Double -> Double -> InertiaTensor
 sphereInertia m r =
   let i = (2/5) * m * r * r
   in ((i,0,0),(0,i,0),(0,0,i))
-
-makeStep
-  :: [(Component,Double,Double,InertiaTensor)]  -- specs
-  -> Double                                      -- restitution
-  -> Double                                      -- friction
-  -> Int                                         -- solver iterations
-  -> RRune
-makeStep specs e μ it =
-  let comps    = [c | (c,_,_,_) <- specs]
-      -- half‐drift and collision runes
-      drift    = driftTrans comps
-      collide = contactSpheresF (const e) (const μ) it specs
-      -- union of domains
-      dom      = Set.union (domainR drift) (domainR collide)
-
-      step dt st0 =
-        let half    = dt/2
-            st1     = applyRRuneWorld drift   half st0
-            st2     = applyRRuneWorld collide dt   st1
-            st3     = applyRRuneWorld drift   half st2
-        in st3
-  in RR { domainR = dom, stepR = step }
 
 formatCSV :: Double -> RigidState -> String
 formatCSV t st =
@@ -59,36 +32,40 @@ formatCSV t st =
 
 main :: IO ()
 main = do
-  let r      = 0.5
-      m      = 1.0
-      inertia= sphereInertia m r
-
-      c1     = AtomicC "s1"
-      c2     = AtomicC "s2"
-
-      initSt = insertRigid c2 ( 1,0,0) (1,0,0,0) (-1,0,0) (0,0,0)
-             $ insertRigid c1 (-1,0,0) (1,0,0,0) ( 1,0,0) (0,0,0)
-             $ emptyRigid
-
-      specs      =
-        [ (c1, r, m, inertia)
-        , (c2, r, m, inertia)
-        ]
-
-      restitution = 1.0    -- perfectly elastic
-      friction    = 0.0    -- no friction
-      iterations  = 1      -- one pass is enough here
-
-      -- 3) Build our Strang‐split collision step
-      stepRune   = makeStep specs restitution friction iterations
-
-      dt    = 0.01
-      steps = 200
+  let r           = 0.5
+      m           = 1.0
+      inertia     = sphereInertia m r
+      c1          = AtomicC "s1"
+      c2          = AtomicC "s2"
+      comps       = [c1,c2]
+      initSt      = insertRigid c2 ( 1,0,0) (1,0,0,0) (-1,0,0) (0,0,0)
+                  $ insertRigid c1 (-1,0,0) (1,0,0,0) ( 1,0,0) (0,0,0)
+                  $ emptyRigid
+      specs       = [(c1,r,m,inertia),(c2,r,m,inertia)]
+      shapes      = [(c1,ShSphere r),(c2,ShSphere r)]
+      gridSize    = 2*r
+      restitution = 1.0
+      friction    = 0.0
+      iterations  = 1
+      driftRule   = driftTrans comps
+      dt          = 0.01
+      steps       = 200
 
   putStrLn "time,x1,y1,z1,x2,y2,z2"
   let loop 0 _ _ = return ()
       loop n t st = do
         putStrLn (formatCSV t st)
-        let st' = applyRRuneWorld stepRune dt st
-        loop (n-1) (t+dt) st'
+        let half = dt/2
+            bbs  = [ (c, BB_AABB (aabbFromSphere (SphereBB (lookupPosR c st) r)))
+                   | (c,ShSphere _) <- shapes
+                   ]
+            cm0   = buildManager (BP_Grid gridSize) bbs
+            cm1   = updateManager cm0 bbs
+            pairs = runBroadPhase cm1
+            col   = narrowPhase (const restitution) (const friction) iterations shapes pairs
+            st1   = applyRRuneWorld driftRule half st
+            st2   = applyRRuneWorld col        dt   st1
+            st3   = applyRRuneWorld driftRule half st2
+        loop (n-1) (t+dt) st3
+
   loop steps 0 initSt

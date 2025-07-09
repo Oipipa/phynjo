@@ -35,6 +35,12 @@ import qualified Physics.ContactSpec
 import qualified Physics.ExtraSpec
 import qualified Physics.Math.Vec3UtilSpec
 import qualified Physics.Sim.ComposeSpec
+import qualified Physics.Collision.TypesSpec
+import qualified Physics.Collision.BoundingVolumeSpec
+import qualified Physics.Collision.BroadPhase.SAPSpec
+import qualified Physics.Collision.BroadPhase.UniformGridSpec
+import qualified Physics.Collision.ManagerSpec
+import qualified Physics.Collision.NarrowPhaseSpec
 
 main :: IO ()
 main = hspec $ do
@@ -70,3 +76,9 @@ main = hspec $ do
   Physics.ExtraSpec.spec
   Physics.Math.Vec3UtilSpec.spec
   Physics.Sim.ComposeSpec.spec
+  Physics.Collision.TypesSpec.spec
+  Physics.Collision.BoundingVolumeSpec.spec
+  Physics.Collision.BroadPhase.SAPSpec.spec
+  Physics.Collision.BroadPhase.UniformGridSpec.spec
+  Physics.Collision.ManagerSpec.spec
+  Physics.Collision.NarrowPhaseSpec.spec

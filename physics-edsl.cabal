@@ -72,6 +72,12 @@ library
     , Physics.Extra
     , Physics.Math.Vec3Util
     , Physics.Sim.Compose
+    , Physics.Collision.Types
+    , Physics.Collision.BoundingVolume
+    , Physics.Collision.BroadPhase.SweepAndPrune
+    , Physics.Collision.BroadPhase.UniformGrid
+    , Physics.Collision.Manager
+    , Physics.Collision.NarrowPhase
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1
@@ -96,7 +102,7 @@ executable physics-edsl
   hs-source-dirs:
     app
   main-is:
-    examples/example13.hs
+    examples/example11.hs
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1
