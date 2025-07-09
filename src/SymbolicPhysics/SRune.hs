@@ -10,20 +10,12 @@ import Components (Component)
 import SymbolicPhysics.SState (SState)
 import SymbolicPhysics.SymbolicD (Expr)
 
-----------------------------------------------------------------------
--- Data type
-----------------------------------------------------------------------
-
 data SRune = SR
   { domainS :: S.Set Component
-  , stepS   :: Expr    -- ^ Δt (can be a variable, constant, etc)
-            -> SState  -- ^ current state
-            -> SState  -- ^ next state
+  , stepS   :: Expr    
+            -> SState  
+            -> SState  
   }
-
-----------------------------------------------------------------------
--- Helper to run a rune once
-----------------------------------------------------------------------
 
 applySRuneWorld :: SRune -> Expr -> SState -> SState
 applySRuneWorld SR{stepS} dt st = stepS dt st

@@ -18,7 +18,7 @@ import SymbolicPhysics.SState  (SState(..))
 data SSpell
   = SRun SRune
   | SSeq SSpell SSpell
-  | SPar SSpell SSpell        -- parallel, must be disjoint domains
+  | SPar SSpell SSpell 
 
 domainSpell :: SSpell -> S.Set Component
 domainSpell (SRun r)     = domainS r

@@ -50,16 +50,16 @@ magnus3D
   -> Force3D
 magnus3D rho cl a r = Force3D $ \st c ->
   let v         = lookupVelR   c st
-      ω         = lookupAngVelR c st
-      f         = vscale (0.5 * rho * cl * a * r) (cross ω v)
+      omega         = lookupAngVelR c st
+      f         = vscale (0.5 * rho * cl * a * r) (cross omega v)
   in (f, (0,0,0))
 
 dragTorque3D
-  :: Double          -- ^ damping constant c_ω (N·m·s)
+  :: Double          -- ^ damping constant c_omega (N·m·s)
   -> Force3D
-dragTorque3D cω = Force3D $ \st c ->
-  let ω   = lookupAngVelR c st
-      τ   = vscale (-cω) ω
+dragTorque3D comega = Force3D $ \st c ->
+  let omega   = lookupAngVelR c st
+      τ   = vscale (-comega) omega
   in ((0,0,0), τ)
 
 (<+>) :: Force3D -> Force3D -> Force3D

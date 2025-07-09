@@ -15,11 +15,10 @@ import qualified Data.Map.Strict      as M
 import Numeric.Units.Dimensional.Prelude
   ( Quantity, DMass, (/~), kilo, gram )
 
--- | One leapfrog1D step for a single force.
 addForce
-  :: Double            -- ^ timestep Δt
-  -> Force             -- ^ force to apply
-  -> System            -- ^ extended system
+  :: Double 
+  -> Force 
+  -> System
   -> NumericWorkflow
 addForce dt f System{sMass} =
   let massMapQ :: M.Map Component (Quantity DMass Double)

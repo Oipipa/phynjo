@@ -13,7 +13,6 @@ import Physics.RigidState     (RigidState, lookupPosR, lookupVelR)
 import Physics.LeapfrogNR     (Vec3, vsub, vnorm2, vscale)
 import qualified Data.Map.Strict as M
 
--- | A 3D force–torque field on rigid bodies.
 newtype Force3D = Force3D
   { runForce3D :: RigidState -> Component -> (Vec3, Vec3) }
 
@@ -46,9 +45,8 @@ spring3D i j k rest = Force3D $ \st c ->
             | otherwise = (0,0,0)
   in (f, (0,0,0))
 
--- | Linear drag: F = –gamma·v, where v is the body’s linear velocity.
 drag3D
-  :: Double    -- ^ drag coefficient gamma
+  :: Double  
   -> Force3D
 drag3D gamma = Force3D $ \st c ->
   let v = lookupVelR c st

@@ -8,9 +8,9 @@ import Physics.DriftNR        (driftNR)
 import NumericWorkflow        (NumericWorkflow(..))
 
 eulerNR
-  :: Double                   -- ^ Δt
-  -> Double                   -- ^ G
-  -> [(Component,Double)]     -- ^ masses
+  :: Double 
+  -> Double 
+  -> [(Component,Double)]
   -> NumericWorkflow
 eulerNR dt g masses =
   let kick  = Run (gravNR dt g masses)
