@@ -86,11 +86,6 @@ kick h g m s =
 leapRaw :: Double -> Double -> MassMap -> State -> State
 leapRaw h g m = drift (0.5*h) . kick h g m . drift (0.5*h)
 
-----------------------------------------------------------------------
---  Adaptivity
-----------------------------------------------------------------------
-
--- | Quick CFL-style acceptance test for dt = h.
 stepOK :: Double -> MassMap -> State -> Bool
 stepOK h m s =
   let ks     = M.keys m

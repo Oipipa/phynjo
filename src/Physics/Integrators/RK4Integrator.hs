@@ -43,7 +43,6 @@ rk4Step h g masses st0 =
                    (addSt (scaleSt 2 k3) k4)
   in addSt st0 incr
 
--- | Integrate for n steps (returns n+1 states including initial).
 integrateRK4
   :: Int        -- ^ number of steps
   -> Double     -- ^ timestep h

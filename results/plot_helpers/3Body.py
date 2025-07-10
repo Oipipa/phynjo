@@ -1,0 +1,48 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D  # for 3D plotting
+
+df = pd.read_csv('../data/3bodyproblem.csv')
+
+plt.figure()
+plt.plot(df['x1'], df['y1'], label='Body 1')
+plt.plot(df['x2'], df['y2'], label='Body 2')
+plt.plot(df['x3'], df['y3'], label='Body 3')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('2D Trajectories (xy-plane)')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(df['x1'], df['y1'], df['z1'], label='Body 1')
+ax.plot(df['x2'], df['y2'], df['z2'], label='Body 2')
+ax.plot(df['x3'], df['y3'], df['z3'], label='Body 3')
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_zlabel('z')
+ax.set_title('3D Trajectories')
+ax.legend()
+plt.tight_layout()
+plt.show()
+
+plt.figure()
+plt.plot(df['t'], df['x1'], label='Body 1 x')
+plt.plot(df['t'], df['x2'], label='Body 2 x')
+plt.plot(df['t'], df['x3'], label='Body 3 x')
+plt.xlabel('Time')
+plt.ylabel('x-position')
+plt.title('x-Position vs Time')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+plt.figure()
+plt.plot(df['t'], df['E'])
+plt.xlabel('Time')
+plt.ylabel('Total Energy')
+plt.title('Total Energy vs Time')
+plt.tight_layout()
+plt.show()

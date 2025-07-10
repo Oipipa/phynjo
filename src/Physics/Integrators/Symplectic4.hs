@@ -1,6 +1,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
 module Physics.Integrators.Symplectic4
-  ( symplectic4    -- :: Double -> [(Component,Double)] -> Force -> NumericWorkflow
+  ( symplectic4 
   ) where
 
 import           Components           (Component)
@@ -19,11 +19,11 @@ symplectic4
   -> NumericWorkflow
 symplectic4 dt masses f =
   let 
-      θ  = 1 / (2 - 2 ** (1/3))
-      c1 = θ / 2
-      c2 = (1 - θ) / 2
-      d1 = θ
-      d2 = 1 - 2*θ
+      theta  = 1 / (2 - 2 ** (1/3))
+      c1 = theta / 2
+      c2 = (1 - theta) / 2
+      d1 = theta
+      d2 = 1 - 2*theta
 
       -- chop out base rules
       baseDrift = driftNR masses

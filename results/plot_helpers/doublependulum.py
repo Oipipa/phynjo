@@ -75,6 +75,6 @@ ax4.legend()
 
 fig5, ax5 = plt.subplots()
 ax5.plot(t, E_total - E_total[0])
-format_plot(ax5, "Total‑energy deviation", "Time [s]", "ΔE [J]")
+format_plot(ax5, "Total-energy deviation", "Time [s]", "ΔE [J]")
 
 plt.show()
