@@ -1,8 +1,8 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Physics.Contact
-  ( contactGroundF      -- ^ sphere ↔ infinite plane (y = 0)
-  , contactSpheresF     -- ^ sphere ↔ sphere
+  ( contactGroundF      -- ^ sphere <-> infinite plane (y = 0)
+  , contactSpheresF     -- ^ sphere <-> sphere
   ) where
 
 import           Components              (Component)
@@ -58,11 +58,11 @@ contactGroundF eFun μFun specs =
 
       step _dt st@RigidState{..} =
         let upd = foldl' (stepOne st) (M.empty,M.empty,M.empty) comps
-            (posΔ, velΔ, angΔ) = upd
+            (posdelta, veldelta, angdelta) = upd
 
-            rsPos'    = M.unionWith vadd rsPos    posΔ
-            rsVel'    = M.unionWith vadd rsVel    velΔ
-            rsAngVel' = M.unionWith vadd rsAngVel angΔ
+            rsPos'    = M.unionWith vadd rsPos    posdelta
+            rsVel'    = M.unionWith vadd rsVel    veldelta
+            rsAngVel' = M.unionWith vadd rsAngVel angdelta
         in st { rsPos = rsPos', rsVel = rsVel', rsAngVel = rsAngVel' }
 
           where

@@ -10,13 +10,10 @@ import qualified Data.Set           as S
 import           NumericRule        (NumericRule(..))
 import           NState             (NState, lookupPos, lookupMom, insertPos)
 
--- | Build a NumericRule that drifts positions according to p/m:
---   For each body c with mass mᵢ and momentum pᵢ,
---     qᵢ ← qᵢ + dt · (pᵢ / mᵢ)
 driftNR :: [(Component, Double)] -> NumericRule
 driftNR masses =
   let dom     = S.fromList (map fst masses)
-      massMap = M.fromList masses  -- Component ↦ mᵢ
+      massMap = M.fromList masses  -- Component -> m_i
       step dt st0 =
         foldr
           (\c acc ->

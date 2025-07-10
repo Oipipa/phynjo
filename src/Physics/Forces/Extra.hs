@@ -30,9 +30,9 @@ guardScale ok k v = if ok then vscale k v else (0,0,0)
 
 
 dragQuad3D
-  :: Double          -- ^ air/fluid density rho  (kg·m⁻³)
-  -> Double          -- ^ drag coefficient C_d (≈0.4–1.2 for bluff bodies)
-  -> Double          -- ^ reference area A (m²)
+  :: Double          -- air/fluid density rho 
+  -> Double          -- drag coefficient C_d 
+  -> Double          -- reference area A 
   -> Force3D
 dragQuad3D rho cd a = Force3D $ \st c ->
   let v            = lookupVelR c st

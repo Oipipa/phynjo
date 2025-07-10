@@ -26,11 +26,9 @@ data RRune = RR
   , stepR   :: Double -> RigidState -> RigidState
   }
 
--- | Apply one step of an RRune.
 applyRRuneWorld :: RRune -> Double -> RigidState -> RigidState
 applyRRuneWorld (RR _ step) dt st = step dt st
 
--- | Drift translation: rᵢ ← rᵢ + dt·vᵢ for i in domain.
 driftTrans :: [Component] -> RRune
 driftTrans comps =
   let dom = S.fromList comps
@@ -47,7 +45,6 @@ driftTrans comps =
         in st { rsPos = pos' }
   in RR dom step
 
--- | Drift rotation: qᵢ ← integrateQuat(dt, ωᵢ_body, qᵢ), only for i∈domain.
 driftRot :: [Component] -> RRune
 driftRot comps =
   let dom = S.fromList comps
@@ -74,7 +71,7 @@ driftRot comps =
 kickForce3D
   :: [(Component, Double)]        -- ^ mass map (kg)
   -> [(Component, InertiaTensor)] -- ^ body‐space inertia tensors
-  -> Force3D                      -- ^ field (F,τ) in world coords
+  -> Force3D                      -- ^ field (F,tau) in world coords
   -> RRune
 kickForce3D masses inertias (Force3D field) =
   let dom      = S.fromList (map fst masses)
@@ -131,9 +128,6 @@ kickForce3D masses inertias (Force3D field) =
 
   in RR dom step
 
-----------------------------------------------------------------------  
---  3×3 inertia‐tensor utilities
-
 type InertiaTensor = (Vec3, Vec3, Vec3)
 
 -- | Correct cofactor‐based inversion (adjugate transpose).
@@ -185,7 +179,7 @@ quatToMatrix (w,x,y,z) =
 
 integrateQuat
   :: Double
-  -> Vec3                           -- ^ ω in body coords
+  -> Vec3                           -- ^ omega in body coords
   -> (Double,Double,Double,Double) -- ^ (w,x,y,z)
   -> (Double,Double,Double,Double)
 integrateQuat dt (ωx,ωy,ωz) (qw,qx,qy,qz) =

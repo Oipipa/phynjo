@@ -35,22 +35,17 @@ vscale k (x,y,z) = (k*x, k*y, k*z)
 vdot :: Vec3 -> Vec3 -> Double
 vdot (ax,ay,az) (bx,by,bz) = ax*bx + ay*by + az*bz
 
---------------------------------------------------------------------------------
---  Derived helpers ------------------------------------------------------------
-
 vnorm2 :: Vec3 -> Double
 vnorm2 v = vdot v v
 
 vnorm :: Vec3 -> Double
 vnorm = sqrt . vnorm2
 
--- | Unit vector (returns @vzero@ for the zero vector).
 vhat :: Vec3 -> Vec3
 vhat v =
   let n = vnorm v
   in if n < 1e-12 then vzero else vscale (1/n) v
 
--- | Approximate equality with absolute tolerance @epsilon@ = 1e-9 for each component.
 approxEqVec :: Vec3 -> Vec3 -> Bool
 approxEqVec (ax,ay,az) (bx,by,bz) =
   let epsilon = 1e-9
