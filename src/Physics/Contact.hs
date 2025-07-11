@@ -46,10 +46,10 @@ type InertiaTensor = (Vec3, Vec3, Vec3)
 
 contactGroundF
   :: (Double -> Double)                     -- ^ eFun
-  -> (Double -> Double)                     -- ^ μFun
+  -> (Double -> Double)                     -- ^ muFun
   -> [(Component, Double, Double, InertiaTensor)]
   -> RRune
-contactGroundF eFun μFun specs =
+contactGroundF eFun muFun specs =
   let comps     = [c | (c,_,_,_) <- specs]
       dom       = S.fromList comps
       massMap   = M.fromList [ (c,m) | (c,_,m,_) <- specs ]
@@ -92,7 +92,7 @@ contactGroundF eFun μFun specs =
 
                           -- coefficient look-ups
                           e        = eFun  (abs vn)
-                          μ        = μFun  vtMag
+                          mu        = muFun  vtMag
 
                           -- effective mass for normal
                           invMass  = 1 / m
@@ -102,7 +102,7 @@ contactGroundF eFun μFun specs =
                           jn       = if vn < 0 && invK > 0
                                        then -(1 + e) * vn / invK
                                        else 0
-                          jtMax    = μ * abs jn
+                          jtMax    = mu * abs jn
 
                           -- compute tangential impulse limited by Coulomb
                           tDir     = if vtMag < 1e-9 then (0,0,0) else vscale (1/vtMag) vt
@@ -118,10 +118,10 @@ contactGroundF eFun μFun specs =
                           dw       = applyMat invI (cross rVec impTotal)
 
                           -- positional Baumgarte correction
-                          β        = 0.2
+                          beta        = 0.2
                           slop     = 0.01
                           depth    = max 0 (pen - slop)
-                          dp       = vscale (β * depth) n
+                          dp       = vscale (beta * depth) n
 
                           insert v k m = M.insertWith vadd k v m
                       in ( insert dp c dpAcc
@@ -132,11 +132,11 @@ contactGroundF eFun μFun specs =
 
 contactSpheresF
   :: (Double -> Double)                     -- restitution vn → e
-  -> (Double -> Double)                     -- friction     vt → μ
+  -> (Double -> Double)                     -- friction     vt → mu
   -> Int                                    -- solver iterations
   -> [(Component, Double, Double, InertiaTensor)]
   -> RRune
-contactSpheresF eFun μFun it specs =
+contactSpheresF eFun muFun it specs =
   let comps   = [c | (c,_,_,_) <- specs]
       dom     = S.fromList comps
       massMap = M.fromList [ (c,m) | (c,_,m,_) <- specs ]
@@ -181,7 +181,7 @@ contactSpheresF eFun μFun it specs =
                          vtMag   = vnorm vt
 
                          e       = eFun (abs vn)
-                         μ       = μFun vtMag
+                         mu       = muFun vtMag
 
                          invM1   = 1 / massMap M.! c1
                          invM2   = 1 / massMap M.! c2
@@ -192,7 +192,7 @@ contactSpheresF eFun μFun it specs =
                          jn      | vn < 0 && invKn > 0 = -(1 + e) * vn / invKn
                                  | otherwise           = 0
 
-                         jtMax   = μ * abs jn
+                         jtMax   = mu * abs jn
                          tDir    = if vtMag < 1e-9 then (0,0,0)
                                    else vscale (1/vtMag) vt
                          termT1  = vdot (cross r1 tDir)
@@ -221,7 +221,7 @@ contactSpheresF eFun μFun it specs =
                         , insert dw1 c1 $ insert dw2 c2 dwA )
 
             -- positional correction (Baumgarte)
-            β = 0.2; slop = 0.01
+            beta = 0.2; slop = 0.01
             posCorr = foldl' corrOne M.empty
                         [ (c1,c2) | (c1:c2:_) <- tails comps ]
 
@@ -237,8 +237,8 @@ contactSpheresF eFun μFun it specs =
                      invM1   = 1 / massMap M.! c1
                      invM2   = 1 / massMap M.! c2
                      sumInv  = invM1 + invM2
-                     c1Off   = vscale (β*depth * invM1 / sumInv) n
-                     c2Off   = vscale (-β*depth * invM2 / sumInv) n
+                     c1Off   = vscale (beta*depth * invM1 / sumInv) n
+                     c2Off   = vscale (-beta*depth * invM2 / sumInv) n
                      insert v k m = M.insertWith vadd k v m
                  in  insert c1Off c1 $ insert c2Off c2 acc
 
