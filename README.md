@@ -20,4 +20,4 @@ executable physics-edsl
     examples/example09.hs <------ HERE!!!
 ```
 
-Implementation notes [here](README.pdf). 
+Implementation notes [here](IMPNOTES.pdf). 
