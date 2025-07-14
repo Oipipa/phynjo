@@ -50,8 +50,8 @@ epsStick = 0.01
 
 scaleForce3D :: Double -> Force3D -> Force3D
 scaleForce3D k (Force3D g) =
-  Force3D $ \st c -> let (f,τ) = g st c
-                     in  (vscale k f, vscale k τ)
+  Force3D $ \st c -> let (f,torque) = g st c
+                     in  (vscale k f, vscale k torque)
 
 
 driftHalfT, driftHalfR :: RRune
