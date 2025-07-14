@@ -71,7 +71,7 @@ driftRot comps =
 kickForce3D
   :: [(Component, Double)]        -- ^ mass map (kg)
   -> [(Component, InertiaTensor)] -- ^ body‐space inertia tensors
-  -> Force3D                      -- ^ field (F,tau) in world coords
+  -> Force3D                      -- ^ field (F,torque) in world coords
   -> RRune
 kickForce3D masses inertias (Force3D field) =
   let dom      = S.fromList (map fst masses)
@@ -105,8 +105,8 @@ kickForce3D masses inertias (Force3D field) =
                                 rt     = transpose3 rmat
 
                                 -- body‐space torque & omega
-                                tauW   = snd (field st c)
-                                tauB   = applyMat rt tauW
+                                torqueW   = snd (field st c)
+                                torqueB   = applyMat rt torqueW
                                 wB     = applyMat rt w0
 
                                 iB     = ibodyMap  M.! c
@@ -114,7 +114,7 @@ kickForce3D masses inertias (Force3D field) =
 
                                 invIB  = invIMap   M.! c
                                 gyro   = cross wB lB
-                                wBdot  = applyMat invIB (vsub tauB gyro)
+                                wBdot  = applyMat invIB (vsub torqueB gyro)
 
                                 wWdot  = applyMat rmat wBdot
                             in  vadd w0 (vscale dt wWdot)
