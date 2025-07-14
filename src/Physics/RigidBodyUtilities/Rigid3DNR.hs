@@ -55,7 +55,7 @@ driftRot comps =
                        (\c q0 ->
                           if c `S.member` dom
                             then
-                              -- convert world ω to body ω
+                              -- convert world omega to body omega
                               let rot    = quatToMatrix q0
                                   rotT   = transpose3 rot
                                   omegaW = velW M.! c
@@ -104,7 +104,7 @@ kickForce3D masses inertias (Force3D field) =
                                 rmat   = quatToMatrix q
                                 rt     = transpose3 rmat
 
-                                -- body‐space torque & ω
+                                -- body‐space torque & omega
                                 tauW   = snd (field st c)
                                 tauB   = applyMat rt tauW
                                 wB     = applyMat rt w0
@@ -182,12 +182,12 @@ integrateQuat
   -> Vec3                           -- ^ omega in body coords
   -> (Double,Double,Double,Double) -- ^ (w,x,y,z)
   -> (Double,Double,Double,Double)
-integrateQuat dt (ωx,ωy,ωz) (qw,qx,qy,qz) =
+integrateQuat dt (omegax,omegay,omegaz) (qw,qx,qy,qz) =
   let (mw,mx,my,mz) =
-        ( - qx*ωx - qy*ωy - qz*ωz
-        ,   qw*ωx + qy*ωz - qz*ωy
-        ,   qw*ωy - qx*ωz + qz*ωx
-        ,   qw*ωz + qx*ωy - qy*ωx
+        ( - qx*omegax - qy*omegay - qz*omegaz
+        ,   qw*omegax + qy*omegaz - qz*omegay
+        ,   qw*omegay - qx*omegaz + qz*omegax
+        ,   qw*omegaz + qx*omegay - qy*omegax
         )
       half = 0.5 * dt
       qw'  = qw + half * mw
