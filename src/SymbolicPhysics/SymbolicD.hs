@@ -20,7 +20,6 @@ import qualified CAS.Differentiate  as D
 import qualified CAS.Simplify       as S
 import qualified CAS.PrettyPrinter  as PP
 
--- | Our AST lives in CAS.AST
 type Expr = C.Expr
 
 -- Smart constructors
