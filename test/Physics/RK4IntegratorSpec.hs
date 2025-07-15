@@ -4,7 +4,7 @@ module Physics.RK4IntegratorSpec (spec) where
 import Test.Hspec
 import Physics.Integrators.RK4Integrator (rk4Step, integrateRK4)
 import Physics.Integrators.LeapfrogNR   (State(..), MassMap)
-import Physics.Integrators.LeapfrogNR   (Vec3)
+import Physics.Math.LinearAlgebra   (Vec3)
 import qualified Data.Map.Strict as M
 
 spec :: Spec

@@ -11,7 +11,7 @@ module Physics.Forces.Extra
 
 import           Physics.Forces.Force3D       (Force3D (..))
 import           Physics.RigidBodyUtilities.RigidState    (RigidState, lookupVelR, lookupAngVelR)
-import           Physics.Integrators.LeapfrogNR    (Vec3, vscale, vadd, vdot)
+import           Physics.Math.LinearAlgebra    (Vec3, vscale, vadd, vdot)
 import qualified Data.Map.Strict       as M
 import           Data.Semigroup        (Semigroup (..))
 

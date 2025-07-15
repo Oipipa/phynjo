@@ -10,7 +10,7 @@ module Physics.Forces.Force3D
 
 import Components             (Component)
 import Physics.RigidBodyUtilities.RigidState     (RigidState, lookupPosR, lookupVelR)
-import Physics.Integrators.LeapfrogNR     (Vec3, vsub, vnorm2, vscale)
+import Physics.Math.LinearAlgebra     (Vec3, vsub, vnorm2, vscale)
 import qualified Data.Map.Strict as M
 
 newtype Force3D = Force3D

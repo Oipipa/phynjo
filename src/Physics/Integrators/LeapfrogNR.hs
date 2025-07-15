@@ -1,13 +1,7 @@
 {-# LANGUAGE TupleSections #-}
 module Physics.Integrators.LeapfrogNR
-  ( Vec3
-  , State(..)
+  ( State(..)
   , MassMap
-  , vadd
-  , vsub
-  , vscale
-  , vdot
-  , vnorm2
   , accOne
   , drift
   , kick
@@ -20,19 +14,7 @@ module Physics.Integrators.LeapfrogNR
 
 import qualified Data.Map.Strict as M
 import           Data.Maybe      (fromMaybe)
-
-type Vec3 = (Double,Double,Double)
-
-vadd, vsub          :: Vec3 -> Vec3 -> Vec3
-vscale              :: Double -> Vec3 -> Vec3
-vdot                :: Vec3 -> Vec3 -> Double
-vnorm2              :: Vec3 -> Double
-
-vadd (a,b,c) (x,y,z) = (a+x , b+y , c+z)
-vsub (a,b,c) (x,y,z) = (a-x , b-y , c-z)
-vscale k (x,y,z)     = (k*x , k*y , k*z)
-vdot  (a,b,c) (x,y,z)=  a*x + b*y + c*z
-vnorm2 v             = vdot v v
+import Physics.Math.LinearAlgebra (Vec3, vadd, vsub, vscale, vdot, vnorm2)
 
 type MassMap = M.Map Int Double    -- ^ body-id → mass
 

@@ -9,7 +9,7 @@ import           Numeric                (showFFloat)
 import           System.IO              (hPutStrLn, stdout)
 
 import           Components             (Component (..))
-import           Physics.Integrators.LeapfrogNR     (Vec3, vscale)
+import           Physics.Math.LinearAlgebra     (Vec3, vscale)
 import           Physics.RigidBodyUtilities.RigidBody      (Quaternion)
 import           Physics.RigidBodyUtilities.RigidState
 import           Physics.RigidBodyUtilities.Rigid3DNR      ( RRune (..), applyRRuneWorld

@@ -8,9 +8,7 @@ module Physics.RigidBodyUtilities.RigidBody
   ) where
 
 import Components        (Component)
-import Physics.Integrators.LeapfrogNR (Vec3)
-
-type InertiaTensor = (Vec3, Vec3, Vec3)
+import Physics.Math.LinearAlgebra (Vec3, InertiaTensor)
 
 type Quaternion = (Double, Double, Double, Double)
 

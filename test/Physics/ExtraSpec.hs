@@ -7,7 +7,7 @@ import           Test.Hspec
 import           Physics.Forces.Extra
 import           Physics.Forces.Force3D         (runForce3D)
 import           Physics.RigidBodyUtilities.RigidState
-import           Physics.Integrators.LeapfrogNR      (Vec3, vdot)
+import           Physics.Math.LinearAlgebra      (Vec3, vdot)
 import qualified Data.Map.Strict         as M
 import           Components              (Component (..))
 

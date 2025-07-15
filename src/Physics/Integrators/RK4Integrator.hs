@@ -5,7 +5,8 @@ module Physics.Integrators.RK4Integrator
   , integrateRK4
   ) where
 
-import Physics.Integrators.LeapfrogNR    (State(..), MassMap, accOne, vadd, vscale)
+import Physics.Integrators.LeapfrogNR    (State(..), MassMap, accOne)
+import Physics.Math.LinearAlgebra (vadd, vsub, vscale)
 import qualified Data.Map.Strict as M
 
 rk4Step

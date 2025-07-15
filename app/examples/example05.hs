@@ -19,7 +19,7 @@ import Physics.Forces.Force3D       ( gravity3D
                              , Force3D(..)
                              )
 import Components            ( Component(AtomicC) )
-import Physics.Integrators.LeapfrogNR    ( Vec3, vadd )
+import Physics.Math.LinearAlgebra    ( Vec3, vadd )
 import qualified Data.Map.Strict as M
 import qualified Data.Set        as S
 import Text.Printf           ( printf )

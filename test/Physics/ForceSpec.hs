@@ -5,7 +5,7 @@ module Physics.ForceSpec (spec) where
 import Test.Hspec
 import Physics.Forces.Force
 import Components           (Component(AtomicC))
-import Physics.Integrators.LeapfrogNR   (Vec3)
+import Physics.Math.LinearAlgebra   (Vec3)
 import NState               (NState)
 
 spec :: Spec

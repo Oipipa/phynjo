@@ -5,7 +5,7 @@ module Physics.RigidBodySpec (spec) where
 import Test.Hspec
 import Components            (Component(AtomicC))
 import Physics.RigidBodyUtilities.RigidBody
-import Physics.Integrators.LeapfrogNR    (Vec3)
+import Physics.Math.LinearAlgebra    (Vec3)
 
 spec :: Spec
 spec = describe "Physics.RigidBody.mkRigidBody" $ do

@@ -11,7 +11,7 @@ import qualified Data.Set                as S
 import qualified Data.Map.Strict         as M
 import           Data.List               (foldl', tails)
 
-import           Physics.Integrators.LeapfrogNR      (Vec3, vadd, vsub, vscale, vdot)
+import           Physics.Math.LinearAlgebra      (Vec3, vadd, vsub, vscale, vdot)
 import           Physics.RigidBodyUtilities.RigidState      (RigidState (..))
 import           Physics.RigidBodyUtilities.Rigid3DNR       (RRune (..))
 

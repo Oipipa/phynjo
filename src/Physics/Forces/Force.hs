@@ -8,7 +8,7 @@ module Physics.Forces.Force
   ) where
 
 import Components                (Component)
-import Physics.Integrators.LeapfrogNR        (Vec3)
+import Physics.Math.LinearAlgebra (Vec3)
 import NState                    (NState)
 
 type ForceField = NState -> Component -> Vec3

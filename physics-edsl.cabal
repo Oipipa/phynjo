@@ -78,6 +78,7 @@ library
     , Physics.Collision.BroadPhase.UniformGrid
     , Physics.Collision.Manager
     , Physics.Collision.NarrowPhase
+    , Physics.Math.LinearAlgebra
   build-depends:
       base       >= 4.7 && < 5
     , containers >= 0.6 && < 1

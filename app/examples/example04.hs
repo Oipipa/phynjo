@@ -3,7 +3,7 @@ module Main where
 
 import qualified Data.Map.Strict       as M
 import           Physics.Integrators.LeapfrogNR    (State(..), MassMap, integrateN, totalEnergy)
-import           Physics.Integrators.LeapfrogNR    (Vec3)
+import           Physics.Math.LinearAlgebra    (Vec3)
 import Numeric.Units.Dimensional.Prelude    ( (*~), kilo, gram )
 import qualified Numeric.Units.Dimensional.Prelude as D
 

@@ -11,7 +11,7 @@ module Physics.RigidBodyUtilities.RigidState
   ) where
 
 import Components            (Component)
-import Physics.Integrators.LeapfrogNR    (Vec3)
+import Physics.Math.LinearAlgebra    (Vec3)
 import Physics.RigidBodyUtilities.RigidBody     (Quaternion)
 import Data.Map.Strict       (Map)
 import qualified Data.Map.Strict as M

@@ -14,14 +14,10 @@ module Physics.Math.Vec3Util
   , approxEqVec
   ) where
 
-import           Physics.Integrators.LeapfrogNR (Vec3)
+import Physics.Math.LinearAlgebra (Vec3, vadd, vsub)
 
 vzero :: Vec3
 vzero = (0,0,0)
-
-vadd, vsub :: Vec3 -> Vec3 -> Vec3
-vadd (ax,ay,az) (bx,by,bz) = (ax+bx, ay+by, az+bz)
-vsub (ax,ay,az) (bx,by,bz) = (ax-bx, ay-by, az-bz)
 
 infixl 6 <+>, <->
 (<+>) :: Vec3 -> Vec3 -> Vec3

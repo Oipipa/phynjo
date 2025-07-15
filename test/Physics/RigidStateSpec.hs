@@ -6,7 +6,7 @@ import Test.Hspec
 import Components            (Component(AtomicC))
 import Physics.RigidBodyUtilities.RigidState
 import Physics.RigidBodyUtilities.RigidBody     (Quaternion)
-import Physics.Integrators.LeapfrogNR    (Vec3)
+import Physics.Math.LinearAlgebra    (Vec3)
 
 spec :: Spec
 spec = describe "Physics.RigidState" $ do
