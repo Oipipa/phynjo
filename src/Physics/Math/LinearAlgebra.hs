@@ -2,7 +2,7 @@ module Physics.Math.LinearAlgebra
   ( Vec3
   , vadd, vsub, vscale, vdot, vnorm2, vnorm
   , InertiaTensor
-  , invertTensor, safeInvertTensor, applyMat, transpose3, cross
+  , invertTensor, applyMat, transpose3, cross
   , quatToMatrix, integrateQuat
   ) where
 
@@ -10,7 +10,7 @@ import Control.Monad (guard)
 import Data.Maybe (fromMaybe)
 
 epsilon :: Double
-epsilon = 1e-12
+epsilon = 1e-20
 
 type Vec3 = (Double, Double, Double)
 
@@ -40,7 +40,7 @@ type InertiaTensor = (Vec3, Vec3, Vec3)
 safeInvertTensor :: InertiaTensor -> Maybe InertiaTensor
 safeInvertTensor ((a,b,c),(d,e,f),(g,h,i)) = do
   let det = a*(e*i - f*h) - b*(d*i - f*g) + c*(d*h - e*g)
-  guard (abs det > epsilon)
+  guard (abs det > 0)
   let invDet = 1 / det
       c11 =  (e*i - f*h); c12 = -(d*i - f*g); c13 =  (d*h - e*g)
       c21 = -(b*i - c*h); c22 =  (a*i - c*g); c23 = -(a*h - b*g)
