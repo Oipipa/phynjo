@@ -19,7 +19,7 @@ lexer = Tok.makeTokenParser style
       , Tok.opStart         = oneOf "+-*/^"
       , Tok.opLetter        = oneOf "+-*/^"
       , Tok.reservedOpNames = ["+", "-", "*", "/", "^"]
-      , Tok.reservedNames   = []
+      , Tok.reservedNames   = ["sin","cos","tan","exp","log"]
       , Tok.caseSensitive   = True
       }
 
@@ -29,11 +29,17 @@ parens = Tok.parens lexer
 integer :: Parser Integer
 integer = Tok.integer lexer
 
+reserved :: String -> Parser ()
+reserved = Tok.reserved lexer
+
 reservedOp :: String -> Parser ()
 reservedOp = Tok.reservedOp lexer
 
 identifier :: Parser String
 identifier = Tok.identifier lexer
+
+symbol :: String -> Parser String
+symbol = Tok.symbol lexer
 
 whiteSpace :: Parser ()
 whiteSpace = Tok.whiteSpace lexer
@@ -55,13 +61,21 @@ factor :: Parser Expr
 factor =
       parens expr
   <|> try fraction
+  <|> func "sin" Sin
+  <|> func "cos" Cos
+  <|> func "tan" Tan
+  <|> func "exp" Exp
+  <|> func "log" Log
   <|> (Const . toRational <$> integer)
   <|> (Var <$> identifier)
+  where
+    func name ctor =
+      reserved name *> (ctor <$> (parens expr <|> factor))
 
 fraction :: Parser Expr
 fraction = do
   n <- integer
-  _ <- char '/'
+  _ <- symbol "/"
   d <- integer
   return $ Const (n % d)
 

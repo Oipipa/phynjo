@@ -2,7 +2,7 @@ module CAS.Differentiate (differentiate) where
 
 import           CAS.AST
 import           CAS.Simplify       (simplify, simplifyAdd, simplifySub)
-import           Data.Ratio         (numerator, denominator, (%))
+import           Data.Ratio         ((%))  -- keep if you want rational literals elsewhere
 
 differentiate :: String -> Expr -> Expr
 differentiate v expr = diff expr
@@ -12,7 +12,7 @@ differentiate v expr = diff expr
     flattenMul (Mul x y) = flattenMul x ++ flattenMul y
     flattenMul e         = [e]
 
-    -- remove any “1” factors but leave zeros intact
+    -- drop any factor equal to 1, keep zeros
     stripOneFlatten :: Expr -> Expr
     stripOneFlatten e =
       let fs  = flattenMul e
@@ -33,43 +33,44 @@ differentiate v expr = diff expr
     diff (Sub a b) = simplifySub (diff a) (diff b)
 
     diff (Mul a b) =
-      Add
-        (stripOneFlatten (Mul (diff a) b))
-        (stripOneFlatten (Mul a (diff b)))
+      let da = diff a
+          db = diff b
+      in simplify $ Add
+           (stripOneFlatten (Mul da b))
+           (stripOneFlatten (Mul a db))
 
     diff (Div a b) =
-      Div
+      simplify $ Div
         (Sub (Mul (diff a) b) (Mul a (diff b)))
         (Pow b (Const 2))
 
+    -- constant exponent
     diff (Pow a (Const n)) =
-      let innerPow
-            | denominator n /= 1      = Pow a (Const ((numerator n - 1) % denominator n))
-            | numerator n == 1        = a
-            | numerator n - 1 == 1    = a
-            | otherwise               = Pow a (Const ((numerator n - 1) % 1))
-      in Mul (Mul (Const n) innerPow) (Const 1)
+      let da = diff a
+      in simplify $ Mul (Mul (Const n) (Pow a (Const (n - 1)))) da
 
+    -- general exponent
     diff (Pow a b) =
       let f  = Pow a b
           da = diff a
           db = diff b
-      in if da == Const 0
-           then Mul f (stripOneFlatten (Mul db (Log a)))
-           else Mul f (Add (Mul db (Log a)) (Div (Mul b da) a))
+      in simplify $ Mul f (Add (Mul db (Log a)) (Div (Mul b da) a))
 
-    diff (Neg a)   = Neg (diff a)
-    diff (Sin a)   = let da = stripOneFlatten (diff a)
-                     in if da == Const 1 then Cos a else Mul da (Cos a)
-    diff (Cos a)   = let da = stripOneFlatten (diff a)
-                     in Neg (Mul da (Sin a))
-    diff (Tan a)   = let da = stripOneFlatten (diff a)
-                     in if da == Const 1
-                          then Div (Const 1) (Pow (Cos a) (Const 2))
-                          else Mul da (Div (Const 1) (Pow (Cos a) (Const 2)))
-    diff (Exp a)   = let da = simplify (diff a)
-                     in Mul da (Exp a)
-    diff (Log a)   = let da = simplify (diff a)
-                     in Div da a
+    diff (Neg a)   = simplify $ Neg (diff a)
 
-    diff x         = x
+    diff (Sin a)   =
+      let da = stripOneFlatten (diff a)
+      in simplify $ Mul da (Cos a)
+
+    diff (Cos a)   =
+      let da = stripOneFlatten (diff a)
+      in simplify $ Neg (Mul da (Sin a))
+
+    diff (Tan a)   =
+      let da = stripOneFlatten (diff a)
+          sec2 = Div (Const 1) (Pow (Cos a) (Const 2))
+      in simplify $ Mul da sec2
+
+    diff (Exp a)   = simplify $ Mul (diff a) (Exp a)
+
+    diff (Log a)   = simplify $ Div (diff a) a
