@@ -41,9 +41,11 @@ simplify (Neg a)   = simplifyNeg (simplify a)
 -- small identities on common unary ops
 simplify (Sin a) = case simplify a of
   x | isZero x  -> zero
+  Neg y         -> simplifyNeg (Sin y)   -- sin(-x) = -sin x
   x             -> Sin x
 simplify (Cos a) = case simplify a of
   x | isZero x  -> one
+  Neg y         -> Cos y                 -- cos(-x) = cos x
   x             -> Cos x
 simplify (Tan a) = case simplify a of
   x | isZero x  -> zero
@@ -155,16 +157,12 @@ termFrom (c, b)
 -- Multiplication / Division / Power / Negation
 -- ---------------------------------------------------------------------
 
--- Distribute constants over sums to kill patterns like 1/2*(2*A+2*B)
+-- Distribute product over sums on BOTH sides so trig combiner can fire
 simplifyMul :: Expr -> Expr -> Expr
-simplifyMul (Const c) (Add a b) = simplifyAdd (simplifyMul (Const c) a)
-                                              (simplifyMul (Const c) b)
-simplifyMul (Const c) (Sub a b) = simplifySub (simplifyMul (Const c) a)
-                                              (simplifyMul (Const c) b)
-simplifyMul (Add a b) (Const c) = simplifyAdd (simplifyMul (Const c) a)
-                                              (simplifyMul (Const c) b)
-simplifyMul (Sub a b) (Const c) = simplifySub (simplifyMul (Const c) a)
-                                              (simplifyMul (Const c) b)
+simplifyMul (Add a b) t = simplifyAdd (simplifyMul a t) (simplifyMul b t)
+simplifyMul (Sub a b) t = simplifySub (simplifyMul a t) (simplifyMul b t)
+simplifyMul t (Add a b) = simplifyAdd (simplifyMul t a) (simplifyMul t b)
+simplifyMul t (Sub a b) = simplifySub (simplifyMul t a) (simplifyMul t b)
 
 -- Core multiply with coeff folding and zero/one rules
 simplifyMul (Const x) (Const y) = Const (x * y)
@@ -183,7 +181,7 @@ simplifyMul x y
 
 simplifyDiv :: Expr -> Expr -> Expr
 simplifyDiv (Const x) (Const y)
-  | y == 0    = Div (Const x) (Const y)   -- leave as-is, no crash
+  | y == 0    = Div (Const x) (Const y)   -- leave as-is, avoid crash
   | otherwise = Const (x / y)
 simplifyDiv x y
   | isZero x  = zero
@@ -225,7 +223,7 @@ simplifyPow x (Const e)
          else if k == 1 then x
          else Pow x (Const e)
 
--- a^(-1) -> 1/a (non-integer handled here too)
+-- a^(-1) -> 1/a (covers non-integers via explicit check too)
 simplifyPow x (Const e)
   | e == (-1) = simplifyDiv one x
 
@@ -271,9 +269,9 @@ partitionTrig = go [] [] []
       _           -> go ss cs (f:os) fs
 
 -- Try to combine one pair of terms in a sum using identities:
---   sin u sin v + cos u cos v = cos(u - v)
---   cos u sin v - sin u cos v = sin(v - u)
--- Returns (combinedTerm, (i,j)) where i<j are indices in the term list.
+--   A) sin u sin v  + cos u cos v = cos(u - v)
+--   B) cos u sin v  - sin u cos v = sin(v - u)
+--   C) sin u cos v  - sin v cos u = sin(u - v)
 combineTrigPair :: [Expr] -> Maybe (Expr, (Int,Int))
 combineTrigPair terms = outer 0
   where
@@ -282,9 +280,9 @@ combineTrigPair terms = outer 0
       | otherwise =
           let (ci, fi) = coeffAndFactors (terms !! i)
               (sSi, cSi, oSi) = partitionTrig fi
-          in case length sSi + length cSi of
-               2 -> inner i ci sSi cSi oSi (i+1)
-               _ -> outer (i+1)
+          in if length sSi + length cSi == 2
+               then inner i ci sSi cSi oSi (i+1)
+               else outer (i+1)
 
     inner i ci sSi cSi oSi j
       | j >= length terms = outer (i+1)
@@ -292,34 +290,63 @@ combineTrigPair terms = outer 0
           let (cj, fj) = coeffAndFactors (terms !! j)
               (sSj, cSj, oSj) = partitionTrig fj
           in if sort oSi /= sort oSj
-                then inner i ci sSi cSi oSi (j+1)
-                else
-                  -- Case A: sin u sin v  + cos u cos v
-                  case (sSi, cSi, sSj, cSj, ci == cj) of
-                    ([u,v], [], [], [u',v'], True)
-                      | sort [u,v] == sort [u',v'] ->
-                          let core = mkMulList oSi
-                              t    = if core == one
-                                       then Cos (Sub u v)
-                                       else Mul core (Cos (Sub u v))
-                          in Just (termFrom (ci, t), (i,j))
-                    -- Case B: cos u sin v  - sin u cos v
-                    ([], [u], [u'], [v], True)
-                      | u == u' && ci == negate cj ->
-                          let core = mkMulList oSi
-                              t    = if core == one
-                                       then Sin (Sub v u)
-                                       else Mul core (Sin (Sub v u))
-                          in Just (termFrom (ci, t), (i,j))
-                    -- symmetric: swap roles of i and j in B
-                    ([u'], [v], [u], [], True)
-                      | u == u' && cj == negate ci ->
-                          let core = mkMulList oSi
-                              t    = if core == one
-                                       then Sin (Sub v u)
-                                       else Mul core (Sin (Sub v u))
-                          in Just (termFrom (cj, t), (i,j))
-                    _ -> inner i ci sSi cSi oSi (j+1)
+               then inner i ci sSi cSi oSi (j+1)
+               else
+                 let -- Case A
+                     tryA =
+                       case (sort sSi, sort cSi, sort sSj, sort cSj, ci == cj) of
+                         ([u,v], [], [], [u',v'], True)
+                           | [u,v] == [u',v'] ->
+                               let core = mkMulList oSi
+                                   t    = if core == one
+                                            then Cos (Sub u v)
+                                            else Mul core (Cos (Sub u v))
+                               in Just (termFrom (ci, t), (i,j))
+                         _ -> Nothing
+                     -- Case B
+                     tryB =
+                       case (sSi, cSi, sSj, cSj, ci == negate cj) of
+                         ([], [u], [u'], [v], True)
+                           | u == u' ->
+                               let core = mkMulList oSi
+                                   t    = if core == one
+                                            then Sin (Sub v u)
+                                            else Mul core (Sin (Sub v u))
+                               in Just (termFrom (ci, t), (i,j))
+                         ([u'], [v], [u], [], True)
+                           | u == u' ->
+                               let core = mkMulList oSi
+                                   t    = if core == one
+                                            then Sin (Sub v u)
+                                            else Mul core (Sin (Sub v u))
+                               in Just (termFrom (cj, t), (i,j))
+                         _ -> Nothing
+                     -- Case C
+                     tryC =
+                       case (sSi, cSi, sSj, cSj, ci == negate cj) of
+                         ([u], [v], [v'], [u'], True)
+                           | u == u' && v == v' ->
+                               let core = mkMulList oSi
+                                   t    = if core == one
+                                            then Sin (Sub u v)
+                                            else Mul core (Sin (Sub u v))
+                               in Just (termFrom (ci, t), (i,j))
+                         ([v], [u], [u'], [v'], True)
+                           | u == u' && v == v' ->
+                               let core = mkMulList oSi
+                                   t    = if core == one
+                                            then Sin (Sub v u)
+                                            else Mul core (Sin (Sub v u))
+                               in Just (termFrom (ci, t), (i,j))
+                         _ -> Nothing
+
+                     orElse :: Maybe a -> Maybe a -> Maybe a
+                     orElse (Just x) _ = Just x
+                     orElse Nothing  y = y
+
+                 in case tryA `orElse` tryB `orElse` tryC of
+                      Just r  -> Just r
+                      Nothing -> inner i ci sSi cSi oSi (j+1)
 
 -- Apply trig combining once to a flattened sum, otherwise return input
 simplifyTrigOnce :: Expr -> Expr
