@@ -2,51 +2,50 @@
 
 module Main where
 
-import Physics.Lagrangian
+import           Control.Monad          (forM_)
+import           Data.Ratio             ((%))
+
+import           CAS.AST
+  ( Expr(..), (.+.), (.-.), (.*.), (.^.)
+  , Cos
+  )
+import           CAS.PrettyPrinter      (pretty)
+import           Physics.Lagrangian
   ( Coord(..)
-  , defineCoord
-  , timeDeriv
-  , buildLagrangian
-  , eulerLagrange
-  )
-import SymbolicPhysics.SymbolicD
-  ( Expr
-  , var
-  , constant
-  , add, sub, mul
-  , cosE
-  )
-import SymbolicPhysics.PrettyEL
-  ( prettyEL
+  , LagM, defineCoord, timeDeriv, buildLagrangian
+  , eulerLagrange, q
   )
 
+-- tiny helpers
+c :: Rational -> Expr
+c = Const
+
+(^!) :: Expr -> Integer -> Expr
+(^!) x k = x .^. Const (fromInteger k)
+
+square :: Expr -> Expr
+square x = x .*. x
+
+-- Pendulum L(q, q̇) with m=1, l=2, g symbolic (or set g = c (981 % 100))
 pendulum :: ([Coord], Expr)
 pendulum = buildLagrangian $ do
   theta  <- defineCoord "theta"
   thetad <- timeDeriv theta
 
-  let m = constant 1.0
-      l = constant 2.0
-      g = constant 9.81
+  let m = c 1           -- 1 kg
+      l = c 2           -- 2 m
+      g = Var "g"       -- keep symbolic; or: c (981 % 100)
 
-      tEnergy =
-        constant 0.5 `mul` m
-                       `mul` l `mul` l
-                       `mul` thetad `mul` thetad
+      tEnergy = c (1 % 2) .*. m .*. (l ^! 2) .*. square thetad
+      vEnergy = m .*. g .*. l .*. (c 1 .-. Cos (q theta))
 
-      vEnergy =
-        m `mul` g `mul` l
-          `mul` (sub (constant 1.0) (cosE (var "theta")))
-
-  return (sub tEnergy vEnergy)
+  pure (tEnergy .-. vEnergy)
 
 main :: IO ()
 main = do
   let (coords, lagrangian) = pendulum
-      rawEqns              = eulerLagrange (coords, lagrangian)
+      eqns                 = eulerLagrange (coords, lagrangian)
 
-      names = [ q | Coord q <- coords ]
-      eqns  = [ (q, expr) | (Coord q, expr) <- rawEqns ]
-
-  putStrLn "Pendulum equations of motion (factored & simplified):"
-  mapM_ (putStrLn . prettyEL names) eqns
+  putStrLn "Pendulum equations of motion (simplified):"
+  forM_ eqns $ \(Coord name, expr) ->
+    putStrLn $ "[" ++ name ++ "]: " ++ pretty expr ++ " = 0"

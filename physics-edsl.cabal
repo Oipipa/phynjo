@@ -49,12 +49,7 @@ library
     , Physics.RigidBodyUtilities.Rigid3DNR
     , Physics.Forces.Force3D
     , Physics.Contact
-    , SymbolicPhysics.SymbolicD
     , Physics.Lagrangian
-    , SymbolicPhysics.SState
-    , SymbolicPhysics.SRune
-    , SymbolicPhysics.SSpell
-    , SymbolicPhysics.PrettyEL
     , NumericRule
     , NumericWorkflow
     , CAS.AST
