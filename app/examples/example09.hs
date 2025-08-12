@@ -32,10 +32,10 @@ doublePendulumL :: ([Coord], Expr)
 doublePendulumL = buildLagrangian $ do
   th1  <- defineCoord "theta1"
   th2  <- defineCoord "theta2"
-  let θ1 = q th1
-      θ2 = q th2
-  θ1d <- timeDeriv th1
-  θ2d <- timeDeriv th2
+  let theta1 = q th1
+      theta2 = q th2
+  theta1d <- timeDeriv th1
+  theta2d <- timeDeriv th2
 
   let m1 = c 1
       m2 = c 1
@@ -44,17 +44,17 @@ doublePendulumL = buildLagrangian $ do
       g  = Var "g"            -- or c (981 % 100) if you want numeric in L
 
   -- KE of mass 1
-  let t1  = c (1 % 2) .*. m1 .*. (l1 ^! 2) .*. square θ1d
+  let t1  = c (1 % 2) .*. m1 .*. (l1 ^! 2) .*. square theta1d
 
   -- velocity of mass 2
-  let vx2 = l1 .*. (Cos θ1) .*. θ1d .+. l2 .*. (Cos θ2) .*. θ2d
-      vy2 = l1 .*. (Sin θ1) .*. θ1d .+. l2 .*. (Sin θ2) .*. θ2d
+  let vx2 = l1 .*. (Cos theta1) .*. theta1d .+. l2 .*. (Cos theta2) .*. theta2d
+      vy2 = l1 .*. (Sin theta1) .*. theta1d .+. l2 .*. (Sin theta2) .*. theta2d
       t2  = c (1 % 2) .*. m2 .*. (square vx2 .+. square vy2)
 
-  -- Potential (zero at ceiling): V = m g (l - l cos θ)
-  let v1 = m1 .*. g .*. l1 .*. (c 1 .-. Cos θ1)
-      v2 = m2 .*. g .*. ( l1 .*. (c 1 .-. Cos θ1)
-                      .+. l2 .*. (c 1 .-. Cos θ2) )
+  -- Potential (zero at ceiling): V = m g (l - l cos theta)
+  let v1 = m1 .*. g .*. l1 .*. (c 1 .-. Cos theta1)
+      v2 = m2 .*. g .*. ( l1 .*. (c 1 .-. Cos theta1)
+                      .+. l2 .*. (c 1 .-. Cos theta2) )
 
   pure $ (t1 .+. t2) .-. (v1 .+. v2)
 
@@ -165,6 +165,6 @@ main = do
   -- numeric sim CSV
   putStrLn "t,theta1,omega1,theta2,omega2"
   let times = [0, dt .. tmax]
-  mapM_ (\(t,(θ1,ω1,θ2,ω2)) ->
-            printf "%.4f,%.6f,%.6f,%.6f,%.6f\n" t θ1 ω1 θ2 ω2)
+  mapM_ (\(t,(theta1,ω1,theta2,ω2)) ->
+            printf "%.4f,%.6f,%.6f,%.6f,%.6f\n" t theta1 ω1 theta2 ω2)
         (zip times simulate)
