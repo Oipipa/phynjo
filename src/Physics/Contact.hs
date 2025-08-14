@@ -1,8 +1,8 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Physics.Contact
-  ( contactGroundF      -- sphere <-> infinite plane (y = 0)
-  , contactSpheresF     -- sphere <-> sphere
+  ( contactGroundF
+  , contactSpheresF 
   ) where
 
 import           Components                              (Component)
@@ -16,17 +16,11 @@ import           Physics.Math.LinearAlgebra              (Vec3, vadd, vsub, vsca
 import           Physics.RigidBodyUtilities.RigidState   (RigidState (..))
 import           Physics.RigidBodyUtilities.Rigid3DNR    (RRune (..))
 
--- all unordered pairs from a list
 pairs :: [a] -> [(a,a)]
 pairs xs = [ (x,y) | (x:rest) <- tails xs, y <- rest ]
 
--- helper to accumulate vector inserts
 insertAccum :: (Ord k) => (Vec3 -> Vec3 -> Vec3) -> k -> Vec3 -> M.Map k Vec3 -> M.Map k Vec3
 insertAccum add k v = M.insertWith add k v
-
---------------------------------------------------------------------------------
--- sphere vs infinite ground plane y = 0
---------------------------------------------------------------------------------
 
 contactGroundF
   :: (Double -> Double)                     -- restitution as a function of |vn|
@@ -110,14 +104,11 @@ contactGroundF eFun muFun specs =
 
   in RR { domainR = dom, stepR = step }
 
---------------------------------------------------------------------------------
--- sphere vs sphere
---------------------------------------------------------------------------------
 
 contactSpheresF
-  :: (Double -> Double)                     -- restitution |vn| -> e
-  -> (Double -> Double)                     -- friction    |vt| -> mu
-  -> Int                                    -- solver iterations
+  :: (Double -> Double) 
+  -> (Double -> Double) 
+  -> Int
   -> [(Component, Double, Double, InertiaTensor)]  -- (id, radius, mass, inertia)
   -> RRune
 contactSpheresF eFun muFun it specs =

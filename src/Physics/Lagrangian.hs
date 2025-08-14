@@ -8,21 +8,16 @@ module Physics.Lagrangian
   , buildLagrangian
   , eulerLagrange
   , tDerivative
-  , q, qd, qdd
+  , qlag, qlagd, qlagdd
   ) where
 
 import           CAS.AST               as C
 import           CAS.Differentiate     (differentiate)
 import           CAS.Simplify          (simplify, simplifyFix)
 
--- ---------------------------------------------------------------------
--- Coordinates and tiny builder monad
--- ---------------------------------------------------------------------
-
 newtype Coord = Coord { coordName :: String }
   deriving (Eq, Ord, Show)
 
--- Collect declared coordinates alongside the built expression
 newtype LagM a = LagM { runLagM :: ([Coord], a) }
 
 instance Functor LagM where
@@ -41,26 +36,20 @@ instance Monad LagM where
 defineCoord :: String -> LagM Coord
 defineCoord name = LagM ([Coord name], Coord name)
 
--- handy constructors for q, q̇, q̈ variables
-q   :: Coord -> Expr
-q   (Coord s) = Var s
+qlag   :: Coord -> Expr
+qlag   (Coord s) = Var s
 
-qd  :: Coord -> Expr
-qd  (Coord s) = Var (s ++ "_dot")
+qlagd  :: Coord -> Expr
+qlagd  (Coord s) = Var (s ++ "_dot")
 
-qdd :: Coord -> Expr
-qdd (Coord s) = Var (s ++ "_ddot")
+qlagdd :: Coord -> Expr
+qlagdd (Coord s) = Var (s ++ "_ddot")
 
--- for building L(q, q̇, t) with the mini-DSL
 timeDeriv :: Coord -> LagM Expr
-timeDeriv c = pure (qd c)
+timeDeriv c = pure (qlagd c)
 
 buildLagrangian :: LagM Expr -> ([Coord], Expr)
 buildLagrangian = runLagM
-
--- ---------------------------------------------------------------------
--- Total time derivative d/dt acting on Expr[q, q̇]
--- ---------------------------------------------------------------------
 
 tDerivative :: [Coord] -> Expr -> Expr
 tDerivative coords = go
@@ -110,14 +99,10 @@ tDerivative coords = go
       C.Exp u     -> simplify (C.Mul (go u) (C.Exp u))
       C.Log u     -> simplify (C.Div (go u) u)
 
--- ---------------------------------------------------------------------
--- Euler–Lagrange equations
--- ---------------------------------------------------------------------
-
 dBy :: String -> Expr -> Expr
 dBy name e = simplify (differentiate name e)
 
--- For each coordinate q:   d/dt (∂L/∂q̇) − ∂L/∂q = 0
+-- For each coordinate qlag:   d/dt (∂L/∂qlaġ) − ∂L/∂qlag = 0
 eulerLagrange :: ([Coord], Expr) -> [(Coord, Expr)]
 eulerLagrange (coords, lag) = map elOne coords
   where

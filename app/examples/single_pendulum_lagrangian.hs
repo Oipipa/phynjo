@@ -2,19 +2,8 @@
 
 module Main where
 
-import           Control.Monad          (forM_)
-import           Data.Ratio             ((%))
-
-import           CAS.AST
-  ( Expr(..), (.+.), (.-.), (.*.), (.^.)
-  , Cos
-  )
-import           CAS.PrettyPrinter      (pretty)
-import           Physics.Lagrangian
-  ( Coord(..)
-  , LagM, defineCoord, timeDeriv, buildLagrangian
-  , eulerLagrange, q
-  )
+import Phynjo.SymbolicPhysics
+import Phynjo.Core
 
 -- tiny helpers
 c :: Rational -> Expr
@@ -26,7 +15,7 @@ c = Const
 square :: Expr -> Expr
 square x = x .*. x
 
--- Pendulum L(q, q̇) with m=1, l=2, g symbolic (or set g = c (981 % 100))
+-- Pendulum L(qlag, q̇) with m=1, l=2, g symbolic (or set g = c (981 % 100))
 pendulum :: ([Coord], Expr)
 pendulum = buildLagrangian $ do
   theta  <- defineCoord "theta"
@@ -37,7 +26,7 @@ pendulum = buildLagrangian $ do
       g = Var "g"       -- keep symbolic; or: c (981 % 100)
 
       tEnergy = c (1 % 2) .*. m .*. (l ^! 2) .*. square thetad
-      vEnergy = m .*. g .*. l .*. (c 1 .-. Cos (q theta))
+      vEnergy = m .*. g .*. l .*. (c 1 .-. Cos (qlag theta))
 
   pure (tEnergy .-. vEnergy)
 

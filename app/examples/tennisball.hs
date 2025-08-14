@@ -1,23 +1,15 @@
 {-# LANGUAGE RecordWildCards #-}
 module Main (main) where
 
-import           Control.Monad          (foldM)
-import           Data.List              (intercalate)
 import qualified Data.Map.Strict        as M
 import qualified Data.Set               as S
-import           Numeric                (showFFloat)
-import           System.IO              (hPutStrLn, stdout)
-
-import           Components             (Component (..))
-import           Physics.Math.LinearAlgebra     (Vec3, vscale)
-import           Physics.RigidBodyUtilities.RigidBody      (Quaternion)
-import           Physics.RigidBodyUtilities.RigidState
-import           Physics.RigidBodyUtilities.Rigid3DNR      ( RRune (..), applyRRuneWorld
-                                        , driftTrans, driftRot
-                                        , kickForce3D )
-import           Physics.Forces.Force3D        (gravity3D, Force3D (..) )
 import qualified Physics.Forces.Extra  as F
-import           Physics.Contact (contactGroundF)
+
+import Phynjo.Collisions 
+import Physics.Math.LinearAlgebra (Vec3, vscale) 
+import Phynjo.RB 
+import Phynjo.Forces 
+import Phynjo.Core
 
 ball        :: Component
 ball        = AtomicC "ball"
@@ -27,8 +19,6 @@ mBall    = 0.0027
 rBall    = 0.020 
 areaBall = pi * rBall * rBall 
 
-type InertiaTensor = (Vec3,Vec3,Vec3)
-inertiaBall :: InertiaTensor
 inertiaBall = let i = (2/3) * mBall * rBall * rBall
               in  ((i,0,0),(0,i,0),(0,0,i))
 

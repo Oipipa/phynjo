@@ -1,4 +1,3 @@
--- src/CAS/Integrate/Exponential.hs
 module CAS.Integrate.Exponential (isExp, integrate) where
 
 import CAS.AST

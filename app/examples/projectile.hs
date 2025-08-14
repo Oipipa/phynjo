@@ -2,23 +2,12 @@
 
 module Main where
 
-import Physics.RigidBodyUtilities.RigidState    ( RigidState(..)
-                             , emptyRigid
-                             , insertRigid
-                             )
-import Physics.RigidBodyUtilities.Rigid3DNR
-                            ( RRune
-                            , applyRRuneWorld
-                            , driftTrans
-                            , kickForce3D
-                            )
+import Phynjo.RB 
+import Phynjo.Core 
+import Phynjo.Forces
 
-import Physics.Forces.Force3D       ( gravity3D, Force3D(..) )
-import Components            ( Component(AtomicC) )
 import qualified Data.Map.Strict as M
-import Text.Printf           ( printf )
 
--- our “particle” component
 proj :: Component
 proj = AtomicC "proj"
 
@@ -27,16 +16,8 @@ massVal    :: Double
 massVal    = 1.0       -- kg
 
 gAccel     :: Double
-gAccel     = 9.81      -- m/s² downward (–Y)
+gAccel     = 9.81 
 
--- we need a dummy inertia tensor (no rotation)
--- use identity 3×3 so that angular updates do nothing
-inertiaId :: ((Double,Double,Double),
-              (Double,Double,Double),
-              (Double,Double,Double))
-inertiaId = ((1,0,0),(0,1,0),(0,0,1))
-
--- force field: pure gravity, no torque
 forceField :: Force3D
 forceField =
   let massMap = M.singleton proj massVal
@@ -44,7 +25,6 @@ forceField =
   in Force3D $ \st c ->
        if c == proj then runForce3D gF st c else ((0,0,0),(0,0,0))
 
--- runes: drift only in translation, then kick under gravity
 driftR :: RRune
 driftR = driftTrans [proj]
 

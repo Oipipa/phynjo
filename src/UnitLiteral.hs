@@ -20,7 +20,6 @@ module UnitLiteral
   , scaleU
   , mergeU
   , disjointMergeU
-  -- handy physics aliases
   , PosLit , MomLit , MassLit , ForceLit
   ) where
 

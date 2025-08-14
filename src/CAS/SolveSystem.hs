@@ -3,8 +3,6 @@ module CAS.SolveSystem (solveSystem) where
 import CAS.AST
 import CAS.Simplify     (simplify)
 
--- | Solve a 2×2 linear system for variables [v1,v2].
---   Equations are given as (lhs, rhs) meaning lhs = rhs.
 solveSystem :: [String] -> [(Expr, Expr)] -> [(String, Expr)]
 solveSystem [v1,v2] [(lhs1, rhs1), (lhs2, rhs2)] =
   let
@@ -51,4 +49,4 @@ solveSystem [v1,v2] [(lhs1, rhs1), (lhs2, rhs2)] =
       solX = simplify $ Const (xNum / det)
       solY = simplify $ Const (yNum / det)
   in [(v1, solX), (v2, solY)]
-solveSystem _ _ = error "solveSystem: only 2×2 systems supported"
+solveSystem _ _ = error "solveSystem: only 2x2 systems supported"

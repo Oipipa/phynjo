@@ -1,4 +1,3 @@
--- src/CAS/Integrate/Polynomial.hs
 module CAS.Integrate.Polynomial (isPolynomial, integrate) where
 
 import CAS.AST

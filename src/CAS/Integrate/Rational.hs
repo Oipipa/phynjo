@@ -1,4 +1,3 @@
--- src/CAS/Integrate/Rational.hs
 module CAS.Integrate.Rational (isRational, integrate) where
 
 import CAS.AST

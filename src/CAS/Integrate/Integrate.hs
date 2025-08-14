@@ -1,4 +1,3 @@
--- src/CAS/Integrate/Integrate.hs
 module CAS.Integrate.Integrate (integrate) where
 
 import CAS.AST

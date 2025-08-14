@@ -11,9 +11,6 @@ import           Data.Map.Strict      (Map)
 import qualified Data.Map.Strict as M
 import           Data.Ratio
 
--- ---------------------------------------------------------------------
--- Basics
--- ---------------------------------------------------------------------
 
 zero, one :: Expr
 zero = Const 0
@@ -25,11 +22,6 @@ isZero _         = False
 isOne  (Const r) = r == 1
 isOne  _         = False
 
--- ---------------------------------------------------------------------
--- Public API
--- ---------------------------------------------------------------------
-
--- One-pass recursive simplifier with local rules
 simplify :: Expr -> Expr
 simplify (Add a b) = simplifyAdd (simplify a) (simplify b)
 simplify (Sub a b) = simplifySub (simplify a) (simplify b)
@@ -38,7 +30,6 @@ simplify (Div a b) = simplifyDiv (simplify a) (simplify b)
 simplify (Pow a b) = simplifyPow (simplify a) (simplify b)
 simplify (Neg a)   = simplifyNeg (simplify a)
 
--- small identities on common unary ops
 simplify (Sin a) = case simplify a of
   x | isZero x  -> zero
   Neg y         -> simplifyNeg (Sin y)   -- sin(-x) = -sin x
@@ -59,7 +50,6 @@ simplify (Log a) = case simplify a of
 
 simplify e = e
 
--- Iterate simplify + a trig-combining pass to a fixed point
 simplifyFix :: Expr -> Expr
 simplifyFix = go 0
   where
@@ -73,18 +63,13 @@ simplifyFix = go 0
                 then e
                 else go (k+1) e2
 
--- ---------------------------------------------------------------------
--- Addition / Subtraction
--- ---------------------------------------------------------------------
 
--- Combine like terms, flatten sums, fold constants
 simplifyAdd :: Expr -> Expr -> Expr
 simplifyAdd x y = rebuildSum (collectSum (flattenSum x ++ flattenSum y))
 
 simplifySub :: Expr -> Expr -> Expr
 simplifySub x y = simplifyAdd x (simplifyNeg y)
 
--- Flatten a sum to a list of terms (Sub and Neg included)
 flattenSum :: Expr -> [Expr]
 flattenSum (Add a b) = flattenSum a ++ flattenSum b
 flattenSum (Sub a b) = flattenSum a ++ map simplifyNeg (flattenSum b)
@@ -101,7 +86,6 @@ splitCoeff (Mul a b) =
   in (ca * cb, mulNorm ba bb)
 splitCoeff e = (1, e)
 
--- Normalize product core: flatten and sort factors, drop 1
 mulNorm :: Expr -> Expr -> Expr
 mulNorm a b = mkMulList (factors a ++ factors b)
   where
@@ -111,7 +95,6 @@ mulNorm a b = mkMulList (factors a ++ factors b)
       | isOne e'     = []
       | otherwise    = [e']
 
--- Group like bases in a sum and add coefficients
 collectSum :: [Expr] -> Map Expr Rational
 collectSum = foldl' step M.empty
   where
@@ -119,7 +102,6 @@ collectSum = foldl' step M.empty
       let (c,b) = splitCoeff term
       in if c == 0 then acc else M.insertWith (+) (canon b) c acc
 
-    -- simple canonicalization for product bases: sorted factors
     canon :: Expr -> Expr
     canon e = case e of
       Mul u v -> mkMulList (sort (flattenMul (Mul u v)))
@@ -153,11 +135,6 @@ termFrom (c, b)
   | c == (-1) = simplifyNeg b
   | otherwise = Mul (Const c) b
 
--- ---------------------------------------------------------------------
--- Multiplication / Division / Power / Negation
--- ---------------------------------------------------------------------
-
--- Distribute product over sums on BOTH sides so trig combiner can fire
 simplifyMul :: Expr -> Expr -> Expr
 simplifyMul (Add a b) t = simplifyAdd (simplifyMul a t) (simplifyMul b t)
 simplifyMul (Sub a b) t = simplifySub (simplifyMul a t) (simplifyMul b t)
@@ -234,11 +211,6 @@ simplifyNeg (Const x) = Const (negate x)
 simplifyNeg (Neg x)   = x
 simplifyNeg x         = Neg x
 
--- ---------------------------------------------------------------------
--- Trig combiner (sum-to-difference identities)
--- ---------------------------------------------------------------------
-
--- Helpers to detect trig heads
 isSin :: Expr -> Maybe Expr
 isSin (Sin a) = Just a
 isSin _       = Nothing
@@ -268,10 +240,6 @@ partitionTrig = go [] [] []
       (_, Just u) -> go ss (u:cs) os fs
       _           -> go ss cs (f:os) fs
 
--- Try to combine one pair of terms in a sum using identities:
---   A) sin u sin v  + cos u cos v = cos(u - v)
---   B) cos u sin v  - sin u cos v = sin(v - u)
---   C) sin u cos v  - sin v cos u = sin(u - v)
 combineTrigPair :: [Expr] -> Maybe (Expr, (Int,Int))
 combineTrigPair terms = outer 0
   where
@@ -359,10 +327,6 @@ simplifyTrigOnce e =
              rest     = [ t | (k,t) <- zip [0..] ts, keep k t ]
              sum'     = mkAddList (tNew : rest)
          in simplify sum'
-
--- ---------------------------------------------------------------------
--- Builders (flat and ordered)
--- ---------------------------------------------------------------------
 
 mkAddList :: [Expr] -> Expr
 mkAddList []  = zero

@@ -2,27 +2,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Body                          (Body, mkBody)
-import Components                    (Component(AtomicC))
-import System.SystemForces           (mkSystem, System(..))
-import UnitLiteral                   (getLiteral)
-import NumericWorkflow               (NumericWorkflow, applyNumericWorkflow)
-import NState                        ( NState
-                                     , emptyNS
-                                     , insertPos
-                                     , lookupPos
-                                     , lookupMom
-                                     )
-import Physics.Forces.Force                 (Force(..))
-import Physics.Forces.ForceDSL              (addForces)
-import Numeric.Units.Dimensional.Prelude
-  ( (*~), (/~)
-  , kilo, gram
-  , metre, second
-  )
+import Phynjo.Core 
+import Phynjo.Forces
+
 import qualified Numeric.Units.Dimensional.Prelude as D
 import qualified Data.Map.Strict       as M
-import           Data.Map.Strict         (Map, (!))
 
 -- | Simulation parameters
 dt      :: Double

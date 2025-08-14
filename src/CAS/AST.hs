@@ -1,4 +1,7 @@
-module CAS.AST where
+module CAS.AST ( Expr(..)
+  , (.+.), (.-.), (.*.), (./.), (.^.)
+  , neg
+  ) where
 
 data Expr
   = Var String

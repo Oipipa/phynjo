@@ -2,10 +2,10 @@
 
 module Main where
 
-import Physics.Integrators.LeapfrogNR    (State(..), MassMap, integrateN, totalEnergy)
+import Phynjo.Core 
+import Phynjo.Integrators 
+
 import qualified Data.Map.Strict as M
-import Data.List             (intercalate)
-import Text.Printf           (printf)
 
 gConst, dt :: Double
 gConst = 1.0

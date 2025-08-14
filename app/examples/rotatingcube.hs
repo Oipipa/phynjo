@@ -3,26 +3,12 @@
 
 module Main where
 
-import Physics.RigidBodyUtilities.RigidState    ( RigidState(..)
-                             , emptyRigid
-                             , insertRigid
-                             )
-import Physics.RigidBodyUtilities.Rigid3DNR
-  ( RRune
-  , applyRRuneWorld
-  , driftTrans
-  , driftRot
-  , kickForce3D
-  )
-import Physics.Forces.Force3D       ( gravity3D
-                             , drag3D
-                             , Force3D(..)
-                             )
-import Components            ( Component(AtomicC) )
+import Phynjo.RB 
+import Phynjo.Forces 
+import Phynjo.Core
 import Physics.Math.LinearAlgebra    ( Vec3, vadd )
 import qualified Data.Map.Strict as M
 import qualified Data.Set        as S
-import Text.Printf           ( printf )
 
 -- | Our single rigid body
 cube :: Component
@@ -35,17 +21,16 @@ inertiaTensor  = ( (1.0,0,0)
                  , (0,0,1.0)
                  )             :: (Vec3,Vec3,Vec3)  -- simple unit cube
 
--- | Build the composite Force3D: gravity downward + drag
 forceField :: Force3D
 forceField =
   let mmap      = M.fromList [(cube,massValue)]
       gField    = gravity3D 9.81 mmap
       dField    = drag3D    0.5    -- drag coefficient
   in Force3D $ \st c ->
-       let (fG,τG) = runForce3D gField st c
-           (fD,τD) = runForce3D dField st c
+       let (fG,taoG) = runForce3D gField st c
+           (fD,taoD) = runForce3D dField st c
        in ( vadd fG fD
-          , vadd τG τD
+          , vadd taoG taoD
           )
 
 -- | The three runes for our integrator

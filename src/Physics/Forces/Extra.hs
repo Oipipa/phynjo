@@ -14,16 +14,7 @@ import           Physics.RigidBodyUtilities.RigidState    (RigidState, lookupVel
 import           Physics.Math.LinearAlgebra    (Vec3, vscale, vadd, vdot)
 import qualified Data.Map.Strict       as M
 import           Data.Semigroup        (Semigroup (..))
-
-vnorm2 :: Vec3 -> Double
-vnorm2 v = vdot v v
-
-cross :: Vec3 -> Vec3 -> Vec3
-cross (x1,y1,z1) (x2,y2,z2) =
-  ( y1*z2 - z1*y2
-  , z1*x2 - x1*z2
-  , x1*y2 - y1*x2
-  )
+import Physics.Math.LinearAlgebra 
 
 guardScale :: Bool -> Double -> Vec3 -> Vec3
 guardScale ok k v = if ok then vscale k v else (0,0,0)
@@ -51,7 +42,7 @@ magnus3D
 magnus3D rho cl a r = Force3D $ \st c ->
   let v         = lookupVelR   c st
       omega         = lookupAngVelR c st
-      f         = vscale (0.5 * rho * cl * a * r) (cross omega v)
+      f = vscale (0.5 * rho * cl * a * r) (cross v omega)
   in (f, (0,0,0))
 
 dragTorque3D
@@ -70,7 +61,7 @@ Force3D f <+> Force3D g = Force3D $ \st c ->
 infixr 6 <+>
 
 sumForces3D :: [Force3D] -> Force3D
-sumForces3D = foldr1 (<+>)
+sumForces3D = mconcat
 
 instance Semigroup Force3D where
   (<>) = (<+>)

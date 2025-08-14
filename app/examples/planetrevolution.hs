@@ -1,10 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import qualified Data.Map.Strict       as M
-import           Physics.Integrators.LeapfrogNR    (State(..), MassMap, integrateN, totalEnergy)
-import           Physics.Math.LinearAlgebra    (Vec3)
-import Numeric.Units.Dimensional.Prelude    ( (*~), kilo, gram )
+import Phynjo.Integrators 
+import Phynjo.Core
+import qualified Data.Map.Strict as M
+import Physics.Math.LinearAlgebra (Vec3)
 import qualified Numeric.Units.Dimensional.Prelude as D
 
 -- gravitational constant, time‐step and steps
@@ -38,7 +38,6 @@ initState = State
       ]
   , vel = M.fromList
       [ (sunId,    (0,0,0))
-      -- v = sqrt(GM/r) in y direction
       , (planetId, (0, v, 0))
       ]
   }

@@ -1,4 +1,3 @@
--- src/CAS/Integrate/Trigonometric.hs
 module CAS.Integrate.Trigonometric (isTrig, integrate) where
 
 import CAS.AST
