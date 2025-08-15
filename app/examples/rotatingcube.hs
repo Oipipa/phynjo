@@ -33,7 +33,6 @@ forceField =
           , vadd taoG taoD
           )
 
--- | The three runes for our integrator
 driftRune :: RRune
 driftRune = driftTrans [cube]
 

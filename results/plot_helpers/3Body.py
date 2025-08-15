@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D  # for 3D plotting
 
-df = pd.read_csv('../data/3bodyproblem.csv')
+df = pd.read_csv('../data/3BodyFigure8.csv')
 
 plt.figure()
 plt.plot(df['x1'], df['y1'], label='Body 1')
