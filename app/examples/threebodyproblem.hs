@@ -35,7 +35,6 @@ initState = case scenario of
   FigureEight      -> cmZero masses figureEightInit
   Sitnikov3D       -> cmZero masses sitnikovInit
 
--- 1) Lagrange equilateral triangle with small out-of-plane wobble
 lagrangeInit :: State
 lagrangeInit =
   let side      = 1.0
@@ -43,7 +42,6 @@ lagrangeInit =
       twoPi120  = 2 * pi / 3
       toPos i   = let th = fromIntegral (i-1) * twoPi120
                   in  ( r * cos th, r * sin th, 0.0 )
-      -- Correct ω² = G m / (√3 r³) for equal masses
       omega     = sqrt (gConst / (sqrt 3.0 * r*r*r))
       wobble    = 0.02 * omega
       posMap    = M.fromList [(i, toPos i) | i <- [1..3 :: Int]]
@@ -54,7 +52,6 @@ lagrangeInit =
       velMap    = M.fromList [(i, getVel i) | i <- [1..3 :: Int]]
   in  State { pos = posMap, vel = velMap }
 
--- 2) Moore–Chenciner figure-eight for three equal masses, G=1
 figureEightInit :: State
 figureEightInit =
   let q1 = (-0.97000436,  0.24308753, 0.0)
@@ -66,12 +63,10 @@ figureEightInit =
   in  State { pos = M.fromList [(1,q1),(2,q2),(3,q3)]
             , vel = M.fromList [(1,v1),(2,v2),(3,v3)] }
 
--- 3) Sitnikov-style: two heavy bodies in a circular binary, light third bouncing in z
 sitnikovInit :: State
 sitnikovInit =
   let a     = 0.8          -- semi-distance from CM
       m     = 1.0
-      -- For two equal masses at separation 2a: ω² = G m / (4 a³)
       omega = sqrt (gConst * m / (4*a*a*a))
       q1 = (-a, 0.0, 0.0)
       q2 = ( a, 0.0, 0.0)
@@ -82,7 +77,6 @@ sitnikovInit =
   in  State { pos = M.fromList [(1,q1),(2,q2),(3,q3)]
             , vel = M.fromList [(1,v1),(2,v2),(3,v3)] }
 
--- Center-of-mass recentering and de-drifting, using your Vec3 ops
 cmZero :: MassMap -> State -> State
 cmZero ms st =
   let mTot = sum (M.elems ms)
