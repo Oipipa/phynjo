@@ -67,12 +67,6 @@ library
     , Physics.Forces.Extra
     , Physics.Math.Vec3Util
     , Physics.Sim.Compose
-    , Physics.Collision.Types
-    , Physics.Collision.BoundingVolume
-    , Physics.Collision.BroadPhase.SweepAndPrune
-    , Physics.Collision.BroadPhase.UniformGrid
-    , Physics.Collision.Manager
-    , Physics.Collision.NarrowPhase
     , Physics.Math.LinearAlgebra
     , Phynjo.Core
     , Phynjo.Forces 
