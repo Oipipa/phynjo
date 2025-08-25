@@ -2,17 +2,15 @@ module CAS.Differentiate (differentiate) where
 
 import           CAS.AST
 import           CAS.Simplify       (simplify, simplifyAdd, simplifySub)
-import           Data.Ratio         ((%))  -- keep if you want rational literals elsewhere
+import           Data.Ratio         ((%)) 
 
 differentiate :: String -> Expr -> Expr
 differentiate v expr = diff expr
   where
-    -- collect all factors of a product into a list
     flattenMul :: Expr -> [Expr]
     flattenMul (Mul x y) = flattenMul x ++ flattenMul y
     flattenMul e         = [e]
 
-    -- drop any factor equal to 1, keep zeros
     stripOneFlatten :: Expr -> Expr
     stripOneFlatten e =
       let fs  = flattenMul e
@@ -44,12 +42,10 @@ differentiate v expr = diff expr
         (Sub (Mul (diff a) b) (Mul a (diff b)))
         (Pow b (Const 2))
 
-    -- constant exponent
     diff (Pow a (Const n)) =
       let da = diff a
       in simplify $ Mul (Mul (Const n) (Pow a (Const (n - 1)))) da
 
-    -- general exponent
     diff (Pow a b) =
       let f  = Pow a b
           da = diff a
