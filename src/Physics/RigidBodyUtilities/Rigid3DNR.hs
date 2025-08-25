@@ -21,7 +21,6 @@ import qualified Data.Map.Strict as M
 import           Data.Set        (Set)
 import qualified Data.Set        as S
 
--- | A numeric‐rune over 3D rigid‐body state.
 data RRune = RR
   { domainR :: Set Component
   , stepR   :: Double -> RigidState -> RigidState
@@ -56,7 +55,6 @@ driftRot comps =
                        (\c q0 ->
                           if c `S.member` dom
                             then
-                              -- convert world omega to body omega
                               let rot    = quatToMatrix q0
                                   rotT   = transpose3 rot
                                   omegaW = velW M.! c
@@ -68,11 +66,10 @@ driftRot comps =
         in st { rsOri = ori' }
   in RR dom step
 
--- | Kick: full Euler‐equation update + linear‐velocity kick.
 kickForce3D
-  :: [(Component, Double)]        -- ^ mass map (kg)
-  -> [(Component, InertiaTensor)] -- ^ body‐space inertia tensors
-  -> Force3D                      -- ^ field (F,torque) in world coords
+  :: [(Component, Double)] 
+  -> [(Component, InertiaTensor)] 
+  -> Force3D 
   -> RRune
 kickForce3D masses inertias (Force3D field) =
   let dom      = S.fromList (map fst masses)
@@ -95,17 +92,14 @@ kickForce3D masses inertias (Force3D field) =
                      )
                      vel0
 
-            -- angular update via Euler equations
             ang' = M.mapWithKey
                      (\c w0 ->
                         if c `S.member` dom
                           then
-                            let -- world→body
+                            let
                                 q      = ori0 M.! c
                                 rmat   = quatToMatrix q
                                 rt     = transpose3 rmat
-
-                                -- body‐space torque & omega
                                 torqueW   = snd (field st c)
                                 torqueB   = applyMat rt torqueW
                                 wB     = applyMat rt w0
