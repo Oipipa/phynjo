@@ -25,11 +25,9 @@ symplectic4 dt masses f =
       d1 = theta
       d2 = 1 - 2*theta
 
-      -- chop out base rules
       baseDrift = driftNR masses
       baseKick  = forceNR  f masses
 
-      -- full set of bodies
       domain = S.fromList (map fst masses)
 
       mkSlice (ruleF, alpha) =
@@ -39,7 +37,6 @@ symplectic4 dt masses f =
                    }
         in Run nr
 
-      -- the sequence of (rule, fraction) pairs
       schedule =
         [ (baseDrift, c1)
         , (baseKick , d1)

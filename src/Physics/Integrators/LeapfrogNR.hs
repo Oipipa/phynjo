@@ -33,7 +33,6 @@ drift h s =
   s{ pos = M.intersectionWith (\r v -> vadd r (vscale h v))
                               (pos s) (vel s) }
 
--- | Acceleration on body i from all other bodies.
 accOne :: Double              -- ^ G
        -> MassMap
        -> M.Map Int Vec3      -- ^ positions
@@ -49,14 +48,12 @@ accOne g m rs i =
             in  vadd acc (vscale (g * (m M.! j) / (r2 * sqrt r2)) dr)
   in  M.foldlWithKey' force (0,0,0) rs
 
--- | Kick velocities for a time h with freshly computed accelerations.
 kick :: Double -> Double -> MassMap -> State -> State
 kick h g m s =
   let rs  = pos s
       vs  = vel s
       a   = M.mapWithKey (\i _ -> accOne g m rs i) rs
       dv  = M.map (vscale h) a
-      -- strict key match; fail fast if something is missing
       vel' = M.mapWithKey
                 (\k vOld ->
                    vadd vOld (fromMaybe (err k) (M.lookup k dv)))
@@ -64,7 +61,6 @@ kick h g m s =
       err k = error ("kick: missing dv for body id " ++ show k)
   in  s{ vel = vel' }
 
--- | Second-order, time-reversible velocity-Verlet (a.k.a. leap-frog).
 leapRaw :: Double -> Double -> MassMap -> State -> State
 leapRaw h g m = drift (0.5*h) . kick h g m . drift (0.5*h)
 
@@ -78,8 +74,6 @@ stepOK h m s =
       vmax   = sqrt vmax2
   in  h * safety <= sqrt r2min / vmax
 
--- | Recursive adaptive wrapper around `leapRaw`.
---   *If h falls below hMin we stop subdividing and accept the step.*
 adaptive :: Double -> Double -> MassMap -> State -> State
 adaptive h g m s
   | h < hMin     = leapRaw h g m s           -- give up further subdivision
@@ -88,15 +82,12 @@ adaptive h g m s
                        s' = adaptive h2 g m s
                    in  adaptive h2 g m s'
 
--- | Adaptive velocity-Verlet step.
 leapfrogNR :: Double -> Double -> MassMap -> State -> State
 leapfrogNR = adaptive
 
--- | Integrate for n steps, returning the whole trajectory.
 integrateN :: Int -> Double -> Double -> MassMap -> State -> [State]
 integrateN n h g m = take (n + 1) . iterate (leapfrogNR h g m)
 
--- | Total (kinetic + potential) energy.
 totalEnergy :: Double -> MassMap -> State -> Double
 totalEnergy g m s =
   let ke = sum [ 0.5 * mi * vnorm2 (vel s M.! i)

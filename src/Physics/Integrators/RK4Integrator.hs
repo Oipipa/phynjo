@@ -31,13 +31,11 @@ rk4Step h g masses st0 =
         , vel = M.map (vscale k) vel
         }
 
-      -- the four RK4 slopes
       k1 = deriv st0
       k2 = deriv (addSt st0 (scaleSt (h/2) k1))
       k3 = deriv (addSt st0 (scaleSt (h/2) k2))
       k4 = deriv (addSt st0 (scaleSt h     k3))
 
-      -- weighted combination
       incr = scaleSt (h/6)
            $ addSt k1
            $ addSt (scaleSt 2 k2)

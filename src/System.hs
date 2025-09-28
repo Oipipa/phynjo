@@ -18,21 +18,17 @@ data System = Sys
   }
   deriving (Eq, Show)
 
--- convert a single Body to a singleton System
 bodyToSys :: Body -> System
 bodyToSys Body{mass, pos0, mom0} = Sys mass pos0 mom0
 
--- internal unsafe merge (assumes keys disjoint)
 unsafeMerge :: System -> System -> System
 unsafeMerge (Sys m1 q1 p1) (Sys m2 q2 p2) =
   Sys (mergeU m1 m2) (mergeU q1 q2) (mergeU p1 p2)
 
--- | Build a system from a non-empty list of bodies (assumes unique ids).
 bodies :: [Body] -> System
 bodies []     = error "System.bodies: empty list"
 bodies (b:bs) = foldl unsafeMerge (bodyToSys b) (map bodyToSys bs)
 
--- | Disjoint union; returns Nothing on duplicate component keys.
 (<+>) :: System -> System -> Maybe System
 Sys m1 q1 p1 <+> Sys m2 q2 p2 = do
   m <- disjointMergeU m1 m2
