@@ -6,7 +6,7 @@ import qualified Data.Map.Strict           as M
 import           Physics.Contact
 import           Physics.RigidBodyUtilities.RigidState
 import           Physics.RigidBodyUtilities.Rigid3DNR         (RRune, applyRRuneWorld)
-import           Components                (Component (..))
+import           Base.Components                (Component (..))
 
 ball :: Component
 ball = AtomicC "ball"

@@ -5,9 +5,9 @@ module Physics.Forces.ForceNR
   ) where
 
 import Physics.Forces.Force    (Force(..))
-import NState                  (NState, lookupPos, lookupMom, insertMom)
-import NumericRule             (NumericRule(..))
-import Components              (Component)
+import Base.NState                  (NState, lookupPos, lookupMom, insertMom)
+import Base.NumericRule             (NumericRule(..))
+import Base.Components              (Component)
 import qualified Data.Set      as S
 import qualified Data.Map.Strict as M
 

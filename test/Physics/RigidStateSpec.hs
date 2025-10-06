@@ -3,7 +3,7 @@
 module Physics.RigidStateSpec (spec) where
 
 import Test.Hspec
-import Components            (Component(AtomicC))
+import Base.Components            (Component(AtomicC))
 import Physics.RigidBodyUtilities.RigidState
 import Physics.RigidBodyUtilities.RigidBody     (Quaternion)
 import Physics.Math.LinearAlgebra    (Vec3)

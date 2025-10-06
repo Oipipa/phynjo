@@ -2,8 +2,8 @@
 module ScalarLitSpec (spec) where
 
 import Test.Hspec
-import Components      (Component(..))
-import ScalarLiteral
+import Base.Components      (Component(..))
+import Base.ScalarLiteral
 
 spec :: Spec
 spec = describe "ScalarLiteral" $ do

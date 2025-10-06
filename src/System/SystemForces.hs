@@ -7,10 +7,10 @@ module System.SystemForces
 
 import qualified Data.Map.Strict             as M
 import           Numeric.Units.Dimensional.Prelude ((/~), kilo, gram)
-import           UnitLiteral                  (MassLit, PosLit, MomLit, getLiteral)
-import qualified System                      as Core    (System(..), bodies)
-import           Body                         (Body)
-import           Components                   (Component)
+import           Base.UnitLiteral                  (MassLit, PosLit, MomLit, getLiteral)
+import qualified Base.System                      as Core    (System(..), bodies)
+import           Base.Body                         (Body)
+import           Base.Components                   (Component)
 
 -- | A fast-lookup mass map (in raw kilograms).
 type MassMap = M.Map Component Double

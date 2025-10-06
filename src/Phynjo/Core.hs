@@ -46,30 +46,30 @@ module Phynjo.Core
   ) where
 
 -- Core
-import Body (Body(..), mkBody)
-import Components (Component(AtomicC))
+import Base.Body (Body(..), mkBody)
+import Base.Components (Component(AtomicC))
 import System.SystemForces (System(..), mkSystem)
 
 -- Numeric workflow and state
-import NState
+import Base.NState
   ( NState(..)
   , emptyNS, insertPos, insertMom, lookupPos, lookupMom, componentsNS
   )
-import NumericWorkflow (NumericWorkflow(..), workflowDomain, applyNumericWorkflow)
+import Base.NumericWorkflow (NumericWorkflow(..), workflowDomain, applyNumericWorkflow)
 
 -- Scalar literals
-import ScalarLiteral
+import Base.ScalarLiteral
   ( SLit(..)
   , emptySL, singletonSL, lookupSL, insertSL, adjustSL, keysSL
   )
 
 -- Unit literals
-import UnitLiteral
+import Base.UnitLiteral
   ( ULiteral(..), emptyU, singletonU, lookupU, insertU, deleteU
   , keysU, mapU, zipWithU, scaleU, mergeU, disjointMergeU
   , PosLit, MomLit, MassLit, ForceLit
   )
-import qualified UnitLiteral as UL
+import qualified Base.UnitLiteral as UL
 
 -- Boolean utilities
 import BooleanUtils.EventRule (EventRule(..), ruleToAction)
@@ -87,7 +87,7 @@ import BooleanUtils.Transition
   )
 
 -- Actions
-import Action (Action(..), applyActionWorld, applyActionPhen)
+import Base.Action (Action(..), applyActionWorld, applyActionPhen)
 
 -- Units and maps re-exports needed by users
 import Numeric.Units.Dimensional.Prelude ((*~), (/~), kilo, gram, metre, second)

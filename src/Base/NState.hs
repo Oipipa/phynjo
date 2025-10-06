@@ -1,6 +1,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
-module NState
+module Base.NState
   ( NState(..)
   , emptyNS
   , insertPos , insertMom
@@ -8,8 +8,8 @@ module NState
   , componentsNS
   ) where
 
-import Components        (Component)
-import ScalarLiteral
+import Base.Components        (Component)
+import Base.ScalarLiteral
   ( SLit , emptySL , insertSL , lookupSL , keysSL )
 
 data NState = NS

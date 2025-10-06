@@ -4,9 +4,9 @@ module Physics.ForceSpec (spec) where
 
 import Test.Hspec
 import Physics.Forces.Force
-import Components           (Component(AtomicC))
+import Base.Components           (Component(AtomicC))
 import Physics.Math.LinearAlgebra   (Vec3)
-import NState               (NState)
+import Base.NState               (NState)
 
 spec :: Spec
 spec = describe "Physics.Force" $ do

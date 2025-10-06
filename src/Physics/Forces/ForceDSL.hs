@@ -10,12 +10,12 @@ import qualified Data.Map.Strict as M
 import Physics.Integrators.Leapfrog1D        (leapfrog1D)
 import Physics.Forces.Force                  (Force(..))
 import System.SystemForces                   (System(..))
-import UnitLiteral                           (getLiteral)
-import NumericWorkflow                       (NumericWorkflow(..))
-import Components                            (Component)
+import Base.UnitLiteral                           (getLiteral)
+import Base.NumericWorkflow                       (NumericWorkflow(..))
+import Base.Components                            (Component)
 import Numeric.Units.Dimensional.Prelude     (Quantity, DMass, (/~), kilo, gram)
 
-import NState                                (NState, lookupPos, lookupMom)
+import Base.NState                                (NState, lookupPos, lookupMom)
 
 addForce :: Double -> Force -> System -> NumericWorkflow
 addForce dt f System{sMass} =

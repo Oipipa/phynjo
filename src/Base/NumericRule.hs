@@ -1,13 +1,13 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
-module NumericRule
+module Base.NumericRule
   ( NumericRule(..)
   , applyNumericRule
   ) where
 
 import qualified Data.Set   as Set
-import           Components  (Component)
-import           NState      (NState)
+import           Base.Components  (Component)
+import           Base.NState      (NState)
 
 data NumericRule = NumericRule
   { nrDomain :: Set.Set Component

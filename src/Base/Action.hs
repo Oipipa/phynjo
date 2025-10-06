@@ -1,4 +1,4 @@
-module Action
+module Base.Action
   ( Action(..)
   , applyActionWorld
   , applyActionPhen

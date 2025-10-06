@@ -7,10 +7,10 @@ module Physics.Forces.Force
   , ForceField
   ) where
 
-import Components                 (Component)
+import Base.Components                 (Component)
 import Physics.Math.LinearAlgebra (Vec3)
 
-import NState                     (NState)
+import Base.NState                     (NState)
 
 type ForceField = NState -> Component -> Vec3
 

@@ -3,14 +3,14 @@ module Physics.Integrators.Symplectic4
   ( symplectic4 
   ) where
 
-import           Components           (Component)
+import           Base.Components           (Component)
 import qualified Data.Set             as S
 
 import           Physics.DriftNR      (driftNR)
 import           Physics.Forces.ForceNR      (forceNR)
 import           Physics.Forces.Force        (Force)
-import           NumericRule          (NumericRule(..))
-import           NumericWorkflow      (NumericWorkflow(..))
+import           Base.NumericRule          (NumericRule(..))
+import           Base.NumericWorkflow      (NumericWorkflow(..))
 
 symplectic4
   :: Double 

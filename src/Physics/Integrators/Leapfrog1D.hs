@@ -3,15 +3,15 @@ module Physics.Integrators.Leapfrog1D
   ( leapfrog1D 
   ) where
 
-import           Components         (Component)
+import           Base.Components         (Component)
 import qualified Data.Set           as S
 
 import           Physics.DriftNR    (driftNR)
 import           Physics.Forces.ForceNR    (forceNR)
 import           Physics.Forces.Force      (Force)
-import           NumericRule        (NumericRule(..))
-import           NumericWorkflow    (NumericWorkflow(..))
-import           NState             (NState)
+import           Base.NumericRule        (NumericRule(..))
+import           Base.NumericWorkflow    (NumericWorkflow(..))
+import           Base.NState             (NState)
 
 leapfrog1D
   :: Double 

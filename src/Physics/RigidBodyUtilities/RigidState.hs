@@ -10,7 +10,7 @@ module Physics.RigidBodyUtilities.RigidState
   , lookupAngVelR
   ) where
 
-import Components            (Component)
+import Base.Components            (Component)
 import Physics.Math.LinearAlgebra    (Vec3)
 import Physics.RigidBodyUtilities.RigidBody     (Quaternion)
 import Data.Map.Strict       (Map)

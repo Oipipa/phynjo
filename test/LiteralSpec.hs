@@ -5,7 +5,7 @@ import Test.Hspec
 import qualified Data.Set as Set
 
 import BooleanUtils.Literal
-import Components (Component(AtomicC, Composite))
+import Base.Components (Component(AtomicC, Composite))
 
 spec :: Spec
 spec = describe "Literal module" $ do

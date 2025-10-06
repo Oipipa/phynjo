@@ -1,4 +1,4 @@
-module ScalarLiteral
+module Base.ScalarLiteral
   ( SLit(..)
   , emptySL
   , singletonSL
@@ -8,7 +8,7 @@ module ScalarLiteral
   , keysSL
   ) where
 
-import Components                 (Component)
+import Base.Components                 (Component)
 import Data.Map.Strict            (Map)
 import qualified Data.Map.Strict  as M
 

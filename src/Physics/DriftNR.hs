@@ -3,12 +3,12 @@ module Physics.DriftNR
   ( driftNR        -- :: [(Component,Double)] -> NumericRule
   ) where
 
-import           Components         (Component)
+import           Base.Components         (Component)
 import qualified Data.Map.Strict    as M
 import qualified Data.Set           as S
 
-import           NumericRule        (NumericRule(..))
-import           NState             (NState, lookupPos, lookupMom, insertPos)
+import           Base.NumericRule        (NumericRule(..))
+import           Base.NState             (NState, lookupPos, lookupMom, insertPos)
 
 driftNR :: [(Component, Double)] -> NumericRule
 driftNR masses =

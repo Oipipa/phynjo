@@ -10,7 +10,7 @@ import           Data.Set                 (Set)
 import qualified Data.Set                 as S
 import qualified Data.Map.Strict          as M
 
-import           Components               (Component)
+import           Base.Components               (Component)
 import           Physics.Forces.Force3D          (Force3D)
 import qualified Physics.Forces.Extra    as F
 import           Physics.RigidBodyUtilities.Rigid3DNR        (RRune (..), kickForce3D)

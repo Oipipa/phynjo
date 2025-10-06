@@ -4,11 +4,11 @@ module Physics.ForceNRSpec (spec) where
 import Test.Hspec
 import Physics.Forces.ForceNR       (forceNR)
 import Physics.Forces.Force         (Force(..))
-import NState                ( emptyNS
+import Base.NState                ( emptyNS
                              , insertPos, insertMom
                              , lookupPos, lookupMom )
-import NumericRule           (applyNumericRule, nrDomain)
-import Components            (Component(AtomicC))
+import Base.NumericRule           (applyNumericRule, nrDomain)
+import Base.Components            (Component(AtomicC))
 import qualified Data.Set     as S
 
 spec :: Spec

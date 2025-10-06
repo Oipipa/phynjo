@@ -1,12 +1,12 @@
 {-# LANGUAGE DataKinds #-}
 
-module Body
+module Base.Body
   ( Body(..)
   , mkBody
   ) where
 
-import Components   (Component(..))
-import UnitLiteral
+import Base.Components   (Component(..))
+import Base.UnitLiteral
 import Numeric.Units.Dimensional.Prelude
          ( Quantity, (*~), metre, second, kilo, gram
          , DLength, DMass )

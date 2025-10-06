@@ -6,7 +6,7 @@
 {-# LANGUAGE TypeOperators        #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module UnitLiteral
+module Base.UnitLiteral
   ( ULiteral(..)
   , getLiteral
   , emptyU
@@ -23,7 +23,7 @@ module UnitLiteral
   , PosLit , MomLit , MassLit , ForceLit
   ) where
 
-import Components                      (Component)
+import Base.Components                      (Component)
 import Data.Map.Strict                 (Map)
 import qualified Data.Map.Strict       as M
 import Numeric.Units.Dimensional.Prelude

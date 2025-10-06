@@ -5,7 +5,7 @@ synopsis:            A Haskell EDSL for physics abstractions
 description:         |
   physics-edsl is an embedded domain-specific language (EDSL) in Haskell
   for modeling and simulating physical systems. It builds on a formal
-  component–phenomenon abstraction, providing compositional “runes” (atomic
+  component-phenomenon abstraction, providing compositional “runes” (atomic
   laws) and “spells” (composed behaviors) with first-class support for
   conservation laws and constraints.
 license:             BSD-3-Clause
@@ -20,19 +20,19 @@ library
   hs-source-dirs:
     src
   exposed-modules:
-      Components
+      Base.Components
     , BooleanUtils.Literal
     , BooleanUtils.Transition
-    , Action
+    , Base.Action
     , BooleanUtils.Process
     , BooleanUtils.EventRule
     , BooleanUtils.EventWorkflow
-    , Constraint
-    , UnitLiteral
-    , Body
-    , System
-    , ScalarLiteral
-    , NState
+    , Base.Constraint
+    , Base.UnitLiteral
+    , Base.Body
+    , Base.System
+    , Base.ScalarLiteral
+    , Base.NState
     , Physics.DriftNR
     , Physics.Forces.GravNR
     , Physics.Integrators.EulerNR
@@ -50,8 +50,8 @@ library
     , Physics.Forces.Force3D
     , Physics.Contact
     , Physics.Lagrangian
-    , NumericRule
-    , NumericWorkflow
+    , Base.NumericRule
+    , Base.NumericWorkflow
     , CAS.AST
     , CAS.Parser
     , CAS.PrettyPrinter

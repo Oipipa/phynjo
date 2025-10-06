@@ -8,7 +8,7 @@ import           Physics.Sim.Compose
 import           Physics.RigidBodyUtilities.Rigid3DNR        (RRune (..), applyRRuneWorld)
 import           Physics.RigidBodyUtilities.RigidState
 import           Physics.Forces.Force3D
-import           Components               (Component (..))
+import           Base.Components               (Component (..))
 
 cA, cB :: Component
 cA = AtomicC "A"

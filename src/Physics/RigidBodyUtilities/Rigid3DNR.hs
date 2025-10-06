@@ -8,7 +8,7 @@ module Physics.RigidBodyUtilities.Rigid3DNR
   , kickForce3D
   ) where
 
-import Components            (Component)
+import Base.Components            (Component)
 import Physics.RigidBodyUtilities.RigidState    (RigidState(..))
 import Physics.Forces.Force3D       (Force3D(..))
 import Physics.Math.LinearAlgebra

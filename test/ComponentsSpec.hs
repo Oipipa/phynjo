@@ -2,7 +2,7 @@
 module ComponentsSpec (spec) where
 
 import Test.Hspec
-import Components
+import Base.Components
 
 spec :: Spec
 spec = describe "Components module" $ do

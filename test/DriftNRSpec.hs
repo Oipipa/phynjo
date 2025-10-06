@@ -1,9 +1,9 @@
 module DriftNRSpec (spec) where
 
 import Test.Hspec
-import Components      (Component(..))
-import NState          (emptyNS, insertPos, insertMom, lookupPos)
-import NumericRule     (applyNumericRule)
+import Base.Components      (Component(..))
+import Base.NState          (emptyNS, insertPos, insertMom, lookupPos)
+import Base.NumericRule     (applyNumericRule)
 import Physics.DriftNR (driftNR)
 
 spec :: Spec

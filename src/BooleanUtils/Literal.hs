@@ -10,7 +10,7 @@ module BooleanUtils.Literal
 
 import Data.Set (Set)
 import qualified Data.Set as Set
-import Components (Component)
+import Base.Components (Component)
 
 newtype Literal = Literal { getLiteral :: Set Component }
   deriving (Eq, Show)

@@ -2,11 +2,11 @@
 module ProcessSpec (spec) where
 
 import Test.Hspec
-import Action      (Action(..))
+import Base.Action      (Action(..))
 import BooleanUtils.Process     (Process(..), applyProcessWorld, applyProcessPhen)
 import BooleanUtils.Literal     (emptyLiteral)
 import BooleanUtils.Transition  (singletonPhen, epsilon)
-import Components  (Component(AtomicC))
+import Base.Components  (Component(AtomicC))
 import qualified Data.Set as Set
 
 spec :: Spec

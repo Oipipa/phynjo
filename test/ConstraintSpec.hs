@@ -6,13 +6,13 @@ import qualified Data.Set as Set
 
 import BooleanUtils.Literal               (emptyLiteral, getLiteral, literalFromList)
 import BooleanUtils.Transition            (singletonPhen, epsilon)
-import Components            (Component(AtomicC))
+import Base.Components            (Component(AtomicC))
 import BooleanUtils.EventRule             (EventRule(..))
 import BooleanUtils.EventWorkflow         
   ( EventWorkflow(..)
   , applyEventWorkflowWorld
   )
-import Constraint            (Invariant, preservesInvariant)
+import Base.Constraint            (Invariant, preservesInvariant)
 
 spec :: Spec
 spec = describe "Constraint module (over EventWorkflow)" $ do

@@ -9,7 +9,7 @@ import           Physics.Forces.Force3D         (runForce3D)
 import           Physics.RigidBodyUtilities.RigidState
 import           Physics.Math.LinearAlgebra      (Vec3, vdot)
 import qualified Data.Map.Strict         as M
-import           Components              (Component (..))
+import           Base.Components              (Component (..))
 
 dummyC :: Component
 dummyC = AtomicC "dummy"

@@ -6,9 +6,9 @@ import Test.Hspec
 import Control.Exception            (evaluate)
 import qualified Data.Map.Strict       as M
 import Numeric.Units.Dimensional.Prelude  (( *~), kilo, gram)
-import UnitLiteral                  (getLiteral)
-import Body                         (mkBody)
-import Components                   (Component(AtomicC))
+import Base.UnitLiteral                  (getLiteral)
+import Base.Body                         (mkBody)
+import Base.Components                   (Component(AtomicC))
 import System.SystemForces          (System(..), mkSystem)
 
 spec :: Spec

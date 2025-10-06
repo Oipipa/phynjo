@@ -1,18 +1,18 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
-module NumericWorkflow
+module Base.NumericWorkflow
   ( NumericWorkflow(..)
   , workflowDomain
   , applyNumericWorkflow
   ) where
 
-import           Components         (Component)
+import           Base.Components         (Component)
 import qualified Data.Set           as Set
 import qualified Data.Map.Strict    as M
 
-import           NumericRule        (NumericRule(..), applyNumericRule)
-import           NState             (NState(..))
-import           ScalarLiteral      (SLit(..)) 
+import           Base.NumericRule        (NumericRule(..), applyNumericRule)
+import           Base.NState             (NState(..))
+import           Base.ScalarLiteral      (SLit(..)) 
 
 data NumericWorkflow
   = Run NumericRule

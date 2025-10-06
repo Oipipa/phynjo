@@ -1,4 +1,4 @@
-module Components
+module Base.Components
   ( Component(..)
   , children
   , arity

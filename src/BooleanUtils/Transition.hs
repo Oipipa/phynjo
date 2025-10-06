@@ -8,7 +8,7 @@ module BooleanUtils.Transition
   , unionPhen
   ) where
 
-import Components (Component)
+import Base.Components (Component)
 import Data.Set    (Set)
 import qualified Data.Set as Set
 

@@ -4,12 +4,12 @@ module Physics.Forces.GravNR
   ( gravNR
   ) where
 
-import           Components         (Component)
+import           Base.Components         (Component)
 import qualified Data.Map.Strict    as M
 import qualified Data.Set           as S
 
-import           NumericRule        (NumericRule(..))
-import           NState             (NState, lookupPos, lookupMom, insertMom)
+import           Base.NumericRule        (NumericRule(..))
+import           Base.NState             (NState, lookupPos, lookupMom, insertMom)
 
 gravNR :: Double -> Double -> [(Component,Double)] -> NumericRule
 gravNR dt g masses =

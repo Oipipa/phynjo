@@ -3,7 +3,7 @@
 module Physics.RigidBodySpec (spec) where
 
 import Test.Hspec
-import Components            (Component(AtomicC))
+import Base.Components            (Component(AtomicC))
 import Physics.RigidBodyUtilities.RigidBody
 import Physics.Math.LinearAlgebra    (Vec3)
 

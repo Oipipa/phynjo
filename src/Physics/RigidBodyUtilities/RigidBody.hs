@@ -7,7 +7,7 @@ module Physics.RigidBodyUtilities.RigidBody
   , mkRigidBody
   ) where
 
-import Components        (Component)
+import Base.Components        (Component)
 import Physics.Math.LinearAlgebra (Vec3, InertiaTensor)
 
 type Quaternion = (Double, Double, Double, Double)

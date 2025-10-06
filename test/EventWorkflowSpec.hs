@@ -10,8 +10,8 @@ import BooleanUtils.EventRule             (EventRule(..), ruleToAction)
 import BooleanUtils.EventWorkflow         (EventWorkflow(..), toProcess
                              , applyEventWorkflowWorld
                              , applyEventWorkflowPhen)
-import Components            (Component(AtomicC))
-import Action                (applyActionWorld, applyActionPhen)
+import Base.Components            (Component(AtomicC))
+import Base.Action                (applyActionWorld, applyActionPhen)
 
 spec :: Spec
 spec = describe "EventWorkflow module" $ do

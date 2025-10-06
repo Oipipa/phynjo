@@ -1,4 +1,4 @@
-module Constraint
+module Base.Constraint
   ( Invariant
   , preservesInvariant
   ) where

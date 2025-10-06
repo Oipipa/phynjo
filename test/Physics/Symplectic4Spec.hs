@@ -2,11 +2,11 @@
 module Physics.Symplectic4Spec (spec) where
 
 import Test.Hspec
-import Components              (Component(AtomicC))
+import Base.Components              (Component(AtomicC))
 import Physics.Integrators.Symplectic4     (symplectic4)
 import Physics.Forces.Force           (Force(..))
-import NumericWorkflow         (applyNumericWorkflow, workflowDomain)
-import NState ( NState
+import Base.NumericWorkflow         (applyNumericWorkflow, workflowDomain)
+import Base.NState ( NState
               , emptyNS
               , insertPos, insertMom
               , lookupPos, lookupMom )

@@ -3,11 +3,11 @@ module BooleanUtils.EventRule
   , ruleToAction
   ) where
 
-import           Components   (Component)
+import           Base.Components   (Component)
 import           BooleanUtils.Literal      (Literal, getLiteral, literalFromList)
 import qualified BooleanUtils.Literal      as L
 import           BooleanUtils.Transition   (Phenomenon)
-import           Action       (Action(..))
+import           Base.Action       (Action(..))
 import qualified Data.Set     as Set
 
 data EventRule = EventRule

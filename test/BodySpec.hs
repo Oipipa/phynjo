@@ -2,9 +2,9 @@
 module BodySpec (spec) where
 
 import Test.Hspec
-import Body
-import UnitLiteral            (keysU)
-import Components             (Component(..))
+import Base.Body
+import Base.UnitLiteral            (keysU)
+import Base.Components             (Component(..))
 import Numeric.Units.Dimensional.Prelude
          ( (*~), kilo, gram )
 

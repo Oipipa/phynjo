@@ -8,7 +8,7 @@ module Physics.Forces.Force3D
   , drag3D
   ) where
 
-import Components                               (Component)
+import Base.Components                               (Component)
 import Physics.RigidBodyUtilities.RigidState    (RigidState, lookupPosR, lookupVelR)
 import Physics.Math.LinearAlgebra               (Vec3, vsub, vnorm2, vscale)
 import qualified Data.Map.Strict as M

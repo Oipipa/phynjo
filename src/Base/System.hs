@@ -1,14 +1,14 @@
 {-# LANGUAGE DataKinds        #-}
 {-# LANGUAGE NamedFieldPuns   #-}
 
-module System
+module Base.System
   ( System(..)
   , bodies  
   , (<+>) 
   ) where
 
-import Body
-import UnitLiteral
+import Base.Body
+import Base.UnitLiteral
 import qualified Data.Maybe as Mb
 
 data System = Sys

@@ -1,9 +1,9 @@
 module EulerNRSpec (spec) where
 
 import Test.Hspec
-import Components                 (Component(AtomicC))
-import NState                     (emptyNS, insertPos, insertMom, lookupPos)
-import NumericWorkflow            (applyNumericWorkflow)
+import Base.Components                 (Component(AtomicC))
+import Base.NState                     (emptyNS, insertPos, insertMom, lookupPos)
+import Base.NumericWorkflow            (applyNumericWorkflow)
 import Physics.Integrators.EulerNR            (eulerNR)
 
 spec :: Spec

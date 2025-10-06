@@ -2,8 +2,8 @@
 module UnitLiteralSpec (spec) where
 
 import Test.Hspec
-import Components               (Component(..))
-import UnitLiteral
+import Base.Components               (Component(..))
+import Base.UnitLiteral
 import Numeric.Units.Dimensional.Prelude
          ( (*~), metre, newton, kilo, gram, one, Quantity )
 import qualified Numeric.Units.Dimensional.Prelude as D

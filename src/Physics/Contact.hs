@@ -5,7 +5,7 @@ module Physics.Contact
   , contactSpheresF 
   ) where
 
-import           Components                              (Component)
+import           Base.Components                              (Component)
 import           Data.Set                                (Set)
 import qualified Data.Set                                as S
 import qualified Data.Map.Strict                         as M

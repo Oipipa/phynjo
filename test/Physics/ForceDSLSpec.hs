@@ -7,9 +7,9 @@ import Control.Exception       (evaluate)
 
 import Physics.Forces.ForceDSL        (addForce, addForces)
 import Physics.Forces.Force           (Force(..), (<+>))
-import NumericWorkflow         (workflowDomain)
-import Components              (Component(AtomicC))
-import Body                     (mkBody)
+import Base.NumericWorkflow         (workflowDomain)
+import Base.Components              (Component(AtomicC))
+import Base.Body                     (mkBody)
 import System.SystemForces      (mkSystem)
 import Numeric.Units.Dimensional.Prelude
   ( (*~), kilo, gram )

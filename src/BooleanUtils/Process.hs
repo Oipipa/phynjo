@@ -4,7 +4,7 @@ module BooleanUtils.Process
   , applyProcessPhen
   ) where
 
-import Action      (Action(..))
+import Base.Action      (Action(..))
 import BooleanUtils.Literal     (Literal, unionLiteral)
 import BooleanUtils.Transition  (Phenomenon, unionPhen)
 import qualified Data.Set as Set
