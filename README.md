@@ -19,5 +19,3 @@ executable physics-edsl
   main-is:
     examples/example09.hs <------ HERE!!!
 ```
-
-Implementation notes [here](IMPNOTES.pdf). 
